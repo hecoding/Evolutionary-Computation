@@ -2,19 +2,14 @@ package view.gui.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+
 
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -36,28 +31,12 @@ public class MainWindow extends JFrame {
 		//----------Content-----------
 		
 		leftPanel.setBackground(Color.BLUE);
-		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-		
-		JPanel option1 = new JPanel();
-		JLabel option1Label = new JLabel("holi");
-		leftPanel.add(option1Label);
-		JTextField option1TextField = new JTextField(8);
-		//option1TextField.setInputVerifier(new IntegerInputVerifier());
-		option1.add(option1Label);
-		option1.add(option1TextField);
-		option1.setMaximumSize( option1.getPreferredSize() );
-		leftPanel.add(option1);
-		option1.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		
-		JPanel option2 = new JPanel();
-		JLabel option2Label = new JLabel("holaaa");
-		JTextField option2TextField = new JTextField(8);
-		option2.add(option2Label);
-		option2.add(option2TextField);
-		option2.setMaximumSize( option2.getPreferredSize() );
-		leftPanel.add(option2);
-		option2.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		
+		final ConfigPanel<Caca> cp = creaPanelConfiguracion();
+		Caca caca = new Caca();
+		cp.setTarget(caca);
+		cp.initialize();
+		leftPanel.add(cp);
+		// meter quiza un JScrollPane y/o JSplitPane
 		mainPanel.add(leftPanel, BorderLayout.LINE_START);
 		
 		centerPanel.setBackground(Color.GREEN);
@@ -103,5 +82,102 @@ public class MainWindow extends JFrame {
 		this.setMinimumSize(new Dimension(660, 550));
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
+	}
+	
+	public ConfigPanel<Caca> creaPanelConfiguracion() {
+		String[] colores = new String[] { "yeah", "nope", "maybe" };
+		Forma[] formas = new Forma[] { new Rectangulo() };
+		
+		ConfigPanel<Caca> config = new ConfigPanel<Caca>();
+		
+		// se pueden a�adir las opciones de forma independiente, o "de seguido"; el resultado es el mismo.
+		config.addOption(new ConfigPanel.IntegerOption<Caca>(  // -- entero
+				"grosor (px)", 					     // texto a usar como etiqueta del campo
+				"pixeles de grosor del borde",       // texto a usar como 'tooltip' cuando pasas el puntero
+				"grosor",  						     // campo (espera que haya un getGrosor y un setGrosor)
+				1, 10))							     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
+		.addOption(new ConfigPanel.ChoiceOption<Caca>(	 // -- eleccion de objeto no-configurable
+			    "color",							 // etiqueta 
+			    "color del borde", 					 // tooltip
+			    "color",   							 // campo (debe haber un getColor y un setColor)
+			    colores))                            // elecciones posibles
+		.addOption(new ConfigPanel.StrategyOption<Caca>( // -- eleccion de objeto configurable
+				"forma",							 // etiqueta
+				"forma de la figura",                // tooltip
+				"forma",                             // campo
+				formas))                             // elecciones (deben implementar Cloneable)
+				
+			  // para cada clase de objeto interno, hay que definir sus opciones entre un beginInner y un endInner 
+			  .beginInner(new ConfigPanel.InnerOption<Caca,Forma>( 
+			  	"rectangulo", "opciones del rectangulo", "forma", Rectangulo.class))
+		  		  .addInner(new ConfigPanel.DoubleOption<Forma>(
+		  		     "ancho", "ancho del rectangulo", "ancho", 0, Double.POSITIVE_INFINITY))
+		  		  .addInner(new ConfigPanel.DoubleOption<Forma>(
+		  		     "alto", "alto del rectangulo", "alto", 0, Double.POSITIVE_INFINITY))
+		  	  .endInner()
+		.endOptions();
+		
+		return config;
+	}
+	
+	public class Caca {
+		int a;
+		double b;
+		private int grosor = 1;
+		private String color;
+		private Forma forma;
+		
+		public int getGrosor() {
+			return grosor;
+		}
+		public void setGrosor(int grosor) {
+			this.grosor = grosor;
+		}
+		
+		public String getColor() {
+			return color;
+		}
+		public void setColor(String color) {
+			this.color = color;
+		}
+		public Forma getForma() {
+			return forma;
+		}
+		public void setForma(Forma forma) {
+			this.forma = forma;
+		}
+		public String toString() {
+			return "grosor: " + this.grosor;
+		}
+	}
+	
+	/** una forma; implementa cloneable */
+	public static abstract class Forma implements Cloneable {			
+		public abstract void dibuja();
+		
+		// implementacion de 'clone' por defecto, suficiente para objetos sencillos
+		public Forma clone() { 
+			try {
+				return (Forma)super.clone();
+			} catch (CloneNotSupportedException e) {
+				throw new IllegalArgumentException(e);
+			} 
+		}
+	}
+	
+	/** un rectangulo (una forma, y por tanto 'cloneable') */
+	public static class Rectangulo extends Forma {
+		private double ancho = 1, alto = 1;
+	
+		public double getAncho() { return ancho; }
+		public void setAncho(double ancho) { this.ancho = ancho; }
+		public double getAlto() { return alto; }
+		public void setAlto(double alto) { this.alto = alto; }
+
+		public void dibuja() { /* ... */ };
+
+		public String toString() {
+			return "rect. de " + ancho  + "x" + alto; 
+		}
 	}
 }
