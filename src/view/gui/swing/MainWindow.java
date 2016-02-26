@@ -10,11 +10,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import org.math.plot.Plot2DPanel;
+
 
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 	
 	public MainWindow() {
+		this.setTitle("Evolutionary computation");
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				initGUI();
@@ -26,7 +29,7 @@ public class MainWindow extends JFrame {
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		this.add(mainPanel);
 		JPanel leftPanel = new JPanel();
-		JPanel centerPanel = new JPanel();
+		JPanel centerPanel = new JPanel(new BorderLayout());
 		
 		//----------Content-----------
 		
@@ -40,6 +43,17 @@ public class MainWindow extends JFrame {
 		mainPanel.add(leftPanel, BorderLayout.LINE_START);
 		
 		centerPanel.setBackground(Color.GREEN);
+		// define your data
+		double[] x = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+		double[] y = { 45, 89, 6, 32, 63, 12, 15, 23, 12, 34 };
+		// create your PlotPanel (you can use it as a JPanel)
+		Plot2DPanel plot = new Plot2DPanel();
+		// define the legend position
+		plot.addLegend("SOUTH");
+		// add a line plot to the PlotPanel
+		plot.addLinePlot("my plot", x, y);
+		// put the PlotPanel in a JFrame like a JPanel
+		centerPanel.add(plot, BorderLayout.CENTER);
 		mainPanel.add(centerPanel, BorderLayout.CENTER);
 		
 		//----------Settings-----------
@@ -78,8 +92,8 @@ public class MainWindow extends JFrame {
 		});
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(new Dimension(780,690));
-		this.setMinimumSize(new Dimension(660, 550));
+		this.setSize(new Dimension(1024,768));
+		this.setMinimumSize(new Dimension(750, 550));
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
 	}
