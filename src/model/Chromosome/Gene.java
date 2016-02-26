@@ -11,7 +11,13 @@ public class Gene extends AbstractGene<ArrayList<Boolean>> {
 	}
 	
 	public String toString() {
-		return this.genotype.toString();
+		StringBuilder builder = new StringBuilder();
+		
+		for (int i = 0; i < this.genotype.size(); i++) {
+		    if (this.genotype.get(i)) builder.append("1"); else builder.append("0");
+		}
+		
+		return builder.toString();
 	}
 	
 }
