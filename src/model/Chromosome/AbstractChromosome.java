@@ -9,8 +9,6 @@ public abstract class AbstractChromosome<T extends AbstractGene<?>> {
 	double score;
 	double aggregateScore;
 	
-	abstract double evalua();
-	public Object phenotype() {
-		return null;
-	}
+	public abstract double evalua();
+	public abstract Object phenotype();
 }
