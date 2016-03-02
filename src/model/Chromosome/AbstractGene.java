@@ -9,5 +9,4 @@ public abstract class AbstractGene<T> {
 	public T getGenotype() {
 		return this.genotype;
 	}
-	public abstract Object getPhenotype();
 }

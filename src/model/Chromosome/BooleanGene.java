@@ -2,12 +2,14 @@ package model.Chromosome;
 
 import java.util.ArrayList;
 
-public class Gene extends AbstractGene<ArrayList<Boolean>> {
+public class BooleanGene extends AbstractGene<ArrayList<Boolean>> {
 	
-	@Override
-	public Object getPhenotype() {
-		// TODO Auto-generated method stub
-		return 0;
+	public BooleanGene() {
+		this.setGenotype(new ArrayList<Boolean>());
+	}
+	
+	public BooleanGene(ArrayList<Boolean> g) {
+		this.setGenotype(g);
 	}
 	
 	public String toString() {
