@@ -48,8 +48,8 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	
 	private ArrayList<Boolean> getListGenotype() {
 		ArrayList<Boolean> geneList = new ArrayList<Boolean>();
-		for (BooleanGene gen : this.genes) {
-			geneList.addAll(gen.getGenotype());
+		for (BooleanGene gen : this.getGenotype()) {
+			geneList.addAll(gen.getInformation());
 		}
 		
 		return geneList;
@@ -70,7 +70,7 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	public String toString() {
 		String s = new String();
 		
-		for (BooleanGene gen : this.genes) {
+		for (BooleanGene gen : this.getGenotype()) {
 			s.concat(gen.toString());
 		}
 		

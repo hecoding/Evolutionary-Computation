@@ -1,12 +1,13 @@
 package model.Chromosome;
 
 public abstract class AbstractGene<T> {
-	T genotype;
-	
-	public void setGenotype(T genotype) {
-		this.genotype = genotype;
+	private T information;
+
+	public T getInformation() {
+		return information;
 	}
-	public T getGenotype() {
-		return this.genotype;
+
+	public void setInformation(T information) {
+		this.information = information;
 	}
 }
