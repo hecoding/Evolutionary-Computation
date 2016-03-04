@@ -5,19 +5,25 @@ import java.util.ArrayList;
 public class BooleanGene extends AbstractGene<ArrayList<Boolean>> {
 	
 	public BooleanGene() {
-		this.setInformation(new ArrayList<Boolean>());
+		this.information = new ArrayList<Boolean>();
+	}
+	
+	public BooleanGene(Boolean b) {
+		ArrayList<Boolean> info = new ArrayList<Boolean>();
+		info.add(b);
+		
+		this.information = info;
 	}
 	
 	public BooleanGene(ArrayList<Boolean> g) {
-		this.setInformation(g);
+		this.information = g;
 	}
 	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		ArrayList<Boolean> info = this.getInformation();
 		
-		for (int i = 0; i < info.size(); i++) {
-		    if (info.get(i)) builder.append("1"); else builder.append("0");
+		for (int i = 0; i < this.information.size(); i++) {
+		    if (this.information.get(i)) builder.append("1"); else builder.append("0");
 		}
 		
 		return builder.toString();

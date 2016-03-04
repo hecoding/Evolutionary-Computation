@@ -3,22 +3,35 @@ package model.Chromosome;
 import java.util.ArrayList;
 
 public abstract class AbstractChromosome<T extends AbstractGene<?>> {
-	private ArrayList<T> genes;
-	private double phenotype;
-	private double aptitude;
-	private double score;
-	private double aggregateScore;
-	// getPhenotype using the double?
-	// a method named refreshPhenotype?
-	// setGenotype (also calling refreshPhenotype)?
+	protected ArrayList<T> genes;
+	protected double phenotype;
+	protected double aptitude;
+	protected double score;
+	protected double aggregateScore;
 	
+	public AbstractChromosome() {
+		this.phenotype = 0;
+		this.aptitude = 0;
+		this.score = 0;
+		this.aggregateScore = 0;
+	}
+	
+	public abstract void initialize();
 	public abstract double evaluate();
+	public abstract void refreshPhenotype();
 	
 	public ArrayList<T> getGenotype() {
 		return this.genes;
 	}
 	
-	public abstract Object getPhenotype();
+	public void setGenotype(ArrayList<T> genes) {
+		this.genes = genes;
+		this.refreshPhenotype();
+	}
+
+	public double getPhenotype() {
+		return this.phenotype;
+	}
 
 	public double getAptitude() {
 		return aptitude;

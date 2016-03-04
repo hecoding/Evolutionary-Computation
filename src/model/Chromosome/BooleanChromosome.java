@@ -1,30 +1,45 @@
 package model.Chromosome;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	private int minx;
 	private int maxx;
 	private int length;
 	private double tolerance;
+	private long seed;
 	
-	public BooleanChromosome(int minx, int maxx, double tolerance) {
+	public BooleanChromosome(int minx, int maxx, double tolerance, long randomSeed) {
 		this.minx = minx;
 		this.maxx = maxx;
 		this.tolerance = tolerance;
+		this.seed = randomSeed;
 		this.length = this.computeLength();
+		this.genes = new ArrayList<BooleanGene>(this.length);
+	}
+
+	@Override
+	public void initialize() {
+		Random myRandom = new Random(this.seed);
+		if (!this.genes.isEmpty())
+			this.genes.clear();
+		
+		for (int i = 0; i < this.length; i++) {
+			this.genes.add( new BooleanGene(myRandom.nextBoolean()) );
+		}
 	}
 
 	@Override
 	public double evaluate() {
 		return this.f((double) this.getPhenotype());
 	}
-
+	
 	@Override
-	public Object getPhenotype() {
+	public void refreshPhenotype() {
 		long chromosomeDecimal = chromo2dec(this.getListGenotype());
 		
-		return this.minx + (this.maxx - this.minx) * chromosomeDecimal / (Math.pow(2, this.length) - 1);
+		this.phenotype = this.minx + (this.maxx - this.minx) * chromosomeDecimal / (Math.pow(2, this.length) - 1);
 	}
 	
 	double f(double x) {
@@ -69,10 +84,13 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	
 	public String toString() {
 		String s = new String();
+		boolean unitaryGenes = this.genes.get(0).information.size() == 1;
 		
-		for (BooleanGene gen : this.getGenotype()) {
-			s.concat(gen.toString());
+		for (BooleanGene gen : this.genes) {
+			s = s + gen;
+			if (!unitaryGenes) s += "|";
 		}
+		if (!unitaryGenes) s = s.substring(0, s.length() - 1);
 		
 		return s;
 	}

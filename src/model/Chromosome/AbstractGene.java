@@ -1,7 +1,7 @@
 package model.Chromosome;
 
 public abstract class AbstractGene<T> {
-	private T information;
+	protected T information;
 
 	public T getInformation() {
 		return information;
