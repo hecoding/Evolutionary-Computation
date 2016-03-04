@@ -6,6 +6,7 @@ import model.Chromosome.BooleanChromosome;
 
 public class GeneticAlgorithm { // TODO make it generic
 	private ArrayList<BooleanChromosome> population;
+	private int generationNum;
 	private int maxGenerationNum;
 	private BooleanChromosome bestChromosome;
 	private double crossProb;
@@ -16,6 +17,7 @@ public class GeneticAlgorithm { // TODO make it generic
 	public GeneticAlgorithm(int populationNum, int maxGenerationNum, double crossProb, double mutationProb, double tolerance, long seed) {
 		super();
 		this.population = new ArrayList<BooleanChromosome>(populationNum);
+		this.generationNum = 0;
 		this.maxGenerationNum = maxGenerationNum;
 		this.bestChromosome = null;
 		this.crossProb = crossProb;
@@ -61,8 +63,12 @@ public class GeneticAlgorithm { // TODO make it generic
 		// generalize for minimization handling also
 	}
 	
+	public void increaseGeneration() {
+		this.generationNum++;
+	}
+	
 	public boolean finished() {
-		return true;
+		return this.generationNum == this.maxGenerationNum;
 	}
 	
 	/* GENETIC OPERATORS */
