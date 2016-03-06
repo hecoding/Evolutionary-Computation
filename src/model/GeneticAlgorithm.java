@@ -33,7 +33,7 @@ public class GeneticAlgorithm { // TODO make it generic
 	
 	public void initialize() {
 		for (int i = 0; i < this.population.size(); i++) {
-			BooleanChromosome chr = new BooleanChromosome(-250, 250, this.tolerance, this.seed);
+			BooleanChromosome chr = new BooleanChromosome(-250, 250, this.tolerance, random);
 			chr.initialize();
 			chr.setAptitude(chr.evaluate());
 			this.population.set(i, chr);

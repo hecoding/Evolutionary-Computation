@@ -8,19 +8,15 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	private int maxx;
 	private int length;
 	private double tolerance;
-	private long seed;
-	private static Random random;
+	private Random random;
 	
-	public BooleanChromosome(int minx, int maxx, double tolerance, long randomSeed) {
+	public BooleanChromosome(int minx, int maxx, double tolerance, Random randomGenerator) {
 		this.minx = minx;
 		this.maxx = maxx;
 		this.tolerance = tolerance;
-		this.seed = randomSeed;
 		this.length = this.computeLength();
 		this.genes = new ArrayList<BooleanGene>(this.length);
-		
-		if(random == null)
-			random = new Random(this.seed);
+		this.random = randomGenerator;
 	}
 
 	@Override
