@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import model.Chromosome.BooleanChromosome;
+import model.Chromosome.BooleanGene;
 
 public class GeneticAlgorithm { // TODO make it generic
 	private ArrayList<BooleanChromosome> population;
@@ -14,10 +15,9 @@ public class GeneticAlgorithm { // TODO make it generic
 	private double mutationProb;
 	private double tolerance;
 	private long seed;
-	private static Random randomnessGenerator;
+	private static Random random;
 
 	public GeneticAlgorithm(int populationNum, int maxGenerationNum, double crossProb, double mutationProb, double tolerance, long seed) {
-		super();
 		this.population = new ArrayList<BooleanChromosome>(populationNum);
 		this.generationNum = 0;
 		this.maxGenerationNum = maxGenerationNum;
@@ -26,7 +26,9 @@ public class GeneticAlgorithm { // TODO make it generic
 		this.mutationProb = mutationProb;
 		this.tolerance = tolerance;
 		this.seed = seed;
-		randomnessGenerator = new Random(this.seed);
+		
+		if(random == null)
+			random = new Random(this.seed);
 	}
 	
 	public void initialize() {
@@ -83,7 +85,7 @@ public class GeneticAlgorithm { // TODO make it generic
 		int positionSelected = 0;
 		
 		for (int i = 0; i < this.population.size(); i++) {
-			prob = randomnessGenerator.nextDouble();
+			prob = random.nextDouble();
 			positionSelected = 0;
 			
 			while((prob > this.population.get(positionSelected).getAggregateScore())
@@ -101,7 +103,20 @@ public class GeneticAlgorithm { // TODO make it generic
 	}
 	
 	public void mutation() {
+		ArrayList<BooleanGene> genes;
+		boolean mutated = false;
 		
+		for (BooleanChromosome chrom : this.population) {
+			mutated = false;
+			genes = chrom.getGenotype();
+			
+			for (BooleanGene gene : genes) { // each gene can be coded on several bits
+				mutated = gene.mutate(this.mutationProb, random);
+			}
+			
+			if(mutated)
+				chrom.setAptitude(chrom.evaluate());
+		}
 	}
 
 }

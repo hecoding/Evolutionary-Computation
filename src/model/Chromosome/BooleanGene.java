@@ -1,6 +1,7 @@
 package model.Chromosome;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class BooleanGene extends AbstractGene<ArrayList<Boolean>> {
 	
@@ -17,6 +18,19 @@ public class BooleanGene extends AbstractGene<ArrayList<Boolean>> {
 	
 	public BooleanGene(ArrayList<Boolean> g) {
 		this.information = g;
+	}
+	
+	public boolean mutate(double mutationProb, Random random) {
+		boolean mutated = false;
+		
+		for (Boolean bit : this.information) {
+			if(random.nextDouble() < mutationProb) {
+				bit = !bit;
+				mutated = true;
+			}
+		}
+		
+		return mutated;
 	}
 	
 	public String toString() {

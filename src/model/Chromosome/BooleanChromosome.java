@@ -9,6 +9,7 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	private int length;
 	private double tolerance;
 	private long seed;
+	private static Random random;
 	
 	public BooleanChromosome(int minx, int maxx, double tolerance, long randomSeed) {
 		this.minx = minx;
@@ -17,16 +18,18 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 		this.seed = randomSeed;
 		this.length = this.computeLength();
 		this.genes = new ArrayList<BooleanGene>(this.length);
+		
+		if(random == null)
+			random = new Random(this.seed);
 	}
 
 	@Override
 	public void initialize() {
-		Random myRandom = new Random(this.seed);
 		if (!this.genes.isEmpty())
 			this.genes.clear();
 		
 		for (int i = 0; i < this.length; i++) {
-			this.genes.add( new BooleanGene(myRandom.nextBoolean()) );
+			this.genes.add( new BooleanGene(random.nextBoolean()) );
 		}
 	}
 
