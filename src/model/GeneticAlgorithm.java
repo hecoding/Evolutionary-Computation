@@ -1,8 +1,10 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import model.Chromosome.BooleanChromosome;
+import model.Chromosome.BooleanGene;
 
 public class GeneticAlgorithm { // TODO make it generic
 	private ArrayList<BooleanChromosome> population;
@@ -13,6 +15,7 @@ public class GeneticAlgorithm { // TODO make it generic
 	private double mutationProb;
 	private double tolerance;
 	private long seed;
+	private static Random randomGenerator;
 
 	public GeneticAlgorithm(int populationNum, int maxGenerationNum, double crossProb, double mutationProb, double tolerance, long seed) {
 		super();
@@ -24,6 +27,7 @@ public class GeneticAlgorithm { // TODO make it generic
 		this.mutationProb = mutationProb;
 		this.tolerance = tolerance;
 		this.seed = seed;
+		randomGenerator = new Random(this.seed);
 	}
 	
 	public void initialize() {
@@ -74,7 +78,27 @@ public class GeneticAlgorithm { // TODO make it generic
 	/* GENETIC OPERATORS */
 	
 	public void selection() {
+		// selección ruleta
+		ArrayList<Integer> idxSelection = new ArrayList<Integer>(this.population.size());
+		ArrayList<BooleanChromosome> selectedPopulation = new ArrayList<BooleanChromosome>(this.population.size());
+		double prob;
+		int positionSelected;
 		
+		for (int i = 0; i < this.population.size(); i++) {
+			prob = randomGenerator.nextDouble();
+			positionSelected = 0;
+			
+			while((prob > this.population.get(positionSelected).getAggregateScore())
+					&& (positionSelected < this.population.size()))
+				positionSelected++;
+			
+			idxSelection.set(i, positionSelected);
+		}
+		
+		for (int i = 0; i < idxSelection.size(); i++) {
+			int index = idxSelection.get(i);
+			selectedPopulation.set(index, this.population.get(index));
+		}
 	}
 	
 	public void reproduction() {
