@@ -47,7 +47,7 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	}
 	
 	private final int computeLength() {
-		return integralPart( log2( 1 + (this.maxx - this.minx) / this.tolerance ) );
+		return (int) Math.ceil( log2( 1 + (this.maxx - this.minx) / this.tolerance ) );
 	}
 	
 	private final long chromo2dec(ArrayList<Boolean> geneList) {
