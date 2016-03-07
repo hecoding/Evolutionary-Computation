@@ -73,14 +73,6 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	    return (int)Math.floor(Math.log(n)/Math.log(2.0));
 	}
 	
-	private static final int integralPart (double n) {
-		return (int) (n - fractionalPart(n));
-	}
-	
-	private static final double fractionalPart (double n) {
-		return n % 1;
-	}
-	
 	public String toString() {
 		String s = new String();
 		boolean unitaryGenes = this.genes.get(0).information.size() == 1;
