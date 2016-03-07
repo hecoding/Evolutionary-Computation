@@ -99,7 +99,34 @@ public class GeneticAlgorithm { // TODO make it generic
 	}
 	
 	public void reproduction() {
+		ArrayList<Integer> selectedPopulation = new ArrayList<Integer>(this.population.size());
+		int num_sele_cruce = 0;
+		double prob;
+		BooleanChromosome hijo1 = null, hijo2 = null;
 		
+		for (int i = 0; i < this.population.size(); i++) {
+			prob = this.random.nextDouble();
+			
+			if(prob < this.crossProb) {
+				selectedPopulation.set(num_sele_cruce, i);
+				num_sele_cruce++;
+			}
+		}
+		
+		// hacer par
+		if((num_sele_cruce % 2) == 1)
+			num_sele_cruce--;
+		
+		for (int i = 0; i < num_sele_cruce; i+=2) {
+			cruce();
+			
+			this.population.set(selectedPopulation.get(i), hijo1);
+			this.population.set(selectedPopulation.get(i + 1), hijo2);
+		}
+	}
+	
+	private void cruce() {
+		int punto_cruce = this.random.nextInt(this.population.get(0).getLength());
 	}
 	
 	public void mutation() {
