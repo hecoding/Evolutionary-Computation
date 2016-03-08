@@ -30,6 +30,8 @@ public abstract class AbstractChromosome<T extends AbstractGene<?>> {
 	}
 
 	public double getPhenotype() {
+		this.refreshPhenotype();
+		
 		return this.phenotype;
 	}
 

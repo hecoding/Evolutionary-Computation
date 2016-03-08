@@ -7,6 +7,7 @@ import model.Chromosome.BooleanChromosome;
 import model.Chromosome.BooleanGene;
 
 public class GeneticAlgorithm {
+	private int populationNum;
 	private ArrayList<BooleanChromosome> population;
 	private int generationNum;
 	private int maxGenerationNum;
@@ -18,6 +19,7 @@ public class GeneticAlgorithm {
 	private static Random random;
 
 	public GeneticAlgorithm(int populationNum, int maxGenerationNum, double crossProb, double mutationProb, double tolerance, long seed) {
+		this.populationNum = populationNum;
 		this.population = new ArrayList<BooleanChromosome>(populationNum);
 		this.generationNum = 0;
 		this.maxGenerationNum = maxGenerationNum;
@@ -32,11 +34,14 @@ public class GeneticAlgorithm {
 	}
 	
 	public void initialize() {
-		for (int i = 0; i < this.population.size(); i++) {
-			BooleanChromosome chr = new BooleanChromosome(-250, 250, this.tolerance, random);
+		this.population.clear();
+		
+		for (int i = 0; i < this.populationNum; i++) {
+			// BooleanChromosome chr = new BooleanChromosome(-250, 250, this.tolerance, random);
+			BooleanChromosome chr = new BooleanChromosome(0, 20, this.tolerance, random);
 			chr.initialize();
 			chr.setAptitude(chr.evaluate());
-			this.population.set(i, chr);
+			this.population.add(chr);
 		}
 	}
 	
@@ -62,7 +67,7 @@ public class GeneticAlgorithm {
 			currentAggregateScore += chromosome.getScore();
 		}
 		
-		if (currentBestAptitude > this.bestChromosome.getAptitude()) {
+		if (this.bestChromosome == null || currentBestAptitude > this.bestChromosome.getAptitude()) {
 			this.bestChromosome = currentBest;
 		}
 	}
@@ -169,6 +174,22 @@ public class GeneticAlgorithm {
 			if(mutated)
 				chrom.setAptitude(chrom.evaluate());
 		}
+	}
+	
+	public BooleanChromosome getBestChromosome() {
+		return bestChromosome;
+	}
+
+	public String toString() {
+		String s = new String();
+		
+		s += "pos     genotype     aptitude phenotype" + System.lineSeparator();
+		for (int i = 0; i < this.population.size(); i++) {
+			BooleanChromosome elem = this.population.get(i);
+			s += i + " " + elem + " " + String.format("%5f", elem.getAptitude()) + " " + String.format("%.5f", elem.getPhenotype()) + System.lineSeparator();
+		}
+		
+		return s;
 	}
 	
 	// TODO list

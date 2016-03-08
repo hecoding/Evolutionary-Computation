@@ -43,7 +43,8 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	
 	double f(double x) {
 		// primera función
-		return -Math.abs(x * Math.sin( Math.sqrt(Math.abs(x)) ));
+		//return -Math.abs(x * Math.sin( Math.sqrt(Math.abs(x)) ));
+		return x / (1 + (x * x));
 	}
 	
 	private final int computeLength() {
@@ -69,8 +70,8 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 		return geneList;
 	}
 	
-	private static final int log2(double n) {
-	    return (int)Math.floor(Math.log(n)/Math.log(2.0));
+	private static final double log2(double n) {
+		return Math.log(n)/Math.log(2.0);
 	}
 	
 	public int getLength() {
