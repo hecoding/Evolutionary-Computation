@@ -77,6 +77,10 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 		return this.length;
 	}
 	
+	public BooleanChromosome clone() {
+		return new BooleanChromosome(this.minx, this.maxx, this.tolerance, random);
+	}
+	
 	public String toString() {
 		String s = new String();
 		boolean unitaryGenes = this.genes.get(0).information.size() == 1;

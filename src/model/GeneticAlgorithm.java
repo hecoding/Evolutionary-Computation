@@ -6,7 +6,7 @@ import java.util.Random;
 import model.Chromosome.BooleanChromosome;
 import model.Chromosome.BooleanGene;
 
-public class GeneticAlgorithm { // TODO make it generic
+public class GeneticAlgorithm {
 	private ArrayList<BooleanChromosome> population;
 	private int generationNum;
 	private int maxGenerationNum;
@@ -65,7 +65,6 @@ public class GeneticAlgorithm { // TODO make it generic
 		if (currentBestAptitude > this.bestChromosome.getAptitude()) {
 			this.bestChromosome = currentBest;
 		}
-		// generalize for minimization handling also
 	}
 	
 	public void increaseGeneration() {
@@ -79,7 +78,7 @@ public class GeneticAlgorithm { // TODO make it generic
 	/* GENETIC OPERATORS */
 	
 	public void selection() {
-		// selección ruleta
+		// roulette selection
 		ArrayList<BooleanChromosome> selectedPopulation = new ArrayList<BooleanChromosome>(this.population.size());
 		double prob = 0;
 		int positionSelected = 0;
@@ -99,34 +98,60 @@ public class GeneticAlgorithm { // TODO make it generic
 	}
 	
 	public void reproduction() {
-		ArrayList<Integer> selectedPopulation = new ArrayList<Integer>(this.population.size());
-		int num_sele_cruce = 0;
-		double prob;
-		BooleanChromosome hijo1 = null, hijo2 = null;
+		ArrayList<Integer> selectedCandidatesIdx = new ArrayList<Integer>(this.population.size());
+		BooleanChromosome child1 = null, child2 = null;
 		
+		// select randomly all the candidates for the crossover
 		for (int i = 0; i < this.population.size(); i++) {
-			prob = this.random.nextDouble();
-			
-			if(prob < this.crossProb) {
-				selectedPopulation.set(num_sele_cruce, i);
-				num_sele_cruce++;
-			}
+			if(random.nextDouble() < this.crossProb)
+				selectedCandidatesIdx.add(i);
 		}
 		
-		// hacer par
-		if((num_sele_cruce % 2) == 1)
-			num_sele_cruce--;
+		// make size even
+		if((selectedCandidatesIdx.size() % 2) == 1)
+			selectedCandidatesIdx.remove(selectedCandidatesIdx.size() - 1);
 		
-		for (int i = 0; i < num_sele_cruce; i+=2) {
-			cruce();
+		// iterate over pairs
+		for (int i = 0; i < selectedCandidatesIdx.size(); i+=2) {
+			crossover(
+					this.population.get(selectedCandidatesIdx.get(i)), this.population.get(selectedCandidatesIdx.get(i + 1)),
+					child1, child2
+					);
 			
-			this.population.set(selectedPopulation.get(i), hijo1);
-			this.population.set(selectedPopulation.get(i + 1), hijo2);
+			this.population.set(selectedCandidatesIdx.get(i), child1);
+			this.population.set(selectedCandidatesIdx.get(i + 1), child2);
 		}
 	}
 	
-	private void cruce() {
-		int punto_cruce = this.random.nextInt(this.population.get(0).getLength());
+	private void crossover(BooleanChromosome parent1, BooleanChromosome parent2, BooleanChromosome child1, BooleanChromosome child2) {
+		int chromLength = this.population.get(0).getLength();
+		// select point over 0 and chromosomeLength - 1
+		int crossoverPoint = random.nextInt(chromLength);
+		child1 = parent1.clone();
+		child2 = parent1.clone();
+		
+		ArrayList<BooleanGene> parent1Genes = parent1.getGenotype();
+		ArrayList<BooleanGene> parent2Genes = parent2.getGenotype();
+		ArrayList<BooleanGene> child1Genes = new ArrayList<BooleanGene>(chromLength);
+		ArrayList<BooleanGene> child2Genes = new ArrayList<BooleanGene>(chromLength);
+		
+		// before the crossover point
+		for (int i = 0; i < crossoverPoint; i++) {
+			child1Genes.set(i, parent1Genes.get(i));
+			child2Genes.set(i, parent2Genes.get(i));
+		}
+		
+		// after the crossover point
+		for (int i = crossoverPoint; i < chromLength; i++) {
+			child1Genes.set(i, parent2Genes.get(i));
+			child2Genes.set(i, parent1Genes.get(i));
+		}
+		
+		child1.setGenotype(child1Genes);
+		child2.setGenotype(child2Genes);
+		
+		child1.setAptitude(child1.evaluate());
+		child2.setAptitude(child2.evaluate());
 	}
 	
 	public void mutation() {
@@ -145,5 +170,9 @@ public class GeneticAlgorithm { // TODO make it generic
 				chrom.setAptitude(chrom.evaluate());
 		}
 	}
+	
+	// TODO list
+	// make the algorithm generic
+	// generalize evaluatePopulation() for minimization handling also
 
 }
