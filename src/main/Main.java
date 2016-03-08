@@ -1,6 +1,9 @@
 package main;
 
+import java.util.ArrayList;
+
 import model.GeneticAlgorithm;
+import model.Chromosome.BooleanChromosome;
 
 public class Main {
 
@@ -16,7 +19,9 @@ public class Main {
 		//chr.initialize();
 		//System.out.println(chr);
 		
-		GeneticAlgorithm ga = new GeneticAlgorithm(30, 10, 0.4, 0.01, 0.0001, 0);
+		boolean usingElitism = true;
+		ArrayList<BooleanChromosome> elite = null;
+		GeneticAlgorithm ga = new GeneticAlgorithm(30, 0.10, 10, 0.4, 0.01, 0.0001, 0);
 		ga.initialize();
 		System.out.println(ga);
 		ga.evaluatePopulation();
@@ -24,10 +29,14 @@ public class Main {
 							+ ga.getBestChromosome().getAptitude() + " "
 							+ ga.getBestChromosome().getPhenotype() + System.lineSeparator());
 		while(!ga.finished()) {
+			if (usingElitism)
+				elite = ga.selectElite();
 			ga.increaseGeneration();
 			ga.selection();
 			ga.reproduction();
 			ga.mutation();
+			if (usingElitism)
+				ga.includeElite(elite);
 			ga.evaluatePopulation();
 		}
 		System.out.println(ga);

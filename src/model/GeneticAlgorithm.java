@@ -1,13 +1,16 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
+import model.Chromosome.AptitudeComparator;
 import model.Chromosome.BooleanChromosome;
 import model.Chromosome.BooleanGene;
 
 public class GeneticAlgorithm {
 	private int populationNum;
+	private double eliteSize;
 	private ArrayList<BooleanChromosome> population;
 	private int generationNum;
 	private int maxGenerationNum;
@@ -17,9 +20,11 @@ public class GeneticAlgorithm {
 	private double tolerance;
 	private long seed;
 	private static Random random;
+	private static Comparator<BooleanChromosome> aptitudeComparator;
 
-	public GeneticAlgorithm(int populationNum, int maxGenerationNum, double crossProb, double mutationProb, double tolerance, long seed) {
+	public GeneticAlgorithm(int populationNum, double eliteSize, int maxGenerationNum, double crossProb, double mutationProb, double tolerance, long seed) {
 		this.populationNum = populationNum;
+		this.eliteSize = eliteSize;
 		this.population = new ArrayList<BooleanChromosome>(populationNum);
 		this.generationNum = 0;
 		this.maxGenerationNum = maxGenerationNum;
@@ -31,6 +36,8 @@ public class GeneticAlgorithm {
 		
 		if(random == null)
 			random = new Random(this.seed);
+		if(aptitudeComparator == null)
+			aptitudeComparator = new AptitudeComparator();
 	}
 	
 	public void initialize() {
@@ -173,6 +180,23 @@ public class GeneticAlgorithm {
 			if(mutated)
 				chrom.setAptitude(chrom.evaluate());
 		}
+	}
+	
+	public ArrayList<BooleanChromosome> selectElite() {
+		int eliteNum = (int) Math.ceil(this.populationNum * this.eliteSize);
+		ArrayList<BooleanChromosome> elite = new ArrayList<BooleanChromosome>(eliteNum);
+		
+		this.population.sort(aptitudeComparator);
+		for (int i = this.populationNum - eliteNum; i < this.populationNum; i++) {
+			elite.add(this.population.get(i));
+		}
+		
+		return elite;
+	}
+	
+	public void includeElite(ArrayList<BooleanChromosome> elite) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	public BooleanChromosome getBestChromosome() {
