@@ -96,7 +96,7 @@ public class GeneticAlgorithm {
 					&& (positionSelected < this.population.size()))
 				positionSelected++;
 			
-			selectedPopulation.set(i, this.population.get(positionSelected));
+			selectedPopulation.add(this.population.get(positionSelected));
 		}
 		
 		this.population = selectedPopulation;
@@ -118,10 +118,11 @@ public class GeneticAlgorithm {
 		
 		// iterate over pairs
 		for (int i = 0; i < selectedCandidatesIdx.size(); i+=2) {
-			crossover(
-					this.population.get(selectedCandidatesIdx.get(i)), this.population.get(selectedCandidatesIdx.get(i + 1)),
-					child1, child2
-					);
+			BooleanChromosome parent1 = this.population.get(selectedCandidatesIdx.get(i));
+			BooleanChromosome parent2 = this.population.get(selectedCandidatesIdx.get(i + 1));
+			child1 = parent1.clone();
+			child2 = parent1.clone();
+			crossover(parent1, parent2, child1, child2);
 			
 			this.population.set(selectedCandidatesIdx.get(i), child1);
 			this.population.set(selectedCandidatesIdx.get(i + 1), child2);
@@ -132,8 +133,6 @@ public class GeneticAlgorithm {
 		int chromLength = this.population.get(0).getLength();
 		// select point over 0 and chromosomeLength - 1
 		int crossoverPoint = random.nextInt(chromLength);
-		child1 = parent1.clone();
-		child2 = parent1.clone();
 		
 		ArrayList<BooleanGene> parent1Genes = parent1.getGenotype();
 		ArrayList<BooleanGene> parent2Genes = parent2.getGenotype();
@@ -142,14 +141,14 @@ public class GeneticAlgorithm {
 		
 		// before the crossover point
 		for (int i = 0; i < crossoverPoint; i++) {
-			child1Genes.set(i, parent1Genes.get(i));
-			child2Genes.set(i, parent2Genes.get(i));
+			child1Genes.add(parent1Genes.get(i));
+			child2Genes.add(parent2Genes.get(i));
 		}
 		
 		// after the crossover point
 		for (int i = crossoverPoint; i < chromLength; i++) {
-			child1Genes.set(i, parent2Genes.get(i));
-			child2Genes.set(i, parent1Genes.get(i));
+			child1Genes.add(parent2Genes.get(i));
+			child2Genes.add(parent1Genes.get(i));
 		}
 		
 		child1.setGenotype(child1Genes);

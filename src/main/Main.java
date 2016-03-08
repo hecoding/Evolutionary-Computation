@@ -30,7 +30,7 @@ public class Main {
 			ga.mutation();
 			ga.evaluatePopulation();
 		}
-		
+		System.out.println(ga);
 		System.out.println("best at the end: " + System.lineSeparator() + ga.getBestChromosome() + " "
 				+ ga.getBestChromosome().getAptitude() + " "
 				+ ga.getBestChromosome().getPhenotype() + System.lineSeparator());
