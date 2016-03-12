@@ -15,6 +15,9 @@ public class GeneticAlgorithm {
 	private int generationNum;
 	private int maxGenerationNum;
 	private BooleanChromosome bestChromosome;
+	private double bestAptitude;
+	private double averageAptitude;
+	private double averageScore;
 	private double crossProb;
 	private double mutationProb;
 	private double tolerance;
@@ -29,6 +32,9 @@ public class GeneticAlgorithm {
 		this.generationNum = 0;
 		this.maxGenerationNum = maxGenerationNum;
 		this.bestChromosome = null;
+		this.bestAptitude = 0;
+		this.averageAptitude = 0;
+		this.averageScore = 0;
 		this.crossProb = crossProb;
 		this.mutationProb = mutationProb;
 		this.tolerance = tolerance;
@@ -44,8 +50,8 @@ public class GeneticAlgorithm {
 		this.population.clear();
 		
 		for (int i = 0; i < this.populationNum; i++) {
-			// BooleanChromosome chr = new BooleanChromosome(-250, 250, this.tolerance, random);
-			BooleanChromosome chr = new BooleanChromosome(0, 20, this.tolerance, random);
+			BooleanChromosome chr = new BooleanChromosome(-250, 250, this.tolerance, random);
+			//BooleanChromosome chr = new BooleanChromosome(0, 20, this.tolerance, random);
 			chr.initialize();
 			chr.setAptitude(chr.evaluate());
 			this.population.add(chr);
@@ -53,30 +59,35 @@ public class GeneticAlgorithm {
 	}
 	
 	public void evaluatePopulation() {
-		double currentAggregateScore = 0;
-		double currentBestAptitude = 0;
-		double currentAptitudeSum = 0;
+		double aggregateScore = 0;
+		double bestAptitude = 0;
+		double aggregateAptitude = 0;
 		BooleanChromosome currentBest = null;
 		
+		// compute best and aggregate aptitude
 		for (BooleanChromosome chromosome : this.population) {
-			double currentAptitude = chromosome.getAptitude();
-			currentAptitudeSum += currentAptitude;
+			double chromAptitude = chromosome.getAptitude();
+			aggregateAptitude += chromAptitude;
 			
-			if (currentAptitude > currentBestAptitude) {
+			if (chromAptitude > bestAptitude) {
 				currentBest = chromosome;
-				currentBestAptitude = currentAptitude;
+				bestAptitude = chromAptitude;
 			}
 		}
 		
+		// compute and set score of population individuals
 		for (BooleanChromosome chromosome : this.population) {
-			chromosome.setScore(chromosome.getAptitude() / currentAptitudeSum);
-			chromosome.setAggregateScore(chromosome.getScore() + currentAggregateScore);
-			currentAggregateScore += chromosome.getScore();
+			chromosome.setScore(chromosome.getAptitude() / aggregateAptitude);
+			chromosome.setAggregateScore(chromosome.getScore() + aggregateScore);
+			aggregateScore += chromosome.getScore();
 		}
 		
-		if (this.bestChromosome == null || currentBestAptitude > this.bestChromosome.getAptitude()) {
+		// refresh best individual and aptitude statistics
+		if (this.bestChromosome == null || bestAptitude > this.bestChromosome.getAptitude())
 			this.bestChromosome = currentBest;
-		}
+		this.bestAptitude = bestAptitude;
+		this.averageAptitude = aggregateAptitude / this.population.size();
+		this.averageScore = aggregateScore / this.population.size();
 	}
 	
 	public void increaseGeneration() {
@@ -205,6 +216,18 @@ public class GeneticAlgorithm {
 	
 	public BooleanChromosome getBestChromosome() {
 		return bestChromosome;
+	}
+	
+	public double getBestAptitude() {
+		return this.bestAptitude;
+	}
+	
+	public double getAverageAptitude() {
+		return this.averageAptitude;
+	}
+	
+	public double getAverageScore() {
+		return this.averageScore;
 	}
 
 	public String toString() {
