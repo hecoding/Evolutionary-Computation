@@ -1,7 +1,7 @@
 package model.geneticAlgorithm;
 
-import view.gui.swing.MainWindow.Check;
-import view.gui.swing.MainWindow.No;
+import view.gui.swing.SettingsPanel.Check;
+import view.gui.swing.SettingsPanel.No;
 
 public class TransferGeneticAlgorithm {
 	private String funcion;

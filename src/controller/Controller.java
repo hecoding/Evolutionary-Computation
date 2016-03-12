@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import model.geneticAlgorithm.BooleanGeneticAlgorithm;
 import model.geneticAlgorithm.TransferGeneticAlgorithm;
-import view.gui.swing.MainWindow.Check;
-import view.gui.swing.MainWindow.Si;
-import view.gui.swing.MainWindow.No;
+import view.gui.swing.SettingsPanel.Check;
+import view.gui.swing.SettingsPanel.Si;
+import view.gui.swing.SettingsPanel.No;
 
 public class Controller {
 	private BooleanGeneticAlgorithm ga;
