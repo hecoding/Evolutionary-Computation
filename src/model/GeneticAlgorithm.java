@@ -10,7 +10,7 @@ import model.Chromosome.BooleanGene;
 
 public class GeneticAlgorithm {
 	private int populationNum;
-	private double eliteSize;
+	private double elitePercentage;
 	private ArrayList<BooleanChromosome> population;
 	private int generationNum;
 	private int maxGenerationNum;
@@ -22,9 +22,9 @@ public class GeneticAlgorithm {
 	private static Random random;
 	private static Comparator<BooleanChromosome> aptitudeComparator;
 
-	public GeneticAlgorithm(int populationNum, double eliteSize, int maxGenerationNum, double crossProb, double mutationProb, double tolerance, long seed) {
+	public GeneticAlgorithm(int populationNum, double elitePercentage, int maxGenerationNum, double crossProb, double mutationProb, double tolerance, long seed) {
 		this.populationNum = populationNum;
-		this.eliteSize = eliteSize;
+		this.elitePercentage = elitePercentage;
 		this.population = new ArrayList<BooleanChromosome>(populationNum);
 		this.generationNum = 0;
 		this.maxGenerationNum = maxGenerationNum;
@@ -183,7 +183,7 @@ public class GeneticAlgorithm {
 	}
 	
 	public ArrayList<BooleanChromosome> selectElite() {
-		int eliteNum = (int) Math.ceil(this.populationNum * this.eliteSize);
+		int eliteNum = (int) Math.ceil(this.populationNum * this.elitePercentage);
 		ArrayList<BooleanChromosome> elite = new ArrayList<BooleanChromosome>(eliteNum);
 		
 		this.population.sort(aptitudeComparator);
@@ -195,8 +195,12 @@ public class GeneticAlgorithm {
 	}
 	
 	public void includeElite(ArrayList<BooleanChromosome> elite) {
-		// TODO Auto-generated method stub
+		// reemplazo de los individuos peor adaptados
+		this.population.sort(aptitudeComparator);
 		
+		for (int i = 0; i < elite.size(); i++) {
+			this.population.set(i, elite.get(i));
+		}
 	}
 	
 	public BooleanChromosome getBestChromosome() {
