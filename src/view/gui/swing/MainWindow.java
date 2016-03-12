@@ -39,8 +39,6 @@ public class MainWindow extends JFrame {
 		mainPanel.add(settingsPanel, BorderLayout.LINE_START);
 		this.add(mainPanel);
 		
-		//----------Settings-----------
-		
 		this.addWindowListener(new WindowListener() {
 
 			@Override

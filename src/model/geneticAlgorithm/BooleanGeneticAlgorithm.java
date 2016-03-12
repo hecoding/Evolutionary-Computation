@@ -52,6 +52,31 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 			aptitudeComparator = new AptitudeComparator();
 	}
 	
+	public void restart(int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
+			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
+		this.populationNum = populationNum;
+		this.useElitism = useElitism;
+		this.elitePercentage = elitePercentage;
+		this.population = new ArrayList<BooleanChromosome>(populationNum);
+		this.elite = null;
+		this.currentGeneration = 0;
+		this.maxGenerationNum = maxGenerationNum;
+		this.bestChromosome = null;
+		this.bestAptitude = 0;
+		this.averageAptitude = 0;
+		this.averageScore = 0;
+		this.crossProb = crossProb;
+		this.mutationProb = mutationProb;
+		this.tolerance = tolerance;
+		this.customSeed = customSeed;
+		this.seed = seed;
+		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
+		
+		this.initialize();
+	}
+	
 	public void initialize() {
 		this.population.clear();
 		
@@ -65,6 +90,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 	}
 	
 	public void run() {
+		this.notifyStartRun();
 		//GeneticAlgorithm ga = new GeneticAlgorithm(30, 0.10, 10, 0.4, 0.01, 0.0001, 0);
 		//GeneticAlgorithm ga = new GeneticAlgorithm(100, 0.10, 100, 0.4, 0.01, 0.0001, 0);
 		this.initialize();
@@ -92,6 +118,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		//System.out.println("best at the end: " + System.lineSeparator() + this.getBestChromosome() + " "
 		//		+ this.getBestChromosome().getAptitude() + " "
 		//		+ this.getBestChromosome().getPhenotype() + System.lineSeparator());
+		this.notifyEndRun();
 	}
 	
 	public void evaluatePopulation() {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import model.geneticAlgorithm.BooleanGeneticAlgorithm;
 import model.geneticAlgorithm.TransferGeneticAlgorithm;
+import model.observer.GeneticAlgorithmObserver;
 import view.gui.swing.SettingsPanel.Check;
 import view.gui.swing.SettingsPanel.Si;
 import view.gui.swing.SettingsPanel.No;
@@ -19,9 +20,9 @@ public class Controller {
 		double elitePercentage = 0;
 		boolean elitism = transfer.getElitismo().getOpcion();
 		//if (elitism)
-		//	elitePercentage = transfer.getPorcElite();
+		//	elitePercentage = transfer.getPorcElite(); CUANDO SE LE PUEDA PONER A LA GUI
 		
-		this.ga = new BooleanGeneticAlgorithm(transfer.getPoblacion(), elitism, elitePercentage, transfer.getGeneraciones(),
+		this.ga.restart(transfer.getPoblacion(), elitism, elitePercentage, transfer.getGeneraciones(),
 				transfer.getPorcCruces(), transfer.getPorcMutacion(), transfer.getPrecision(),
 				transfer.getSemillaPersonalizada(), transfer.getSemilla());
 	}
@@ -65,5 +66,9 @@ public class Controller {
 	
 	private static double[] toPrimitiveArray(ArrayList<Double> a) {
 		return a.stream().mapToDouble(d -> d).toArray();
+	}
+	
+	public void addModelObserver(GeneticAlgorithmObserver o) {
+		this.ga.addObserver(o);
 	}
 }

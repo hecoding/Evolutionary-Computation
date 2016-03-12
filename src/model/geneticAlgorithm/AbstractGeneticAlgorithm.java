@@ -1,8 +1,12 @@
 package model.geneticAlgorithm;
 
+import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class AbstractGeneticAlgorithm {
+import model.observer.GeneticAlgorithmObserver;
+import model.observer.Observable;
+
+public abstract class AbstractGeneticAlgorithm implements Observable<GeneticAlgorithmObserver> {
 	protected int populationNum;
 	protected double tolerance;
 	protected int currentGeneration;
@@ -14,6 +18,11 @@ public abstract class AbstractGeneticAlgorithm {
 	protected boolean useElitism;
 	protected double elitePercentage;
 	protected static Random random;
+	protected ArrayList<GeneticAlgorithmObserver> observers;
+	
+	public AbstractGeneticAlgorithm() {
+		this.observers = new ArrayList<GeneticAlgorithmObserver>();
+	}
 	
 	public abstract void selection();
 	public abstract void reproduction();
@@ -61,5 +70,25 @@ public abstract class AbstractGeneticAlgorithm {
 
 	public double getElitePercentage() {
 		return elitePercentage;
+	}
+	
+	public void addObserver(GeneticAlgorithmObserver o) {
+		this.observers.add(o);
+	}
+	
+	public void removeObserver(GeneticAlgorithmObserver o) {
+		this.observers.remove(o);
+	}
+	
+	protected void notifyStartRun() {
+		for (GeneticAlgorithmObserver obs : this.observers) {
+			obs.onStartRun();
+		}
+	}
+	
+	protected void notifyEndRun() {
+		for (GeneticAlgorithmObserver obs : this.observers) {
+			obs.onEndRun();
+		}
 	}
 }

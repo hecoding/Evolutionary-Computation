@@ -1,8 +1,10 @@
 package view.gui.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.peer.ButtonPeer;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -11,18 +13,21 @@ import javax.swing.border.TitledBorder;
 
 import controller.Controller;
 import model.geneticAlgorithm.TransferGeneticAlgorithm;
+import model.observer.GeneticAlgorithmObserver;
 import view.gui.swing.ConfigPanel.ChoiceOption;
 import view.gui.swing.ConfigPanel.DoubleOption;
 import view.gui.swing.ConfigPanel.IntegerOption;
 import view.gui.swing.ConfigPanel.StrategyOption;
 
-public class SettingsPanel extends JPanel {
+public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private static final long serialVersionUID = 1L;
  	private Controller ctrl;
  	private TransferGeneticAlgorithm transfer;
+ 	JPanel buttonPanel;
 
 	public SettingsPanel(Controller ctrl) {
 		this.ctrl = ctrl;
+		this.ctrl.addModelObserver(this);
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -43,9 +48,19 @@ public class SettingsPanel extends JPanel {
 		settings.initialize();
 		this.add(settings, BorderLayout.CENTER);
 		
-		JPanel buttonPanel = new JPanel(new BorderLayout());
+		buttonPanel = new JPanel(new BorderLayout());
+		JButton runButton = new JButton();
 		JButton doSomth = new JButton();
 		JButton meteParams = new JButton();
+		runButton.setText("Run");
+		runButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ctrl.setParameters(transfer);
+				ctrl.run();
+			}
+		});
+		runButton.setVisible(false);
+		buttonPanel.add(runButton, BorderLayout.PAGE_START);
 		doSomth.setText("show in console");
 		doSomth.setToolTipText("Hi");
 		doSomth.addActionListener(new ActionListener() {
@@ -63,6 +78,29 @@ public class SettingsPanel extends JPanel {
 		buttonPanel.add(meteParams, BorderLayout.PAGE_END);
 		this.add(buttonPanel, BorderLayout.PAGE_END);
 		// meter quiza un JScrollPane y/o JSplitPane
+	}
+
+	@Override
+	public void onStartRun() {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				for (Component cmp : buttonPanel.getComponents()) {
+					cmp.setVisible(true);
+					cmp.setEnabled(false);
+				}
+			}
+		});
+	}
+
+	@Override
+	public void onEndRun() {
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				for (Component cmp : buttonPanel.getComponents()) {
+					cmp.setEnabled(true);
+				}
+			}
+		});
 	}
 	
 	public ConfigPanel<TransferGeneticAlgorithm> creaPanelConfiguracion() {
@@ -217,4 +255,5 @@ public class SettingsPanel extends JPanel {
 			return "rect. de " + ancho  + "x" + alto; 
 		}
 	}
+
 }
