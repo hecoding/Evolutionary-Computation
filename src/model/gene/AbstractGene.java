@@ -1,4 +1,4 @@
-package model.Chromosome;
+package model.gene;
 
 public abstract class AbstractGene<T> {
 	protected T information;

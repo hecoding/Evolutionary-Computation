@@ -1,6 +1,8 @@
-package model.Chromosome;
+package model.chromosome;
 
 import java.util.ArrayList;
+
+import model.gene.AbstractGene;
 
 public abstract class AbstractChromosome<T extends AbstractGene<?>> {
 	protected ArrayList<T> genes;

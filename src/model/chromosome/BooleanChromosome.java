@@ -1,7 +1,9 @@
-package model.Chromosome;
+package model.chromosome;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import model.gene.BooleanGene;
 
 public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	private int minx;
@@ -85,7 +87,7 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	
 	public String toString() {
 		String s = new String();
-		boolean unitaryGenes = this.genes.get(0).information.size() == 1;
+		boolean unitaryGenes = this.genes.get(0).getInformation().size() == 1;
 		
 		for (BooleanGene gen : this.genes) {
 			s = s + gen;

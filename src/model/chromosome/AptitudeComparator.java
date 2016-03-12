@@ -1,4 +1,4 @@
-package model.Chromosome;
+package model.chromosome;
 
 import java.util.Comparator;
 

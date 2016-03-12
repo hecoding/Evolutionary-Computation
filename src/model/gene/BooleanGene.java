@@ -1,4 +1,4 @@
-package model.Chromosome;
+package model.gene;
 
 import java.util.ArrayList;
 import java.util.Random;

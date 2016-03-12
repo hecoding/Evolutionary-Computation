@@ -1,35 +1,33 @@
-package model;
+package model.geneticAlgorithm;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
 
-import model.Chromosome.AptitudeComparator;
-import model.Chromosome.BooleanChromosome;
-import model.Chromosome.BooleanGene;
+import model.chromosome.AptitudeComparator;
+import model.chromosome.BooleanChromosome;
+import model.gene.BooleanGene;
 
-public class GeneticAlgorithm {
-	private int populationNum;
-	private double elitePercentage;
+public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 	private ArrayList<BooleanChromosome> population;
-	private int generationNum;
-	private int maxGenerationNum;
+	private ArrayList<BooleanChromosome> elite;
 	private BooleanChromosome bestChromosome;
 	private double bestAptitude;
 	private double averageAptitude;
 	private double averageScore;
-	private double crossProb;
-	private double mutationProb;
-	private double tolerance;
-	private long seed;
-	private static Random random;
 	private static Comparator<BooleanChromosome> aptitudeComparator;
+	private ArrayList<Double> bestChromosomeList;
+	private ArrayList<Double> averageAptitudeList;
+	private ArrayList<Double> bestAptitudeList;
 
-	public GeneticAlgorithm(int populationNum, double elitePercentage, int maxGenerationNum, double crossProb, double mutationProb, double tolerance, long seed) {
+	public BooleanGeneticAlgorithm(int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
+			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
 		this.populationNum = populationNum;
+		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
 		this.population = new ArrayList<BooleanChromosome>(populationNum);
-		this.generationNum = 0;
+		this.elite = null;
+		this.currentGeneration = 0;
 		this.maxGenerationNum = maxGenerationNum;
 		this.bestChromosome = null;
 		this.bestAptitude = 0;
@@ -38,10 +36,18 @@ public class GeneticAlgorithm {
 		this.crossProb = crossProb;
 		this.mutationProb = mutationProb;
 		this.tolerance = tolerance;
+		this.customSeed = customSeed;
 		this.seed = seed;
+		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		
-		if(random == null)
-			random = new Random(this.seed);
+		if(random == null) {
+			if(customSeed)
+				random = new Random(this.seed);
+			else
+				random = new Random();
+		}
 		if(aptitudeComparator == null)
 			aptitudeComparator = new AptitudeComparator();
 	}
@@ -56,6 +62,36 @@ public class GeneticAlgorithm {
 			chr.setAptitude(chr.evaluate());
 			this.population.add(chr);
 		}
+	}
+	
+	public void run() {
+		//GeneticAlgorithm ga = new GeneticAlgorithm(30, 0.10, 10, 0.4, 0.01, 0.0001, 0);
+		//GeneticAlgorithm ga = new GeneticAlgorithm(100, 0.10, 100, 0.4, 0.01, 0.0001, 0);
+		this.initialize();
+		//System.out.println(this);
+		this.evaluatePopulation();
+		//System.out.println("best: " + System.lineSeparator() + this.getBestChromosome() + " "
+		//					+ this.getBestChromosome().getAptitude() + " "
+		//					+ this.getBestChromosome().getPhenotype() + System.lineSeparator());
+		while(!this.finished()) {
+			if (this.useElitism)
+				this.elite = this.selectElite();
+			this.increaseGeneration();
+			this.selection();
+			this.reproduction();
+			this.mutation();
+			if (this.useElitism)
+				this.includeElite(this.elite);
+			this.evaluatePopulation();
+			
+			this.bestChromosomeList.add(this.getBestChromosome().getAptitude());
+			this.bestAptitudeList.add(this.getBestAptitude());
+			this.averageAptitudeList.add(this.getAverageAptitude());
+		}
+		//System.out.println(this);
+		//System.out.println("best at the end: " + System.lineSeparator() + this.getBestChromosome() + " "
+		//		+ this.getBestChromosome().getAptitude() + " "
+		//		+ this.getBestChromosome().getPhenotype() + System.lineSeparator());
 	}
 	
 	public void evaluatePopulation() {
@@ -88,14 +124,6 @@ public class GeneticAlgorithm {
 		this.bestAptitude = bestAptitude;
 		this.averageAptitude = aggregateAptitude / this.population.size();
 		this.averageScore = aggregateScore / this.population.size();
-	}
-	
-	public void increaseGeneration() {
-		this.generationNum++;
-	}
-	
-	public boolean finished() {
-		return this.generationNum == this.maxGenerationNum;
 	}
 	
 	/* GENETIC OPERATORS */
@@ -230,6 +258,18 @@ public class GeneticAlgorithm {
 		return this.averageScore;
 	}
 
+	public ArrayList<Double> getBestChromosomeList() {
+		return bestChromosomeList;
+	}
+
+	public ArrayList<Double> getAverageAptitudeList() {
+		return averageAptitudeList;
+	}
+
+	public ArrayList<Double> getBestAptitudeList() {
+		return bestAptitudeList;
+	}
+
 	public String toString() {
 		String s = new String();
 		
@@ -241,9 +281,5 @@ public class GeneticAlgorithm {
 		
 		return s;
 	}
-	
-	// TODO list
-	// make the algorithm generic
-	// generalize evaluatePopulation() for minimization handling also
 
 }
