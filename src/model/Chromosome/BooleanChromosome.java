@@ -44,7 +44,8 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	double f(double x) {
 		// primera función
 		//return -Math.abs(x * Math.sin( Math.sqrt(Math.abs(x)) ));
-		return x / (1 + (x * x));
+		//return x / (1 + (x * x));
+		return Math.abs(x * Math.sin( Math.sqrt(Math.abs(x)) ));
 	}
 	
 	private final int computeLength() {
