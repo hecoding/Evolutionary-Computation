@@ -13,21 +13,25 @@ import controller.Controller;
 import model.geneticAlgorithm.TransferGeneticAlgorithm;
 import model.observer.GeneticAlgorithmObserver;
 import view.gui.swing.ConfigPanel.ChoiceOption;
+import view.gui.swing.ConfigPanel.ConfigListener;
 import view.gui.swing.ConfigPanel.DoubleOption;
+import view.gui.swing.ConfigPanel.InnerOption;
 import view.gui.swing.ConfigPanel.IntegerOption;
 import view.gui.swing.ConfigPanel.StrategyOption;
-import view.gui.swing.ConfigPanel.InnerOption;
 
 public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private static final long serialVersionUID = 1L;
  	private Controller ctrl;
  	private TransferGeneticAlgorithm transfer;
- 	JPanel buttonPanel;
+ 	private StatusBarPanel status;
+ 	private JPanel buttonPanel;
+ 	JButton runButton;
 
-	public SettingsPanel(Controller ctrl, TransferGeneticAlgorithm transfer) {
+	public SettingsPanel(Controller ctrl, TransferGeneticAlgorithm transfer, StatusBarPanel status) {
 		this.ctrl = ctrl;
 		this.ctrl.addModelObserver(this);
 		this.transfer = transfer;
+		this.status = status;
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -44,10 +48,24 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		final ConfigPanel<TransferGeneticAlgorithm> settings = creaPanelConfiguracion();
 		settings.setTarget(transfer);
 		settings.initialize();
+		settings.addConfigListener(new ConfigListener() {
+			@Override
+			public void configChanged(boolean isConfigValid) {
+				if (!isConfigValid) {
+					runButton.setEnabled(false);
+					status.setStatus("Hay errores");
+				}
+				else {
+					status.setStatus("");
+					if (!runButton.isEnabled())
+						runButton.setEnabled(true);
+				}
+			}
+		});
 		this.add(settings, BorderLayout.CENTER);
 		
 		buttonPanel = new JPanel(new BorderLayout());
-		JButton runButton = new JButton();
+		runButton = new JButton();
 		JButton doSomth = new JButton();
 		JButton meteParams = new JButton();
 		runButton.setText("Lanzar");

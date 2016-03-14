@@ -21,14 +21,16 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 	private static final long serialVersionUID = 1L;
  	private Controller ctrl;
  	private TransferGeneticAlgorithm transfer;
+ 	private StatusBarPanel status;
  	JPanel centerPanel;
  	Plot2DPanel plot;
  	JPanel runButtonPanel;
  	
-	public CenterPanel(Controller ctrl, TransferGeneticAlgorithm transfer) {
+	public CenterPanel(Controller ctrl, TransferGeneticAlgorithm transfer, StatusBarPanel status) {
 		this.ctrl = ctrl;
 		this.ctrl.addModelObserver(this);
 		this.transfer = transfer;
+		this.status = status;
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -62,6 +64,8 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		gbc.gridy = GridBagConstraints.RELATIVE;
 		runButtonPanel.add(runButton, gbc);
 		this.add(runButtonPanel, BorderLayout.CENTER);
+		
+		this.add(this.status, BorderLayout.PAGE_END);
 	}
 
 	@Override
@@ -82,6 +86,8 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 				plot.addLinePlot("Mejor de la generación", ctrl.getBestAptitudeList());
 				plot.addLinePlot("Mejor absoluto", ctrl.getBestChromosomeList());
 				plot.setVisible(true);
+				
+				status.setStatus("Mejor: " + String.format("%.4f", ctrl.getResult()));
 			}
 		});
 	}
