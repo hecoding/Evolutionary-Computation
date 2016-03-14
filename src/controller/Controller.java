@@ -8,6 +8,7 @@ import model.observer.GeneticAlgorithmObserver;
 import view.gui.swing.SettingsPanel.Check;
 import view.gui.swing.SettingsPanel.Si;
 import view.gui.swing.SettingsPanel.No;
+import view.gui.swing.SettingsPanel.Percentage;
 
 public class Controller {
 	private BooleanGeneticAlgorithm ga;
@@ -19,8 +20,7 @@ public class Controller {
 	public void setParameters(TransferGeneticAlgorithm transfer) {
 		double elitePercentage = 0;
 		boolean elitism = transfer.getElitismo().getOpcion();
-		//if (elitism)
-		//	elitePercentage = transfer.getPorcElite(); CUANDO SE LE PUEDA PONER A LA GUI
+		elitePercentage = transfer.getPorcElite().getPerc();
 		
 		this.ga.restart(transfer.getPoblacion(), elitism, elitePercentage, transfer.getGeneraciones(),
 				transfer.getPorcCruces(), transfer.getPorcMutacion(), transfer.getPrecision(),
@@ -29,6 +29,8 @@ public class Controller {
 	
 	public TransferGeneticAlgorithm getParameters() {
 		TransferGeneticAlgorithm transfer = new TransferGeneticAlgorithm();
+		Check elitism;
+		Percentage porcElite;
 		
 		//transfer.setFuncion(this.ga.damelafunc());
 		transfer.setPrecision(this.ga.getTolerance());
@@ -38,12 +40,14 @@ public class Controller {
 		transfer.setPorcMutacion(this.ga.getMutationProb());
 		transfer.setSemillaPersonalizada(this.ga.isCustomSeed());
 		transfer.setSemilla((int) this.ga.getSeed());
-		Check elitism;
 		if (this.ga.isUseElitism())
 			elitism = new Si();
 		else
 			elitism = new No();
 		transfer.setElitismo(elitism);
+		porcElite = new Percentage();
+		porcElite.setPerc(this.ga.getElitePercentage());
+		transfer.setPorcElite(porcElite);
 		
 		return transfer;
 	}

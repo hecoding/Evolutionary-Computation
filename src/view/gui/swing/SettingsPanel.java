@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.peer.ButtonPeer;
-
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -18,6 +16,7 @@ import view.gui.swing.ConfigPanel.ChoiceOption;
 import view.gui.swing.ConfigPanel.DoubleOption;
 import view.gui.swing.ConfigPanel.IntegerOption;
 import view.gui.swing.ConfigPanel.StrategyOption;
+import view.gui.swing.ConfigPanel.InnerOption;
 
 public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private static final long serialVersionUID = 1L;
@@ -52,7 +51,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		JButton runButton = new JButton();
 		JButton doSomth = new JButton();
 		JButton meteParams = new JButton();
-		runButton.setText("Run");
+		runButton.setText("Relanzar");
 		runButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ctrl.setParameters(transfer);
@@ -170,7 +169,11 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				"bla			",                // tooltip
 				"elitismo",                             // campo
 				check))                             // elecciones (deben implementar Cloneable)
-		
+		.beginInner(new InnerOption<TransferGeneticAlgorithm,Percentage>(
+			  	"Elitismo", "bla", "porcElite", Percentage.class))
+		  		  .addInner(new DoubleOption<Double>(
+		  		     "porcentaje", "bla", "perc", 0, 1))
+		  		  .endInner()
 		.endOptions();
 		
 		return config;
@@ -223,6 +226,18 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		
 		public String toString() {
 			return "No"; 
+		}
+	}
+	
+	public static class Percentage {
+		private double perc;
+
+		public double getPerc() {
+			return perc;
+		}
+
+		public void setPerc(double perc) {
+			this.perc = perc;
 		}
 	}
 	
