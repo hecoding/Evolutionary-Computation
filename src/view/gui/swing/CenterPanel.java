@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,18 +14,21 @@ import javax.swing.SwingUtilities;
 import org.math.plot.Plot2DPanel;
 
 import controller.Controller;
+import model.geneticAlgorithm.TransferGeneticAlgorithm;
 import model.observer.GeneticAlgorithmObserver;
 
 public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 	private static final long serialVersionUID = 1L;
  	private Controller ctrl;
+ 	private TransferGeneticAlgorithm transfer;
  	JPanel centerPanel;
  	Plot2DPanel plot;
  	JPanel runButtonPanel;
  	
-	public CenterPanel(Controller ctrl) {
+	public CenterPanel(Controller ctrl, TransferGeneticAlgorithm transfer) {
 		this.ctrl = ctrl;
 		this.ctrl.addModelObserver(this);
+		this.transfer = transfer;
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -37,20 +39,21 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 
 	private void initGUI() {
 		this.setLayout(new BorderLayout());
+		CenterPanel that = this;// so we can use it into runButton callback
 		
 		this.setBackground(Color.GREEN);
 		plot = new Plot2DPanel();
 		plot.addLegend("SOUTH");
 		plot.setVisible(false);
-		this.add(plot, BorderLayout.CENTER);
 		
 		JButton runButton = new JButton();
-		runButton.setText("Run");
+		runButton.setText("Lanzar");
 		runButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//ctrl.setParameters(transfer); A VER QUE HAGO CON ESTO
+				ctrl.setParameters(that.transfer);
 				ctrl.run();
 				runButtonPanel.setVisible(false);
+				that.add(plot, BorderLayout.CENTER);
 			}
 		});
 		runButtonPanel = new JPanel(new GridBagLayout());
@@ -58,7 +61,7 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		gbc.gridx = 0;
 		gbc.gridy = GridBagConstraints.RELATIVE;
 		runButtonPanel.add(runButton, gbc);
-		this.add(runButtonPanel, BorderLayout.PAGE_END);
+		this.add(runButtonPanel, BorderLayout.CENTER);
 	}
 
 	@Override

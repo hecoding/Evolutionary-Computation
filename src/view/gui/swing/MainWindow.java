@@ -10,6 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import controller.Controller;
+import model.geneticAlgorithm.TransferGeneticAlgorithm;
 
 
 public class MainWindow extends JFrame {
@@ -17,9 +18,12 @@ public class MainWindow extends JFrame {
 	private static Controller ctrl;
 	private CenterPanel centerPanel;
 	private SettingsPanel settingsPanel;
+	private TransferGeneticAlgorithm transfer;
 	
 	public MainWindow(Controller controller) {
 		ctrl = controller;
+		this.transfer = new TransferGeneticAlgorithm();
+		this.transfer = ctrl.getParameters();
 		
 		this.setTitle("Evolutionary computation");
 		SwingUtilities.invokeLater(new Runnable() {
@@ -30,8 +34,8 @@ public class MainWindow extends JFrame {
 	}
 
 	private void initGUI() {
-		this.centerPanel = new CenterPanel(ctrl);
-		this.settingsPanel = new SettingsPanel(ctrl);
+		this.centerPanel = new CenterPanel(ctrl, this.transfer);
+		this.settingsPanel = new SettingsPanel(ctrl, this.transfer);
 		
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		

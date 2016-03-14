@@ -24,9 +24,10 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	private TransferGeneticAlgorithm transfer;
  	JPanel buttonPanel;
 
-	public SettingsPanel(Controller ctrl) {
+	public SettingsPanel(Controller ctrl, TransferGeneticAlgorithm transfer) {
 		this.ctrl = ctrl;
 		this.ctrl.addModelObserver(this);
+		this.transfer = transfer;
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -38,11 +39,9 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private void initGUI() {
 		this.setLayout(new BorderLayout());
 		this.setBorder(new TitledBorder("Ajustes"));
-		this.transfer = new TransferGeneticAlgorithm();
 		
 		//this.setBackground(Color.BLUE);
 		final ConfigPanel<TransferGeneticAlgorithm> settings = creaPanelConfiguracion();
-		transfer = ctrl.getParameters();
 		settings.setTarget(transfer);
 		settings.initialize();
 		this.add(settings, BorderLayout.CENTER);
@@ -51,7 +50,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		JButton runButton = new JButton();
 		JButton doSomth = new JButton();
 		JButton meteParams = new JButton();
-		runButton.setText("Relanzar");
+		runButton.setText("Lanzar");
 		runButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ctrl.setParameters(transfer);
