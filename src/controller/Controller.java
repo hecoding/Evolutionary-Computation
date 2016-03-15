@@ -2,6 +2,8 @@ package controller;
 
 import java.util.ArrayList;
 
+import model.function.Function;
+import model.function.FunctionFactory;
 import model.geneticAlgorithm.BooleanGeneticAlgorithm;
 import model.geneticAlgorithm.TransferGeneticAlgorithm;
 import model.observer.GeneticAlgorithmObserver;
@@ -18,15 +20,14 @@ public class Controller {
 	}
 	
 	public void setParameters(TransferGeneticAlgorithm transfer) {
+		Function function = FunctionFactory.getInstance().create(transfer.getFuncion());
 		double elitePercentage = 0;
 		boolean elitism = transfer.getElitismo().getOpcion();
 		elitePercentage = transfer.getPorcElite().getPerc();
-		boolean minimizationProblem = true;
-		//boolean minimization = transfer.getFuncion().isMinimizationProblem;
 		
-		this.ga.restart(minimizationProblem, transfer.getPoblacion(), elitism, elitePercentage, transfer.getGeneraciones(),
-				transfer.getPorcCruces(), transfer.getPorcMutacion(), transfer.getPrecision(),
-				transfer.getSemillaPersonalizada(), transfer.getSemilla());
+		this.ga.restart(function, transfer.getPoblacion(), elitism, elitePercentage,
+				transfer.getGeneraciones(), transfer.getPorcCruces(), transfer.getPorcMutacion(),
+				transfer.getPrecision(), transfer.getSemillaPersonalizada(), transfer.getSemilla());
 	}
 	
 	public TransferGeneticAlgorithm getParameters() {
@@ -34,7 +35,7 @@ public class Controller {
 		Check elitism;
 		Percentage porcElite;
 		
-		//transfer.setFuncion(this.ga.damelafunc());
+		transfer.setFuncion(this.ga.getFunction().getName());
 		transfer.setPrecision(this.ga.getTolerance());
 		transfer.setPoblacion(this.ga.getPopulationNum());
 		transfer.setGeneraciones(this.ga.getMaxGenerationNum());

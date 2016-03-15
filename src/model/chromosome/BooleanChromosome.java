@@ -3,22 +3,22 @@ package model.chromosome;
 import java.util.ArrayList;
 import java.util.Random;
 
+import model.function.Function;
 import model.gene.BooleanGene;
 
 public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
-	private int minx;
-	private int maxx;
 	private int length;
 	private double tolerance;
 	private Random random;
+	ArrayList<Double> params;
 	
-	public BooleanChromosome(int minx, int maxx, double tolerance, Random randomGenerator) {
-		this.minx = minx;
-		this.maxx = maxx;
+	public BooleanChromosome(Function function, double tolerance, Random randomGenerator) {
+		this.function = function;
 		this.tolerance = tolerance;
 		this.length = this.computeLength();
 		this.genes = new ArrayList<BooleanGene>(this.length);
 		this.random = randomGenerator;
+		this.params = new ArrayList<Double>(this.function.paramNum());
 	}
 
 	@Override
@@ -33,25 +33,24 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 
 	@Override
 	public double evaluate() {
-		return this.f((double) this.getPhenotype());
+		params.clear();
+		params.add((double) this.getPhenotype());
+		return this.function.f(params);
 	}
 	
 	@Override
 	public void refreshPhenotype() {
 		long chromosomeDecimal = chromo2dec(this.getListGenotype());
+		double minx = this.function.getLimits().get(0).minx;
+		double maxx = this.function.getLimits().get(0).maxx;
 		
-		this.phenotype = this.minx + (this.maxx - this.minx) * chromosomeDecimal / (Math.pow(2, this.length) - 1);
-	}
-	
-	double f(double x) {
-		// primera función
-		return -Math.abs(x * Math.sin( Math.sqrt(Math.abs(x)) ));
-		//return x / (1 + (x * x));
-		//return Math.abs(x * Math.sin( Math.sqrt(Math.abs(x)) ));
+		this.phenotype = minx + (maxx - minx) * chromosomeDecimal / (Math.pow(2, this.length) - 1);
 	}
 	
 	private final int computeLength() {
-		return (int) Math.ceil( log2( 1 + (this.maxx - this.minx) / this.tolerance ) );
+		double minx = this.function.getLimits().get(0).minx;
+		double maxx = this.function.getLimits().get(0).maxx;
+		return (int) Math.ceil( log2( 1 + (maxx - minx) / this.tolerance ) );
 	}
 	
 	private final long chromo2dec(ArrayList<Boolean> geneList) {
@@ -82,7 +81,7 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	}
 	
 	public BooleanChromosome clone() {
-		return new BooleanChromosome(this.minx, this.maxx, this.tolerance, random);
+		return new BooleanChromosome(this.function, this.tolerance, random);
 	}
 	
 	public String toString() {

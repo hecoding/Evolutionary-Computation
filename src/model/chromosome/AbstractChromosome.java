@@ -2,9 +2,11 @@ package model.chromosome;
 
 import java.util.ArrayList;
 
+import model.function.Function;
 import model.gene.AbstractGene;
 
 public abstract class AbstractChromosome<T extends AbstractGene<?>> {
+	protected Function function;
 	protected ArrayList<T> genes;
 	protected double phenotype;
 	protected double aptitude;
@@ -22,6 +24,14 @@ public abstract class AbstractChromosome<T extends AbstractGene<?>> {
 	public abstract double evaluate();
 	public abstract void refreshPhenotype();
 	
+	public Function getFunction() {
+		return function;
+	}
+
+	public void setFunction(Function function) {
+		this.function = function;
+	}
+
 	public ArrayList<T> getGenotype() {
 		return this.genes;
 	}

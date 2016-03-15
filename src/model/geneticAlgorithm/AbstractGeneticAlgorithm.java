@@ -3,11 +3,12 @@ package model.geneticAlgorithm;
 import java.util.ArrayList;
 import java.util.Random;
 
+import model.function.Function;
 import model.observer.GeneticAlgorithmObserver;
 import model.observer.Observable;
 
 public abstract class AbstractGeneticAlgorithm implements Observable<GeneticAlgorithmObserver> {
-	protected boolean minimizationProblem;
+	protected Function function;
 	protected int populationNum;
 	protected double tolerance;
 	protected int currentGeneration;
@@ -35,6 +36,10 @@ public abstract class AbstractGeneticAlgorithm implements Observable<GeneticAlgo
 	
 	public boolean finished() {
 		return this.currentGeneration == this.maxGenerationNum;
+	}
+
+	public Function getFunction() {
+		return function;
 	}
 
 	public int getPopulationNum() {

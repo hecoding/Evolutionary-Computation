@@ -6,6 +6,7 @@ import java.util.Random;
 
 import model.chromosome.AptitudeComparator;
 import model.chromosome.BooleanChromosome;
+import model.function.Function;
 import model.gene.BooleanGene;
 
 public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
@@ -20,10 +21,10 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 	private ArrayList<Double> averageAptitudeList;
 	private ArrayList<Double> bestAptitudeList;
 
-	public BooleanGeneticAlgorithm(boolean minimizationProblem, int populationNum,
+	public BooleanGeneticAlgorithm(Function function, int populationNum,
 			boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
-		this.minimizationProblem = minimizationProblem;
+		this.function = function;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
@@ -54,10 +55,10 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 			aptitudeComparator = new AptitudeComparator();
 	}
 	
-	public void restart(boolean minimizationProblem, int populationNum, boolean useElitism,
+	public void restart(Function function, int populationNum, boolean useElitism,
 			double elitePercentage, int maxGenerationNum, double crossProb, double mutationProb,
 			double tolerance, boolean customSeed, long seed) {
-		this.minimizationProblem = minimizationProblem;
+		this.function = function;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
@@ -85,14 +86,13 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		this.population.clear();
 		
 		for (int i = 0; i < this.populationNum; i++) {
-			BooleanChromosome chr = new BooleanChromosome(-250, 250, this.tolerance, random);
-			//BooleanChromosome chr = new BooleanChromosome(0, 20, this.tolerance, random);
+			BooleanChromosome chr = new BooleanChromosome(this.function, this.tolerance, random);
 			chr.initialize();
 			chr.setAptitude(chr.evaluate());
 			this.population.add(chr);
 		}
 		
-		if(this.minimizationProblem)
+		if(this.function.isMinimization())
 			this.aptitudeShifting();
 	}
 	
