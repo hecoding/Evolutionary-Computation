@@ -146,9 +146,10 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		}
 		
 		// refresh best individual and aptitude statistics
-		if (this.bestChromosome == null || bestAptitude > this.bestChromosome.getAptitude())
+		if (this.bestChromosome == null || bestAptitude > this.bestChromosome.getAptitude()) {
 			this.bestChromosome = currentBest;
-		this.bestAptitude = bestAptitude;
+			this.bestAptitude = bestAptitude;
+		}
 		this.averageAptitude = aggregateAptitude / this.population.size();
 		this.averageScore = aggregateScore / this.population.size();
 	}
