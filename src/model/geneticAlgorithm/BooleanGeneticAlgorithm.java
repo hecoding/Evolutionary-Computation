@@ -20,8 +20,10 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 	private ArrayList<Double> averageAptitudeList;
 	private ArrayList<Double> bestAptitudeList;
 
-	public BooleanGeneticAlgorithm(int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
+	public BooleanGeneticAlgorithm(boolean minimizationProblem, int populationNum,
+			boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
+		this.minimizationProblem = minimizationProblem;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
@@ -52,8 +54,10 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 			aptitudeComparator = new AptitudeComparator();
 	}
 	
-	public void restart(int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
-			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
+	public void restart(boolean minimizationProblem, int populationNum, boolean useElitism,
+			double elitePercentage, int maxGenerationNum, double crossProb, double mutationProb,
+			double tolerance, boolean customSeed, long seed) {
+		this.minimizationProblem = minimizationProblem;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
@@ -87,6 +91,9 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 			chr.setAptitude(chr.evaluate());
 			this.population.add(chr);
 		}
+		
+		if(this.minimizationProblem)
+			this.aptitudeShifting();
 	}
 	
 	public void run() {
@@ -152,6 +159,21 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		}
 		this.averageAptitude = aggregateAptitude / this.population.size();
 		this.averageScore = aggregateScore / this.population.size();
+	}
+	
+	/* transform minimization problem into maximization */
+	private void aptitudeShifting() {
+		Double cmax = Double.NEGATIVE_INFINITY;
+		
+		for (BooleanChromosome chrom : this.population) {
+			if(chrom.getAptitude() > cmax)
+				cmax = chrom.getAptitude(); // get worst aptitude
+		}
+		cmax = cmax * 1.05; // evitate aggregateAptitude = 0 when population converges
+		
+		for (BooleanChromosome chrom : this.population) {
+			chrom.setAptitude(cmax - chrom.getAptitude());
+		}
 	}
 	
 	/* GENETIC OPERATORS */

@@ -21,8 +21,10 @@ public class Controller {
 		double elitePercentage = 0;
 		boolean elitism = transfer.getElitismo().getOpcion();
 		elitePercentage = transfer.getPorcElite().getPerc();
+		boolean minimizationProblem = true;
+		//boolean minimization = transfer.getFuncion().isMinimizationProblem;
 		
-		this.ga.restart(transfer.getPoblacion(), elitism, elitePercentage, transfer.getGeneraciones(),
+		this.ga.restart(minimizationProblem, transfer.getPoblacion(), elitism, elitePercentage, transfer.getGeneraciones(),
 				transfer.getPorcCruces(), transfer.getPorcMutacion(), transfer.getPrecision(),
 				transfer.getSemillaPersonalizada(), transfer.getSemilla());
 	}
