@@ -33,6 +33,10 @@ public class BooleanGene extends AbstractGene<ArrayList<Boolean>> {
 		return mutated;
 	}
 	
+	public int getLength() {
+		return this.information.size();
+	}
+	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		

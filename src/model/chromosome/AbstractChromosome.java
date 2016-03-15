@@ -8,13 +8,12 @@ import model.gene.AbstractGene;
 public abstract class AbstractChromosome<T extends AbstractGene<?>> {
 	protected Function function;
 	protected ArrayList<T> genes;
-	protected double phenotype;
+	protected ArrayList<Double> phenotype;
 	protected double aptitude;
 	protected double score;
 	protected double aggregateScore;
 	
 	public AbstractChromosome() {
-		this.phenotype = 0;
 		this.aptitude = 0;
 		this.score = 0;
 		this.aggregateScore = 0;
@@ -41,7 +40,7 @@ public abstract class AbstractChromosome<T extends AbstractGene<?>> {
 		this.refreshPhenotype();
 	}
 
-	public double getPhenotype() {
+	public ArrayList<Double> getPhenotype() {
 		this.refreshPhenotype();
 		
 		return this.phenotype;
