@@ -30,6 +30,10 @@ public abstract class AbstractChromosome<T extends AbstractGene<?>> {
 	public void setFunction(Function function) {
 		this.function = function;
 	}
+	
+	public void add(T gene) {
+		this.genes.add(gene);
+	}
 
 	public ArrayList<T> getGenotype() {
 		return this.genes;

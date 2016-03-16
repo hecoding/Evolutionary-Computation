@@ -87,7 +87,12 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 				plot.addLinePlot("Mejor absoluto", ctrl.getBestChromosomeList());
 				plot.setVisible(true);
 				
-				status.setStatus("Mejor: " + String.format("%.4f", ctrl.getResult()));
+				String s = new String();
+				for (Double res : ctrl.getResult()) {
+					s = s + String.format("%.4f", res) + ", ";
+				}
+				s = s.substring(0, s.length() - 2);
+				status.setStatus("Mejor: " + s);
 			}
 		});
 	}

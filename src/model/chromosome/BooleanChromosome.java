@@ -35,17 +35,26 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	@Override
 	public double evaluate() {
 		params.clear();
-		params.add((double) this.getPhenotype());
+		params.addAll(this.getPhenotype());
 		return this.function.f(params);
 	}
 	
 	@Override
 	public void refreshPhenotype() {
-		long chromosomeDecimal = chromo2dec(this.getListGenotype());
-		double minx = this.function.getLimits().get(0).minx;
-		double maxx = this.function.getLimits().get(0).maxx;
+		ArrayList<Long> geneDecimal = new ArrayList<Long>(this.genes.size());
+		for (BooleanGene gene : this.genes) {
+			geneDecimal.add(gene2dec(gene));
+		}
 		
-		this.phenotype = minx + (maxx - minx) * chromosomeDecimal / (Math.pow(2, this.geneLengths) - 1);
+		ArrayList<Double> phenotype = new ArrayList<Double>();
+		for (int i = 0; i < this.genes.size(); i++) {
+			double minx = this.function.getLimits().get(i).minx;
+			double maxx = this.function.getLimits().get(i).maxx;
+			
+			phenotype.add(minx + (maxx - minx) * geneDecimal.get(i) / (Math.pow(2, this.geneLengths.get(i)) - 1));
+		}
+		
+		this.phenotype = phenotype;
 	}
 	
 	private final ArrayList<Integer> computeGeneLengths() {
@@ -62,29 +71,21 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 		return (int) Math.ceil( log2( 1 + (maxx - minx) / this.tolerance ) );
 	}
 	
-	private final long chromo2dec(ArrayList<Boolean> geneList) {
-		long chromosomeDecimal = 0;
+	private final long gene2dec(BooleanGene gene) {
+		long geneDecimal = 0;
 		
-		for (Boolean bit : geneList) {
-			chromosomeDecimal = chromosomeDecimal * 2 + (bit ? 1 : 0);
+		for (Boolean bit : gene.getInformation()) {
+			geneDecimal = geneDecimal * 2 + (bit ? 1 : 0);
 		}
 		
-		return chromosomeDecimal;
-	}
-	
-	private ArrayList<Boolean> getListGenotype() {
-		ArrayList<Boolean> geneList = new ArrayList<Boolean>();
-		for (BooleanGene gen : this.getGenotype()) {
-			geneList.addAll(gen.getInformation());
-		}
-		
-		return geneList;
+		return geneDecimal;
 	}
 	
 	private static final double log2(double n) {
 		return Math.log(n)/Math.log(2.0);
 	}
 	
+	/* Retrieve the count of the bits of all the genes */
 	public int getTotalLength() {
 		int length = 0;
 		for (Integer l : this.geneLengths) { // HACE FALTA ESTE ARRAY? GENE[i].SIZE()?
@@ -103,13 +104,12 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	
 	public String toString() {
 		String s = new String();
-		boolean unitaryGenes = this.genes.get(0).getInformation().size() == 1;
 		
 		for (BooleanGene gen : this.genes) {
 			s = s + gen;
-			if (!unitaryGenes) s += "|";
+			s += "|";
 		}
-		if (!unitaryGenes) s = s.substring(0, s.length() - 1);
+		s = s.substring(0, s.length() - 1);
 		
 		return s;
 	}

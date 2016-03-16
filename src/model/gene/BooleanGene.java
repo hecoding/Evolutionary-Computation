@@ -5,8 +5,14 @@ import java.util.Random;
 
 public class BooleanGene extends AbstractGene<ArrayList<Boolean>> {
 	
+	/* Return empty gene */
 	public BooleanGene() {
 		this.information = new ArrayList<Boolean>();
+	}
+	
+	/* Return empty gene with n allocated position */
+	public BooleanGene(int n) {
+		this.information = new ArrayList<Boolean>(n);
 	}
 	
 	public BooleanGene(Boolean b) {
@@ -20,6 +26,18 @@ public class BooleanGene extends AbstractGene<ArrayList<Boolean>> {
 		this.information = g;
 	}
 	
+	public BooleanGene(Integer length, Random random) {
+		this.information = new ArrayList<Boolean>(length);
+		
+		for (int i = 0; i < length; i++) {
+			this.information.add(random.nextBoolean());
+		}
+	}
+	
+	public void add(Boolean b) {
+		this.information.add(b);
+	}
+
 	public boolean mutate(double mutationProb, Random random) {
 		boolean mutated = false;
 		

@@ -226,29 +226,33 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 	}
 	
 	private void crossover(BooleanChromosome parent1, BooleanChromosome parent2, BooleanChromosome child1, BooleanChromosome child2) {
-		int chromLength = this.population.get(0).getLength();
-		// select point over 0 and chromosomeLength - 1
-		int crossoverPoint = random.nextInt(chromLength);
-		
-		ArrayList<BooleanGene> parent1Genes = parent1.getGenotype();
-		ArrayList<BooleanGene> parent2Genes = parent2.getGenotype();
-		ArrayList<BooleanGene> child1Genes = new ArrayList<BooleanGene>(chromLength);
-		ArrayList<BooleanGene> child2Genes = new ArrayList<BooleanGene>(chromLength);
-		
-		// before the crossover point
-		for (int i = 0; i < crossoverPoint; i++) {
-			child1Genes.add(parent1Genes.get(i));
-			child2Genes.add(parent2Genes.get(i));
+		int geneNum = this.population.get(0).getGeneNum();
+		for (int i = 0; i < geneNum; i++) {
+			int currentGeneLength = this.population.get(0).getGenotype().get(i).getLength();
+			
+			// select point over 0 and the current gene length - 1
+			int crossoverPoint = random.nextInt(currentGeneLength);
+			
+			BooleanGene parent1Gene = parent1.getGenotype().get(i);
+			BooleanGene parent2Gene = parent2.getGenotype().get(i);
+			BooleanGene child1Gene = new BooleanGene(currentGeneLength);
+			BooleanGene child2Gene = new BooleanGene(currentGeneLength);
+			
+			// before the crossover point
+			for (int j = 0; j < crossoverPoint; j++) {
+				child1Gene.add(parent1Gene.getInformation().get(j));
+				child2Gene.add(parent2Gene.getInformation().get(j));
+			}
+			
+			// after the crossover point
+			for (int j = crossoverPoint; j < currentGeneLength; j++) {
+				child1Gene.add(parent2Gene.getInformation().get(j));
+				child2Gene.add(parent1Gene.getInformation().get(j));
+			}
+			
+			child1.add(child1Gene);
+			child2.add(child2Gene);
 		}
-		
-		// after the crossover point
-		for (int i = crossoverPoint; i < chromLength; i++) {
-			child1Genes.add(parent2Genes.get(i));
-			child2Genes.add(parent1Genes.get(i));
-		}
-		
-		child1.setGenotype(child1Genes);
-		child2.setGenotype(child2Genes);
 		
 		child1.setAptitude(child1.evaluate());
 		child2.setAptitude(child2.evaluate());
