@@ -56,6 +56,7 @@ public class BooleanGene extends AbstractGene<ArrayList<Boolean>> {
 	}
 	
 	public String toString() {
+		if(this.information == null || this.information.size() == 0) return "";
 		StringBuilder builder = new StringBuilder();
 		
 		for (int i = 0; i < this.information.size(); i++) {

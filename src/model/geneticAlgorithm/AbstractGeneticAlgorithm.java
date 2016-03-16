@@ -8,7 +8,7 @@ import model.observer.GeneticAlgorithmObserver;
 import model.observer.Observable;
 
 public abstract class AbstractGeneticAlgorithm implements Observable<GeneticAlgorithmObserver> {
-	protected Function function;
+	protected static Function function;
 	protected int populationNum;
 	protected double tolerance;
 	protected int currentGeneration;

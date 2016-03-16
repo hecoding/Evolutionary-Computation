@@ -12,14 +12,14 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	private Random random;
 	ArrayList<Double> params;
 	
-	public BooleanChromosome(Function function, double tolerance, Random randomGenerator) {
-		this.function = function;
+	public BooleanChromosome(Function func, double tolerance, Random randomGenerator) {
+		function = func;
 		this.tolerance = tolerance;
 		this.geneLengths = this.computeGeneLengths();
-		this.genes = new ArrayList<BooleanGene>(this.function.paramNum());
-		this.phenotype = new ArrayList<Double>(this.function.paramNum());
+		this.genes = new ArrayList<BooleanGene>(function.paramNum());
+		this.phenotype = new ArrayList<Double>(function.paramNum());
 		this.random = randomGenerator;
-		this.params = new ArrayList<Double>(this.function.paramNum());
+		this.params = new ArrayList<Double>(function.paramNum());
 	}
 
 	@Override
@@ -27,7 +27,7 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 		if (!this.genes.isEmpty())
 			this.genes.clear();
 		
-		for (int i = 0; i < this.function.paramNum(); i++) {
+		for (int i = 0; i < function.paramNum(); i++) {
 			this.genes.add( new BooleanGene(this.geneLengths.get(i), this.random) );
 		}
 	}
@@ -36,7 +36,7 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	public double evaluate() {
 		params.clear();
 		params.addAll(this.getPhenotype());
-		return this.function.f(params);
+		return function.f(params);
 	}
 	
 	@Override
@@ -48,8 +48,8 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 		
 		ArrayList<Double> phenotype = new ArrayList<Double>();
 		for (int i = 0; i < this.genes.size(); i++) {
-			double minx = this.function.getLimits().get(i).minx;
-			double maxx = this.function.getLimits().get(i).maxx;
+			double minx = function.getLimits().get(i).minx;
+			double maxx = function.getLimits().get(i).maxx;
 			
 			phenotype.add(minx + (maxx - minx) * geneDecimal.get(i) / (Math.pow(2, this.geneLengths.get(i)) - 1));
 		}
@@ -58,10 +58,10 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	}
 	
 	private final ArrayList<Integer> computeGeneLengths() {
-		ArrayList<Integer> lengths = new ArrayList<Integer>(this.function.paramNum());
+		ArrayList<Integer> lengths = new ArrayList<Integer>(function.paramNum());
 		
-		for (int i = 0; i < this.function.paramNum(); i++) {
-			lengths.add(computeLength(this.function.getLimits().get(i).minx, this.function.getLimits().get(i).maxx));
+		for (int i = 0; i < function.paramNum(); i++) {
+			lengths.add(computeLength(function.getLimits().get(i).minx, function.getLimits().get(i).maxx));
 		}
 		
 		return lengths;
@@ -99,7 +99,7 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	}
 	
 	public BooleanChromosome clone() {
-		return new BooleanChromosome(this.function, this.tolerance, random);
+		return new BooleanChromosome(function, this.tolerance, random);
 	}
 	
 	public String toString() {

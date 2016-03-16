@@ -21,10 +21,10 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 	private ArrayList<Double> averageAptitudeList;
 	private ArrayList<Double> bestAptitudeList;
 
-	public BooleanGeneticAlgorithm(Function function, int populationNum,
+	public BooleanGeneticAlgorithm(Function func, int populationNum,
 			boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
-		this.function = function;
+		function = func;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
@@ -55,10 +55,10 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 			aptitudeComparator = new AptitudeComparator();
 	}
 	
-	public void restart(Function function, int populationNum, boolean useElitism,
+	public void restart(Function func, int populationNum, boolean useElitism,
 			double elitePercentage, int maxGenerationNum, double crossProb, double mutationProb,
 			double tolerance, boolean customSeed, long seed) {
-		this.function = function;
+		function = func;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
@@ -86,13 +86,13 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		this.population.clear();
 		
 		for (int i = 0; i < this.populationNum; i++) {
-			BooleanChromosome chr = new BooleanChromosome(this.function, this.tolerance, random);
+			BooleanChromosome chr = new BooleanChromosome(function, this.tolerance, random);
 			chr.initialize();
 			chr.setAptitude(chr.evaluate());
 			this.population.add(chr);
 		}
 		
-		if(this.function.isMinimization())
+		if(function.isMinimization())
 			this.aptitudeShifting();
 	}
 	
@@ -130,7 +130,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 	
 	public void evaluatePopulation() {
 		double aggregateScore = 0;
-		double bestAptitude = 0;
+		double bestAptitude = Double.NEGATIVE_INFINITY;
 		double aggregateAptitude = 0;
 		BooleanChromosome currentBest = null;
 		
@@ -325,12 +325,20 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 	}
 
 	public String toString() {
+		if(this.population == null || this.population.size() == 0) return "";
 		String s = new String();
 		
 		s += "pos     genotype     aptitude phenotype" + System.lineSeparator();
 		for (int i = 0; i < this.population.size(); i++) {
 			BooleanChromosome elem = this.population.get(i);
-			s += i + " " + elem + " " + String.format("%5f", elem.getAptitude()) + " " + String.format("%.5f", elem.getPhenotype()) + System.lineSeparator();
+			s += i + " " + elem + " " + String.format("%5f", elem.getAptitude()) + " ";
+			
+			for (Double el : elem.getPhenotype()) {
+				s += String.format("%.5f", el) + " ";
+			}
+			s = s.substring(0, s.length() - 1);
+			
+			s += System.lineSeparator();
 		}
 		
 		return s;

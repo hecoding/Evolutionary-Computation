@@ -61,7 +61,13 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 					s = s + String.format("%.4f", res) + ", ";
 				}
 				s = s.substring(0, s.length() - 2);
-				result.setText("Mejor: " + s);
+				if(ctrl.getResult().size() > 1)
+					s = "Mejor: " + "[" + s + "]";
+				else
+					s = "Mejor: " + s;
+				
+				s = s + " Resultado: " + String.format("%.4f", ctrl.getFunctionResult());
+				result.setText(s);
 			}
 		});
 	}

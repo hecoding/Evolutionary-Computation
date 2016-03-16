@@ -6,7 +6,7 @@ import model.function.Function;
 import model.gene.AbstractGene;
 
 public abstract class AbstractChromosome<T extends AbstractGene<?>> {
-	protected Function function;
+	protected static Function function;
 	protected ArrayList<T> genes;
 	protected ArrayList<Double> phenotype;
 	protected double aptitude;
@@ -27,8 +27,8 @@ public abstract class AbstractChromosome<T extends AbstractGene<?>> {
 		return function;
 	}
 
-	public void setFunction(Function function) {
-		this.function = function;
+	public void setFunction(Function func) {
+		function = func;
 	}
 	
 	public void add(T gene) {
