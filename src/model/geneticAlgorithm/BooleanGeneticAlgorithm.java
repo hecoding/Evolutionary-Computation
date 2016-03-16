@@ -98,14 +98,10 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 	
 	public void run() {
 		this.notifyStartRun();
-		//GeneticAlgorithm ga = new GeneticAlgorithm(30, 0.10, 10, 0.4, 0.01, 0.0001, 0);
-		//GeneticAlgorithm ga = new GeneticAlgorithm(100, 0.10, 100, 0.4, 0.01, 0.0001, 0);
+		
 		this.initialize();
-		//System.out.println(this);
 		this.evaluatePopulation();
-		//System.out.println("best: " + System.lineSeparator() + this.getBestChromosome() + " "
-		//					+ this.getBestChromosome().getAptitude() + " "
-		//					+ this.getBestChromosome().getPhenotype() + System.lineSeparator());
+		
 		while(!this.finished()) {
 			if (this.useElitism)
 				this.elite = this.selectElite();
@@ -121,10 +117,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 			this.bestAptitudeList.add(this.getBestAptitude());
 			this.averageAptitudeList.add(this.getAverageAptitude());
 		}
-		//System.out.println(this);
-		//System.out.println("best at the end: " + System.lineSeparator() + this.getBestChromosome() + " "
-		//		+ this.getBestChromosome().getAptitude() + " "
-		//		+ this.getBestChromosome().getPhenotype() + System.lineSeparator());
+		
 		this.notifyEndRun();
 	}
 	
