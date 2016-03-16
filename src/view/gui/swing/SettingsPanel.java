@@ -44,7 +44,6 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		this.setLayout(new BorderLayout());
 		this.setBorder(new TitledBorder("Ajustes"));
 		
-		//this.setBackground(Color.BLUE);
 		final ConfigPanel<TransferGeneticAlgorithm> settings = creaPanelConfiguracion();
 		settings.setTarget(transfer);
 		settings.initialize();
@@ -53,10 +52,10 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			public void configChanged(boolean isConfigValid) {
 				if (!isConfigValid) {
 					runButton.setEnabled(false);
-					status.setStatus("Hay errores");
+					status.setErrors(true);
 				}
 				else {
-					status.setStatus("");
+					status.setErrors(false);
 					if (!runButton.isEnabled())
 						runButton.setEnabled(true);
 				}

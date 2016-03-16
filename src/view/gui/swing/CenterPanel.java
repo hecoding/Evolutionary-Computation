@@ -1,7 +1,6 @@
 package view.gui.swing;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -43,7 +42,6 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		this.setLayout(new BorderLayout());
 		CenterPanel that = this;// so we can use it into runButton callback
 		
-		this.setBackground(Color.GREEN);
 		plot = new Plot2DPanel();
 		plot.addLegend("SOUTH");
 		plot.setVisible(false);
@@ -86,13 +84,6 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 				plot.addLinePlot("Mejor de la generación", ctrl.getBestAptitudeList());
 				plot.addLinePlot("Mejor absoluto", ctrl.getBestChromosomeList());
 				plot.setVisible(true);
-				
-				String s = new String();
-				for (Double res : ctrl.getResult()) {
-					s = s + String.format("%.4f", res) + ", ";
-				}
-				s = s.substring(0, s.length() - 2);
-				status.setStatus("Mejor: " + s);
 			}
 		});
 	}
