@@ -15,6 +15,7 @@ public class TransferGeneticAlgorithm {
 	private Check elitismo;
 	private Percentage porcElite;
 	private int paramFunc4 = 1;
+	private Check cromosomaReal;
 	
 	public String getFuncion() {
 		return funcion;
@@ -102,6 +103,14 @@ public class TransferGeneticAlgorithm {
 
 	public void setParamFunc4(int paramFunc4) {
 		this.paramFunc4 = paramFunc4;
+	}
+
+	public Check getCromosomaReal() {
+		return cromosomaReal;
+	}
+
+	public void setCromosomaReal(Check cromosomaReal) {
+		this.cromosomaReal = cromosomaReal;
 	}
 
 	public String toString() {

@@ -3,12 +3,14 @@ package model.function;
 import java.util.ArrayList;
 
 public class Function4 extends Function {
+	private boolean real;
 
-	public Function4(int n) {
+	public Function4(int n, boolean real) {
 		this.name = "función 4";
 		this.minimization = true;
 		this.varNum = n;
 		this.limits = new ArrayList<Limit>(this.varNum);
+		this.real = real;
 		
 		Limit limit = new Limit(0, Math.PI);
 		for (int i = 0; i < this.varNum; i++)
@@ -24,6 +26,10 @@ public class Function4 extends Function {
 		}
 		
 		return -res;
+	}
+
+	public boolean isReal() {
+		return real;
 	}
 
 }

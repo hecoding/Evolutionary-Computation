@@ -137,6 +137,11 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				"bla",	         // texto a usar como 'tooltip' cuando pasas el puntero
 				"paramFunc4",					     // campo (espera que haya un getGrosor y un setGrosor)
 				1, Integer.MAX_VALUE))
+		.addOption(new StrategyOption<TransferGeneticAlgorithm>( // -- eleccion de objeto configurable
+				"Cromosoma reales",					 // etiqueta
+				"bla			",                // tooltip
+				"cromosomaReal",	             // campo
+				check))                             // elecciones (deben implementar Cloneable)
 		
 		.addOption(new DoubleOption<TransferGeneticAlgorithm>(   // -- doble, parecido a entero
 			    "Precisión",	 					 // etiqueta

@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 
 import model.function.Function;
+import model.function.Function4;
 import model.function.FunctionFactory;
 import model.geneticAlgorithm.BooleanGeneticAlgorithm;
 import model.geneticAlgorithm.TransferGeneticAlgorithm;
@@ -21,8 +22,10 @@ public class Controller {
 	
 	public void setParameters(TransferGeneticAlgorithm transfer) {
 		Function function;
-		if(transfer.getFuncion() == "función 4")
-			function = FunctionFactory.getInstance().createFunc4(transfer.getParamFunc4());
+		if(transfer.getFuncion() == "función 4") {
+			function = FunctionFactory.getInstance().createFunc4(transfer.getParamFunc4(), transfer.getCromosomaReal().getOpcion());
+			
+		}
 		else
 			function = FunctionFactory.getInstance().create(transfer.getFuncion());
 		double elitePercentage = 0;
@@ -41,6 +44,12 @@ public class Controller {
 		
 		transfer.setFuncion(this.ga.getFunction().getName());
 		transfer.setParamFunc4(this.ga.getFunction().paramNum());
+		Check real = new No();
+		if(this.ga.getFunction().getName() == "función 4") {
+			if(((Function4) this.ga.getFunction()).isReal())
+				real = new Si();
+		}
+		transfer.setCromosomaReal(real);
 		transfer.setPrecision(this.ga.getTolerance());
 		transfer.setPoblacion(this.ga.getPopulationNum());
 		transfer.setGeneraciones(this.ga.getMaxGenerationNum());

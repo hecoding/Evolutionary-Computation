@@ -23,8 +23,8 @@ public class FunctionFactory {
 			throw new IllegalArgumentException("Unknown function");
 	}
 	
-	public Function createFunc4(int n) {
-		return new Function4(n);
+	public Function createFunc4(int n, boolean b) {
+		return new Function4(n, b);
 	}
 	
 }
