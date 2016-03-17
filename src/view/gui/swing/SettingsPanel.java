@@ -132,6 +132,12 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			    "funcion",   							 // campo (debe haber un getColor y un setColor)
 			    funciones))                            // elecciones posibles
 		
+		.addOption(new IntegerOption<TransferGeneticAlgorithm>(  // -- entero
+				"# param func 4", 					     // texto a usar como etiqueta del campo
+				"bla",	         // texto a usar como 'tooltip' cuando pasas el puntero
+				"paramFunc4",					     // campo (espera que haya un getGrosor y un setGrosor)
+				1, Integer.MAX_VALUE))
+		
 		.addOption(new DoubleOption<TransferGeneticAlgorithm>(   // -- doble, parecido a entero
 			    "Precisión",	 					 // etiqueta
 			    "bla",				 // tooltip

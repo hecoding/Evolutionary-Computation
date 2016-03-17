@@ -20,7 +20,11 @@ public class Controller {
 	}
 	
 	public void setParameters(TransferGeneticAlgorithm transfer) {
-		Function function = FunctionFactory.getInstance().create(transfer.getFuncion());
+		Function function;
+		if(transfer.getFuncion() == "función 4")
+			function = FunctionFactory.getInstance().createFunc4(transfer.getParamFunc4());
+		else
+			function = FunctionFactory.getInstance().create(transfer.getFuncion());
 		double elitePercentage = 0;
 		boolean elitism = transfer.getElitismo().getOpcion();
 		elitePercentage = transfer.getPorcElite().getPerc();
@@ -36,6 +40,7 @@ public class Controller {
 		Percentage porcElite;
 		
 		transfer.setFuncion(this.ga.getFunction().getName());
+		transfer.setParamFunc4(this.ga.getFunction().paramNum());
 		transfer.setPrecision(this.ga.getTolerance());
 		transfer.setPoblacion(this.ga.getPopulationNum());
 		transfer.setGeneraciones(this.ga.getMaxGenerationNum());

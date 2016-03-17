@@ -17,12 +17,14 @@ public class FunctionFactory {
 			return new Function2();
 		else if (id == "función 3")
 			return new Function3();
-		else if (id == "función 4")
-			return new Function4(5);
 		else if (id == "función 5")
 			return new Function5();
 		else
 			throw new IllegalArgumentException("Unknown function");
+	}
+	
+	public Function createFunc4(int n) {
+		return new Function4(n);
 	}
 	
 }

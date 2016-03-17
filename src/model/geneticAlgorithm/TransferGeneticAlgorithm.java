@@ -14,6 +14,7 @@ public class TransferGeneticAlgorithm {
 	private int semilla;
 	private Check elitismo;
 	private Percentage porcElite;
+	private int paramFunc4 = 1;
 	
 	public String getFuncion() {
 		return funcion;
@@ -95,8 +96,17 @@ public class TransferGeneticAlgorithm {
 		this.porcElite = porcElite;
 	}
 
+	public int getParamFunc4() {
+		return paramFunc4;
+	}
+
+	public void setParamFunc4(int paramFunc4) {
+		this.paramFunc4 = paramFunc4;
+	}
+
 	public String toString() {
 		return "función: " + this.funcion + System.lineSeparator() +
+				"param func 4: " + this.paramFunc4 + System.lineSeparator() +
 				"precisión: " + this.precision + System.lineSeparator() +
 				"población: " + this.poblacion + System.lineSeparator() +
 				"generaciones: " + this.generaciones + System.lineSeparator() +
