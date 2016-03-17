@@ -35,6 +35,7 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 		this.add(this.errors);
 		this.add(this.status);
 		this.add(this.result);
+		this.result.setToolTipText("Mejor xi y f(xi)");
 	}
 	
 	public void setErrors(Boolean b) {

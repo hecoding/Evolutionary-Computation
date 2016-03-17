@@ -114,7 +114,7 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	
 	public BooleanChromosome clone() {
 		BooleanChromosome chr = new BooleanChromosome(function, this.genes, this.tolerance, random);
-		chr.setAptitude(chr.evaluate());
+		chr.setAptitude(this.getAptitude());
 		
 		return chr;
 	}

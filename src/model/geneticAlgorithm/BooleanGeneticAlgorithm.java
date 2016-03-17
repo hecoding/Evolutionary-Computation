@@ -13,6 +13,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 	private ArrayList<BooleanChromosome> population;
 	private ArrayList<BooleanChromosome> elite;
 	private BooleanChromosome bestChromosome;
+	private ArrayList<Double> inspectedAptitude;
 	private double bestAptitude;
 	private double averageAptitude;
 	private double averageScore;
@@ -33,6 +34,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		this.currentGeneration = 0;
 		this.maxGenerationNum = maxGenerationNum;
 		this.bestChromosome = null;
+		this.inspectedAptitude = new ArrayList<Double>(populationNum);
 		this.bestAptitude = 0;
 		this.averageAptitude = 0;
 		this.averageScore = 0;
@@ -91,15 +93,14 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 			chr.setAptitude(chr.evaluate());
 			this.population.add(chr);
 		}
-		
-		if(function.isMinimization())
-			this.aptitudeShifting();
 	}
 	
 	public void run() {
 		this.notifyStartRun();
 		
 		this.initialize();
+		if(function.isMinimization())
+			this.aptitudeShifting();
 		this.evaluatePopulation();
 		
 		while(!this.finished()) {
@@ -109,10 +110,10 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 			this.selection();
 			this.reproduction();
 			this.mutation();
-			if(function.isMinimization())
-				this.aptitudeShifting();
 			if (this.useElitism)
 				this.includeElite(this.elite);
+			if(function.isMinimization())
+				this.aptitudeShifting();
 			this.evaluatePopulation();
 			
 			this.bestChromosomeList.add(this.getBestChromosome().getAptitude());
@@ -126,38 +127,63 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 	public void evaluatePopulation() {
 		double aggregateScore = 0;
 		double bestAptitude = Double.NEGATIVE_INFINITY;
+		if(this.population.get(0).getFunction().isMinimization()) {
+			bestAptitude = Double.POSITIVE_INFINITY;
+		}
 		double aggregateAptitude = 0;
+		double aggregateInspectedAptitude = 0;
 		BooleanChromosome currentBest = null;
 		
 		// compute best and aggregate aptitude
+		int i = 0;
 		for (BooleanChromosome chromosome : this.population) {
 			double chromAptitude = chromosome.getAptitude();
 			aggregateAptitude += chromAptitude;
+			aggregateInspectedAptitude += this.inspectedAptitude.get(i);
 			
-			if (chromAptitude > bestAptitude) {
-				currentBest = chromosome;
-				bestAptitude = chromAptitude;
+			if(this.population.get(0).getFunction().isMinimization()) {
+				if (chromAptitude < bestAptitude) {
+					currentBest = chromosome;
+					bestAptitude = chromAptitude;
+				}
 			}
+			else {
+				if (chromAptitude > bestAptitude) {
+					currentBest = chromosome;
+					bestAptitude = chromAptitude;
+				}
+			}
+			i++;
 		}
 		
 		// compute and set score of population individuals
+		i = 0;
 		for (BooleanChromosome chromosome : this.population) {
-			chromosome.setScore(chromosome.getAptitude() / aggregateAptitude);
+			chromosome.setScore(this.inspectedAptitude.get(i) / aggregateInspectedAptitude);
 			chromosome.setAggregateScore(chromosome.getScore() + aggregateScore);
 			aggregateScore += chromosome.getScore();
+			i++;
 		}
 		
 		// refresh best individual and aptitude statistics
-		if (this.bestChromosome == null || bestAptitude > this.bestChromosome.getAptitude()) {
-			this.bestChromosome = currentBest;
-			this.bestAptitude = bestAptitude;
+		if(this.population.get(0).getFunction().isMinimization()) {
+			if (this.bestChromosome == null || bestAptitude < this.bestChromosome.getAptitude()) {
+				this.bestChromosome = currentBest.clone();
+			}
 		}
+		else {			
+			if (this.bestChromosome == null || bestAptitude > this.bestChromosome.getAptitude()) {
+				this.bestChromosome = currentBest.clone();
+			}
+		}
+		this.bestAptitude = bestAptitude;
 		this.averageAptitude = aggregateAptitude / this.population.size();
 		this.averageScore = aggregateScore / this.population.size();
 	}
 	
 	/* transform minimization problem into maximization */
 	private void aptitudeShifting() {
+		this.inspectedAptitude.clear();
 		Double cmax = Double.NEGATIVE_INFINITY;
 		
 		for (BooleanChromosome chrom : this.population) {
@@ -167,7 +193,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		cmax = cmax * 1.05; // avoid aggregateAptitude = 0 when population converges
 		
 		for (BooleanChromosome chrom : this.population) {
-			chrom.setAptitude(cmax - chrom.getAptitude());
+			this.inspectedAptitude.add(cmax - chrom.getAptitude());
 		}
 	}
 	
@@ -183,8 +209,8 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 			prob = random.nextDouble();
 			positionSelected = 0;
 			
-			while((prob > this.population.get(positionSelected).getAggregateScore())
-					&& (positionSelected < this.population.size()))
+			while((positionSelected < this.population.size()) &&
+					(prob > this.population.get(positionSelected).getAggregateScore()))
 				positionSelected++;
 			
 			selectedPopulation.add(this.population.get(positionSelected).clone());
@@ -275,8 +301,15 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		ArrayList<BooleanChromosome> elite = new ArrayList<BooleanChromosome>(eliteNum);
 		
 		this.population.sort(aptitudeComparator);
-		for (int i = this.populationNum - eliteNum; i < this.populationNum; i++) {
-			elite.add(this.population.get(i).clone());
+		if(this.population.get(0).getFunction().isMinimization()) {
+			for (int i = 0; i < eliteNum; i++) {
+				elite.add(this.population.get(i).clone());
+			}
+		}
+		else {			
+			for (int i = this.populationNum - eliteNum; i < this.populationNum; i++) {
+				elite.add(this.population.get(i).clone());
+			}
 		}
 		
 		return elite;
