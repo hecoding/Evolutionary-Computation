@@ -27,7 +27,7 @@ public class Controller {
 		
 		this.ga.restart(function, transfer.getPoblacion(), elitism, elitePercentage,
 				transfer.getGeneraciones(), transfer.getPorcCruces(), transfer.getPorcMutacion(),
-				transfer.getPrecision(), transfer.getSemillaPersonalizada(), transfer.getSemilla());
+				transfer.getPrecision(), transfer.getSemillaPersonalizada().getOpcion(), transfer.getSemilla());
 	}
 	
 	public TransferGeneticAlgorithm getParameters() {
@@ -41,7 +41,12 @@ public class Controller {
 		transfer.setGeneraciones(this.ga.getMaxGenerationNum());
 		transfer.setPorcCruces(this.ga.getCrossProb());
 		transfer.setPorcMutacion(this.ga.getMutationProb());
-		transfer.setSemillaPersonalizada(this.ga.isCustomSeed());
+		Check semillaPersonalizada;
+		if(this.ga.isCustomSeed())
+			semillaPersonalizada = new Si();
+		else
+			semillaPersonalizada = new No();
+		transfer.setSemillaPersonalizada(semillaPersonalizada);
 		transfer.setSemilla((int) this.ga.getSeed());
 		if (this.ga.isUseElitism())
 			elitism = new Si();

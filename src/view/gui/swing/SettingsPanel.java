@@ -160,6 +160,11 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			    "porcMutacion",                     // campo
 			    0, 100,							     // min y max, aplicando factor, si hay; vale usar Double.*_INFINITY) 
 			    100))								 // opcional: factor de multiplicacion != 1.0, para mostrar porcentajes
+		.addOption(new StrategyOption<TransferGeneticAlgorithm>( // -- eleccion de objeto configurable
+				"Semilla manual",					 // etiqueta
+				"bla			",                // tooltip
+				"semillaPersonalizada",             // campo
+				check))                             // elecciones (deben implementar Cloneable)
 		.addOption(new IntegerOption<TransferGeneticAlgorithm>(  // -- entero
 				"Semilla",						     // texto a usar como etiqueta del campo
 				"bla",       // texto a usar como 'tooltip' cuando pasas el puntero
@@ -186,9 +191,9 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				"elitismo",                             // campo
 				check))                             // elecciones (deben implementar Cloneable)
 		.beginInner(new InnerOption<TransferGeneticAlgorithm,Percentage>(
-			  	"Elitismo", "bla", "porcElite", Percentage.class))
+			  	"% de elitismo", "bla", "porcElite", Percentage.class))
 		  		  .addInner(new DoubleOption<Double>(
-		  		     "porcentaje", "bla", "perc", 0, 1))
+		  		     "", "bla", "perc", 0, 1))
 		  		  .endInner()
 		.endOptions();
 		

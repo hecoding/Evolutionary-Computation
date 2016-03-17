@@ -10,7 +10,7 @@ public class TransferGeneticAlgorithm {
 	private int generaciones;
 	private double porcCruces;
 	private double porcMutacion;
-	private boolean semillaPersonalizada;
+	private Check semillaPersonalizada;
 	private int semilla;
 	private Check elitismo;
 	private Percentage porcElite;
@@ -63,11 +63,11 @@ public class TransferGeneticAlgorithm {
 		this.porcMutacion = porcMutacion;
 	}
 
-	public boolean getSemillaPersonalizada() {
+	public Check getSemillaPersonalizada() {
 		return semillaPersonalizada;
 	}
 
-	public void setSemillaPersonalizada(boolean semillaPersonalizada) {
+	public void setSemillaPersonalizada(Check semillaPersonalizada) {
 		this.semillaPersonalizada = semillaPersonalizada;
 	}
 
