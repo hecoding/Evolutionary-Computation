@@ -109,6 +109,8 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 			this.selection();
 			this.reproduction();
 			this.mutation();
+			if(function.isMinimization())
+				this.aptitudeShifting();
 			if (this.useElitism)
 				this.includeElite(this.elite);
 			this.evaluatePopulation();
@@ -162,7 +164,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 			if(chrom.getAptitude() > cmax)
 				cmax = chrom.getAptitude(); // get worst aptitude
 		}
-		cmax = cmax * 1.05; // evitate aggregateAptitude = 0 when population converges
+		cmax = cmax * 1.05; // avoid aggregateAptitude = 0 when population converges
 		
 		for (BooleanChromosome chrom : this.population) {
 			chrom.setAptitude(cmax - chrom.getAptitude());
@@ -185,7 +187,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 					&& (positionSelected < this.population.size()))
 				positionSelected++;
 			
-			selectedPopulation.add(this.population.get(positionSelected));
+			selectedPopulation.add(this.population.get(positionSelected).clone());
 		}
 		
 		this.population = selectedPopulation;
@@ -209,8 +211,8 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		for (int i = 0; i < selectedCandidatesIdx.size(); i+=2) {
 			BooleanChromosome parent1 = this.population.get(selectedCandidatesIdx.get(i));
 			BooleanChromosome parent2 = this.population.get(selectedCandidatesIdx.get(i + 1));
-			child1 = parent1.clone();
-			child2 = parent1.clone();
+			child1 = parent1.clone(); child1.setGenotype(new ArrayList<BooleanGene>());
+			child2 = parent1.clone(); child2.setGenotype(new ArrayList<BooleanGene>());
 			crossover(parent1, parent2, child1, child2);
 			
 			this.population.set(selectedCandidatesIdx.get(i), child1);
@@ -274,7 +276,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		
 		this.population.sort(aptitudeComparator);
 		for (int i = this.populationNum - eliteNum; i < this.populationNum; i++) {
-			elite.add(this.population.get(i));
+			elite.add(this.population.get(i).clone());
 		}
 		
 		return elite;
