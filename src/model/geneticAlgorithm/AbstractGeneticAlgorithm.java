@@ -1,13 +1,17 @@
 package model.geneticAlgorithm;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
+import model.chromosome.AbstractChromosome;
+import model.chromosome.AptitudeComparator;
 import model.function.Function;
 import model.observer.GeneticAlgorithmObserver;
 import model.observer.Observable;
 
-public abstract class AbstractGeneticAlgorithm implements Observable<GeneticAlgorithmObserver> {
+public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> implements Observable<GeneticAlgorithmObserver> {
+	protected ArrayList<T> population;
 	protected static Function function;
 	protected int populationNum;
 	protected double tolerance;
@@ -19,20 +23,90 @@ public abstract class AbstractGeneticAlgorithm implements Observable<GeneticAlgo
 	protected long seed;
 	protected boolean useElitism;
 	protected double elitePercentage;
+	protected ArrayList<Double> inspectedAptitude;
 	protected static Random random;
 	protected ArrayList<GeneticAlgorithmObserver> observers;
 	
+	protected ArrayList<T> elite;
+	protected T bestChromosome;
+	protected double bestAptitude;
+	protected double averageAptitude;
+	protected double averageScore;
+	protected static Comparator<AbstractChromosome<?>> aptitudeComparator;
+	protected ArrayList<Double> bestChromosomeList;
+	protected ArrayList<Double> averageAptitudeList;
+	protected ArrayList<Double> bestAptitudeList;
+	
 	public AbstractGeneticAlgorithm() {
 		this.observers = new ArrayList<GeneticAlgorithmObserver>();
+	}
+	
+	public AbstractGeneticAlgorithm(Function func, int populationNum,
+			boolean useElitism, double elitePercentage, int maxGenerationNum,
+			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
+		function = func;
+		this.populationNum = populationNum;
+		this.useElitism = useElitism;
+		this.elitePercentage = elitePercentage;
+		this.population = new ArrayList<T>(populationNum);
+		this.elite = null;
+		this.currentGeneration = 0;
+		this.maxGenerationNum = maxGenerationNum;
+		this.bestChromosome = null;
+		this.inspectedAptitude = new ArrayList<Double>(populationNum);
+		this.bestAptitude = 0;
+		this.averageAptitude = 0;
+		this.averageScore = 0;
+		this.crossProb = crossProb;
+		this.mutationProb = mutationProb;
+		this.tolerance = tolerance;
+		this.customSeed = customSeed;
+		this.seed = seed;
+		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.observers = new ArrayList<GeneticAlgorithmObserver>();
+		
+		if(random == null) {
+			if(customSeed)
+				random = new Random(this.seed);
+			else
+				random = new Random();
+		}
+		if(aptitudeComparator == null)
+			aptitudeComparator = new AptitudeComparator();
 	}
 	
 	public abstract void selection();
 	public abstract void reproduction();
 	public abstract void mutation();
 	
-	public abstract void restart(Function func, int populationNum, boolean useElitism,
-			double elitePercentage, int maxGenerationNum, double crossProb, double mutationProb,
-			double tolerance, boolean customSeed, long seed);
+	public void restart(Function func, int populationNum, boolean useElitism,
+			double elitePercentage, int maxGenerationNum, double crossProb,
+			double mutationProb, double tolerance, boolean customSeed, long seed) {
+		function = func;
+		this.populationNum = populationNum;
+		this.useElitism = useElitism;
+		this.elitePercentage = elitePercentage;
+		this.population = new ArrayList<T>(populationNum);
+		this.elite = null;
+		this.currentGeneration = 0;
+		this.maxGenerationNum = maxGenerationNum;
+		this.bestChromosome = null;
+		this.bestAptitude = 0;
+		this.averageAptitude = 0;
+		this.averageScore = 0;
+		this.crossProb = crossProb;
+		this.mutationProb = mutationProb;
+		this.tolerance = tolerance;
+		this.customSeed = customSeed;
+		this.seed = seed;
+		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
+		
+		this.initialize();
+	}
 	
 	public void increaseGeneration() {
 		this.currentGeneration++;
@@ -102,13 +176,165 @@ public abstract class AbstractGeneticAlgorithm implements Observable<GeneticAlgo
 		}
 	}
 
-	public abstract void run();
+	public abstract void initialize();
 
-	public abstract Object getBestChromosome();
+	public void run() {
+		this.notifyStartRun();
+		
+		this.initialize();
+		if(function.isMinimization())
+			this.aptitudeShifting();
+		this.evaluatePopulation();
+		
+		while(!this.finished()) {
+			if (this.useElitism)
+				this.elite = this.selectElite();
+			this.increaseGeneration();
+			this.selection();
+			this.reproduction();
+			this.mutation();
+			if (this.useElitism)
+				this.includeElite(this.elite);
+			if(function.isMinimization())
+				this.aptitudeShifting();
+			this.evaluatePopulation();
+			
+			this.bestChromosomeList.add(this.getBestChromosome().getAptitude());
+			this.bestAptitudeList.add(this.getBestAptitude());
+			this.averageAptitudeList.add(this.getAverageAptitude());
+		}
+		
+		this.notifyEndRun();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void evaluatePopulation() {
+		double aggregateScore = 0;
+		double bestAptitude = Double.NEGATIVE_INFINITY;
+		if(this.population.get(0).getFunction().isMinimization()) {
+			bestAptitude = Double.POSITIVE_INFINITY;
+		}
+		double aggregateAptitude = 0;
+		double aggregateInspectedAptitude = 0;
+		T currentBest = null;
+		
+		// compute best and aggregate aptitude
+		int i = 0;
+		for (T chromosome : this.population) {
+			double chromAptitude = chromosome.getAptitude();
+			aggregateAptitude += chromAptitude;
+			aggregateInspectedAptitude += this.inspectedAptitude.get(i);
+			
+			if(this.population.get(0).getFunction().isMinimization()) {
+				if (chromAptitude < bestAptitude) {
+					currentBest = chromosome;
+					bestAptitude = chromAptitude;
+				}
+			}
+			else {
+				if (chromAptitude > bestAptitude) {
+					currentBest = chromosome;
+					bestAptitude = chromAptitude;
+				}
+			}
+			i++;
+		}
+		
+		// compute and set score of population individuals
+		i = 0;
+		for (T chromosome : this.population) {
+			chromosome.setScore(this.inspectedAptitude.get(i) / aggregateInspectedAptitude);
+			chromosome.setAggregateScore(chromosome.getScore() + aggregateScore);
+			aggregateScore += chromosome.getScore();
+			i++;
+		}
+		
+		// refresh best individual and aptitude statistics
+		if(this.population.get(0).getFunction().isMinimization()) {
+			if (this.bestChromosome == null || bestAptitude < this.bestChromosome.getAptitude()) {
+				this.bestChromosome = (T) currentBest.clone();
+			}
+		}
+		else {			
+			if (this.bestChromosome == null || bestAptitude > this.bestChromosome.getAptitude()) {
+				this.bestChromosome = (T) currentBest.clone();
+			}
+		}
+		this.bestAptitude = bestAptitude;
+		this.averageAptitude = aggregateAptitude / this.population.size();
+		this.averageScore = aggregateScore / this.population.size();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ArrayList<T> selectElite() {
+		int eliteNum = (int) Math.ceil(this.populationNum * this.elitePercentage);
+		ArrayList<T> elite = new ArrayList<T>(eliteNum);
+		
+		this.population.sort(aptitudeComparator);
+		if(this.population.get(0).getFunction().isMinimization()) {
+			for (int i = 0; i < eliteNum; i++) {
+				elite.add((T) this.population.get(i).clone());
+			}
+		}
+		else {			
+			for (int i = this.populationNum - eliteNum; i < this.populationNum; i++) {
+				elite.add((T) this.population.get(i).clone());
+			}
+		}
+		
+		return elite;
+	}
+	
+	public void includeElite(ArrayList<T> elite) {
+		// substitution of the worst adapted individuals
+		this.population.sort(aptitudeComparator);
+		
+		for (int i = 0; i < elite.size(); i++) {
+			this.population.set(i, elite.get(i));
+		}
+	}
+	
+	/* transform minimization problem into maximization */
+	private void aptitudeShifting() {
+		this.inspectedAptitude.clear();
+		Double cmax = Double.NEGATIVE_INFINITY;
+		
+		for (T chrom : this.population) {
+			if(chrom.getAptitude() > cmax)
+				cmax = chrom.getAptitude(); // get worst aptitude
+		}
+		cmax = cmax * 1.05; // avoid aggregateAptitude = 0 when population converges
+		
+		for (T chrom : this.population) {
+			this.inspectedAptitude.add(cmax - chrom.getAptitude());
+		}
+	}
 
-	public abstract ArrayList<Double> getBestChromosomeList();
+	public T getBestChromosome() {
+		return bestChromosome;
+	}
+	
+	public double getBestAptitude() {
+		return this.bestAptitude;
+	}
+	
+	public double getAverageAptitude() {
+		return this.averageAptitude;
+	}
+	
+	public double getAverageScore() {
+		return this.averageScore;
+	}
 
-	public abstract ArrayList<Double> getBestAptitudeList();
+	public ArrayList<Double> getBestChromosomeList() {
+		return bestChromosomeList;
+	}
 
-	public abstract ArrayList<Double> getAverageAptitudeList();
+	public ArrayList<Double> getAverageAptitudeList() {
+		return averageAptitudeList;
+	}
+
+	public ArrayList<Double> getBestAptitudeList() {
+		return bestAptitudeList;
+	}
 }

@@ -5,13 +5,14 @@ import java.util.ArrayList;
 import model.function.Function;
 import model.gene.AbstractGene;
 
-public abstract class AbstractChromosome<T extends AbstractGene<?>> {
+public abstract class AbstractChromosome<T extends AbstractGene<?>> implements Cloneable {
 	protected static Function function;
 	protected ArrayList<T> genes;
 	protected ArrayList<Double> phenotype;
 	protected double aptitude;
 	protected double score;
 	protected double aggregateScore;
+	ArrayList<Double> params;
 	
 	public AbstractChromosome() {
 		this.aptitude = 0;
@@ -20,8 +21,12 @@ public abstract class AbstractChromosome<T extends AbstractGene<?>> {
 	}
 	
 	public abstract void initialize();
-	public abstract double evaluate();
-	public abstract void refreshPhenotype();
+	
+	public double evaluate() {
+		params.clear();
+		params.addAll(this.getPhenotype());
+		return function.f(params);
+	}
 	
 	public Function getFunction() {
 		return function;
@@ -41,14 +46,9 @@ public abstract class AbstractChromosome<T extends AbstractGene<?>> {
 	
 	public void setGenotype(ArrayList<T> genes) {
 		this.genes = genes;
-		this.refreshPhenotype();
 	}
 
-	public ArrayList<Double> getPhenotype() {
-		this.refreshPhenotype();
-		
-		return this.phenotype;
-	}
+	public abstract ArrayList<Double> getPhenotype();
 
 	public double getAptitude() {
 		return aptitude;
@@ -73,4 +73,8 @@ public abstract class AbstractChromosome<T extends AbstractGene<?>> {
 	public void setAggregateScore(double aggregateScore) {
 		this.aggregateScore = aggregateScore;
 	}
+	
+	public abstract AbstractChromosome<T> clone();
+	
+	public abstract String toString();
 }

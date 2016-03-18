@@ -120,7 +120,6 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	
 	public ConfigPanel<TransferGeneticAlgorithm> creaPanelConfiguracion() {
 		String[] funciones = new String[] { "función 1", "función 2", "función 3", "función 4", "función 5" };
-		Forma[] formas = new Forma[] { new Rectangulo() };
 		Check[] check = new Check[] {new Si(), new No()};
 		
 		ConfigPanel<TransferGeneticAlgorithm> config = new ConfigPanel<TransferGeneticAlgorithm>();

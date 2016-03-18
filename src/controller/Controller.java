@@ -2,7 +2,6 @@ package controller;
 
 import java.util.ArrayList;
 
-import model.chromosome.AbstractChromosome;
 import model.function.Function;
 import model.function.Function1;
 import model.function.Function4;
@@ -18,7 +17,7 @@ import view.gui.swing.SettingsPanel.No;
 import view.gui.swing.SettingsPanel.Percentage;
 
 public class Controller {
-	private AbstractGeneticAlgorithm ga;
+	private AbstractGeneticAlgorithm<?> ga;
 	private BooleanGeneticAlgorithm ba = new BooleanGeneticAlgorithm(new Function1(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
 	private DoubleGeneticAlgorithm da = new DoubleGeneticAlgorithm(new Function1(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
 	
@@ -90,13 +89,13 @@ public class Controller {
 	}
 	
 	public double getFunctionResult() {
-		return ((AbstractChromosome) this.ga.getBestChromosome()).getFunction().f(
-				((AbstractChromosome) this.ga.getBestChromosome()).getPhenotype()
+		return (this.ga.getBestChromosome()).getFunction().f(
+				this.ga.getBestChromosome().getPhenotype()
 				);
 	}
 	
 	public ArrayList<Double> getResult() {
-		return ((AbstractChromosome) this.ga.getBestChromosome()).getPhenotype();
+		return this.ga.getBestChromosome().getPhenotype();
 	}
 	
 	public double[] getBestChromosomeList() {

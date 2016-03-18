@@ -9,28 +9,26 @@ import model.gene.DoubleGene;
 public class DoubleChromosome extends AbstractChromosome<DoubleGene> {
 	
 	private double tolerance;
-	private ArrayList<Double> goodGenes;
 	private Random random;
-	private ArrayList<Double> params;
-	private double maxRange;
+	private static double maxRange;
 	
 	public DoubleChromosome(Function func, double tolerance, Random randomGenerator) {
 		function = func;
 		this.tolerance = tolerance;
-		this.goodGenes = new ArrayList<Double>();
+		this.genes = new ArrayList<DoubleGene>();
 		this.random = randomGenerator;
 		this.params = new ArrayList<Double>(function.paramNum());
 		this.setMaxRange(function.paramNum() * 2); // function 4 specific
 	}
 
-	public DoubleChromosome(Function func, ArrayList<Double> genes, double tolerance, Random randomGenerator) {
+	public DoubleChromosome(Function func, ArrayList<DoubleGene> genes, double tolerance, Random randomGenerator) {
 		function = func;
 		this.tolerance = tolerance;
-		ArrayList<Double> clonedList = new ArrayList<Double>(genes.size());
-		for (Double gene : genes) {
-			clonedList.add(gene);
+		ArrayList<DoubleGene> clonedList = new ArrayList<DoubleGene>(genes.size());
+		for (DoubleGene gene : genes) {
+			clonedList.add(gene.clone());
 		}
-		this.goodGenes = clonedList;
+		this.genes = clonedList;
 		this.random = randomGenerator;
 		this.params = new ArrayList<Double>(function.paramNum());
 		this.setMaxRange(function.paramNum() * 2);
@@ -38,48 +36,32 @@ public class DoubleChromosome extends AbstractChromosome<DoubleGene> {
 
 	@Override
 	public void initialize() {
-		if (!this.goodGenes.isEmpty())
-			this.goodGenes.clear();
+		if (!this.genes.isEmpty())
+			this.genes.clear();
 		
 		for (int i = 0; i < function.paramNum(); i++) {
-			this.goodGenes.add(random.nextDouble() * this.getMaxRange());
+			this.genes.add(new DoubleGene( random.nextDouble() * this.getMaxRange() ));
 		}
-	}
-
-	@Override
-	public double evaluate() {
-		params.clear();
-		params.addAll(this.getPhenotype());
-		return function.f(params);
+		
+		this.genes.get(0).setMaxRange(this.getMaxRange());
 	}
 	
 	public int getLength() {
-		return this.goodGenes.size();
+		return this.genes.size();
 	}
 	
-	public ArrayList<Double> getPhenotype() {		
-		return this.goodGenes;
-	}
-	
-	public ArrayList<DoubleGene> getGenotype() {
-		ArrayList<DoubleGene> a = new ArrayList<DoubleGene>();
-		for (Double gene : this.goodGenes) {
-			a.add(new DoubleGene(gene));
+	public ArrayList<Double> getPhenotype() {
+		ArrayList<Double> a = new ArrayList<Double>();
+		
+		for (DoubleGene gene : this.genes) {
+			a.add(gene.getInformation());
 		}
+		
 		return a;
 	}
 	
-	public void setGenotype(ArrayList<DoubleGene> genes) {
-		ArrayList<Double> a = new ArrayList<Double>();
-		for (DoubleGene doubleGene : genes) {
-			a.add(doubleGene.getInformation());
-		}
-		this.goodGenes = a;
-		this.refreshPhenotype();
-	}
-	
 	public DoubleChromosome clone() {
-		DoubleChromosome chr = new DoubleChromosome(function, this.goodGenes, this.tolerance, random);
+		DoubleChromosome chr = new DoubleChromosome(function, this.genes, this.tolerance, random);
 		chr.setAptitude(this.getAptitude());
 		
 		return chr;
@@ -89,14 +71,14 @@ public class DoubleChromosome extends AbstractChromosome<DoubleGene> {
 		return maxRange;
 	}
 
-	public void setMaxRange(double maxRange) {
-		this.maxRange = maxRange;
+	public void setMaxRange(double maxRang) {
+		maxRange = maxRang;
 	}
 
 	public String toString() {
 		String s = new String("");
 		
-		for (Double gen : this.goodGenes) {
+		for (DoubleGene gen : this.genes) {
 			s = s + gen;
 			s += "|";
 		}
@@ -104,12 +86,6 @@ public class DoubleChromosome extends AbstractChromosome<DoubleGene> {
 			s = s.substring(0, s.length() - 1);
 		
 		return s;
-	}
-
-	@Override
-	public void refreshPhenotype() {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

@@ -116,6 +116,7 @@ public class TransferGeneticAlgorithm {
 	public String toString() {
 		return "función: " + this.funcion + System.lineSeparator() +
 				"param func 4: " + this.paramFunc4 + System.lineSeparator() +
+				"cromosoma real: " + this.cromosomaReal + System.lineSeparator() +
 				"precisión: " + this.precision + System.lineSeparator() +
 				"población: " + this.poblacion + System.lineSeparator() +
 				"generaciones: " + this.generaciones + System.lineSeparator() +

@@ -1,190 +1,27 @@
 package model.geneticAlgorithm;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Random;
-
-import model.chromosome.AbstractChromosome;
-import model.chromosome.AptitudeComparator;
 import model.chromosome.DoubleChromosome;
 import model.function.Function;
 import model.gene.DoubleGene;
 
-public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm {
-	
-	private ArrayList<DoubleChromosome> population;
-	private ArrayList<DoubleChromosome> elite;
-	private DoubleChromosome bestChromosome;
-	private ArrayList<Double> inspectedAptitude;
-	private double bestAptitude;
-	private double averageAptitude;
-	private double averageScore;
-	private ArrayList<Double> bestChromosomeList;
-	private ArrayList<Double> averageAptitudeList;
-	private ArrayList<Double> bestAptitudeList;
-	private static Comparator<AbstractChromosome> aptitudeComparator;
+public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChromosome> {
 
 	public DoubleGeneticAlgorithm(Function func, int populationNum,
 			boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
-		function = func;
-		this.populationNum = populationNum;
-		this.useElitism = useElitism;
-		this.elitePercentage = elitePercentage;
-		this.population = new ArrayList<DoubleChromosome>(populationNum);
-		this.elite = null;
-		this.currentGeneration = 0;
-		this.maxGenerationNum = maxGenerationNum;
-		this.bestChromosome = null;
-		this.inspectedAptitude = new ArrayList<Double>(populationNum);
-		this.bestAptitude = 0;
-		this.averageAptitude = 0;
-		this.averageScore = 0;
-		this.crossProb = crossProb;
-		this.mutationProb = mutationProb;
-		this.tolerance = tolerance;
-		this.customSeed = customSeed;
-		this.seed = seed;
-		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
-		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
-		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
-		
-		if(random == null) {
-			if(customSeed)
-				random = new Random(this.seed);
-			else
-				random = new Random();
-		}
-		if(aptitudeComparator == null)
-			aptitudeComparator = new AptitudeComparator();
-	}
-	
-	public void run() {
-		this.notifyStartRun();
-		
-		this.initialize();
-		if(function.isMinimization())
-			this.aptitudeShifting();
-		this.evaluatePopulation();
-		
-		while(!this.finished()) {
-			if (this.useElitism)
-				this.elite = this.selectElite();
-			this.increaseGeneration();
-			this.selection();
-			this.reproduction();
-			this.mutation();
-			if (this.useElitism)
-				this.includeElite(this.elite);
-			if(function.isMinimization())
-				this.aptitudeShifting();
-			this.evaluatePopulation();
-			
-			this.bestChromosomeList.add(this.getBestChromosome().getAptitude());
-			this.bestAptitudeList.add(this.getBestAptitude());
-			this.averageAptitudeList.add(this.getAverageAptitude());
-		}
-		
-		this.notifyEndRun();
+		super(func, populationNum, useElitism, elitePercentage, maxGenerationNum,
+				crossProb, mutationProb, tolerance, customSeed, seed);
 	}
 
-	private void includeElite(ArrayList<DoubleChromosome> elite2) {
-		// reemplazo de los individuos peor adaptados
-		this.population.sort(aptitudeComparator);
+	public void initialize() {
+		this.population.clear();
 		
-		for (int i = 0; i < elite.size(); i++) {
-			this.population.set(i, elite.get(i));
-		}
-	}
-
-	private ArrayList<DoubleChromosome> selectElite() {
-		int eliteNum = (int) Math.ceil(this.populationNum * this.elitePercentage);
-		ArrayList<DoubleChromosome> elite = new ArrayList<DoubleChromosome>(eliteNum);
-		
-		this.population.sort(aptitudeComparator);
-		if(this.population.get(0).getFunction().isMinimization()) {
-			for (int i = 0; i < eliteNum; i++) {
-				elite.add(this.population.get(i).clone());
-			}
-		}
-		else {			
-			for (int i = this.populationNum - eliteNum; i < this.populationNum; i++) {
-				elite.add(this.population.get(i).clone());
-			}
-		}
-		
-		return elite;
-	}
-
-	private void evaluatePopulation() {
-		double aggregateScore = 0;
-		double bestAptitude = Double.NEGATIVE_INFINITY;
-		if(this.population.get(0).getFunction().isMinimization()) {
-			bestAptitude = Double.POSITIVE_INFINITY;
-		}
-		double aggregateAptitude = 0;
-		double aggregateInspectedAptitude = 0;
-		DoubleChromosome currentBest = null;
-		
-		// compute best and aggregate aptitude
-		int i = 0;
-		for (DoubleChromosome chromosome : this.population) {
-			double chromAptitude = chromosome.getAptitude();
-			aggregateAptitude += chromAptitude;
-			aggregateInspectedAptitude += this.inspectedAptitude.get(i);
-			
-			if(this.population.get(0).getFunction().isMinimization()) {
-				if (chromAptitude < bestAptitude) {
-					currentBest = chromosome;
-					bestAptitude = chromAptitude;
-				}
-			}
-			else {
-				if (chromAptitude > bestAptitude) {
-					currentBest = chromosome;
-					bestAptitude = chromAptitude;
-				}
-			}
-			i++;
-		}
-		
-		// compute and set score of population individuals
-		i = 0;
-		for (DoubleChromosome chromosome : this.population) {
-			chromosome.setScore(this.inspectedAptitude.get(i) / aggregateInspectedAptitude);
-			chromosome.setAggregateScore(chromosome.getScore() + aggregateScore);
-			aggregateScore += chromosome.getScore();
-			i++;
-		}
-		
-		// refresh best individual and aptitude statistics
-		if(this.population.get(0).getFunction().isMinimization()) {
-			if (this.bestChromosome == null || bestAptitude < this.bestChromosome.getAptitude()) {
-				this.bestChromosome = currentBest.clone();
-			}
-		}
-		else {			
-			if (this.bestChromosome == null || bestAptitude > this.bestChromosome.getAptitude()) {
-				this.bestChromosome = currentBest.clone();
-			}
-		}
-		this.bestAptitude = bestAptitude;
-		this.averageAptitude = aggregateAptitude / this.population.size();
-		this.averageScore = aggregateScore / this.population.size();
-	}
-
-	private void aptitudeShifting() {
-		this.inspectedAptitude.clear();
-		Double cmax = Double.NEGATIVE_INFINITY;
-		
-		for (DoubleChromosome chrom : this.population) {
-			if(chrom.getAptitude() > cmax)
-				cmax = chrom.getAptitude(); // get worst aptitude
-		}
-		cmax = cmax * 1.05; // avoid aggregateAptitude = 0 when population converges
-		
-		for (DoubleChromosome chrom : this.population) {
-			this.inspectedAptitude.add(cmax - chrom.getAptitude());
+		for (int i = 0; i < this.populationNum; i++) {
+			DoubleChromosome chr = new DoubleChromosome(function, this.tolerance, random);
+			chr.initialize();
+			chr.setAptitude(chr.evaluate());
+			this.population.add(chr);
 		}
 	}
 
@@ -279,79 +116,12 @@ public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm {
 			genes = chrom.getGenotype();
 			
 			for (DoubleGene gene : genes) {
-				mutated = gene.mutate(this.mutationProb, random, chrom.getMaxRange());
+				mutated = gene.mutate(this.mutationProb, random);
 			}
 			
 			if(mutated)
 				chrom.setAptitude(chrom.evaluate());
 		}
-	}
-
-	@Override
-	public void restart(Function func, int populationNum, boolean useElitism,
-			double elitePercentage, int maxGenerationNum, double crossProb,
-			double mutationProb, double tolerance, boolean customSeed, long seed) {
-		function = func;
-		this.populationNum = populationNum;
-		this.useElitism = useElitism;
-		this.elitePercentage = elitePercentage;
-		this.population = new ArrayList<DoubleChromosome>(populationNum);
-		this.elite = null;
-		this.currentGeneration = 0;
-		this.maxGenerationNum = maxGenerationNum;
-		this.bestChromosome = null;
-		this.bestAptitude = 0;
-		this.averageAptitude = 0;
-		this.averageScore = 0;
-		this.crossProb = crossProb;
-		this.mutationProb = mutationProb;
-		this.tolerance = tolerance;
-		this.customSeed = customSeed;
-		this.seed = seed;
-		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
-		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
-		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
-		
-		this.initialize();
-	}
-
-	private void initialize() {
-		this.population.clear();
-		
-		for (int i = 0; i < this.populationNum; i++) {
-			DoubleChromosome chr = new DoubleChromosome(function, this.tolerance, random);
-			chr.initialize();
-			chr.setAptitude(chr.evaluate());
-			this.population.add(chr);
-		}
-	}
-	
-	public DoubleChromosome getBestChromosome() {
-		return bestChromosome;
-	}
-	
-	public double getBestAptitude() {
-		return this.bestAptitude;
-	}
-	
-	public double getAverageAptitude() {
-		return this.averageAptitude;
-	}
-	
-	public double getAverageScore() {
-		return this.averageScore;
-	}
-
-	public ArrayList<Double> getBestChromosomeList() {
-		return bestChromosomeList;
-	}
-
-	public ArrayList<Double> getAverageAptitudeList() {
-		return averageAptitudeList;
-	}
-
-	public ArrayList<Double> getBestAptitudeList() {
-		return bestAptitudeList;
 	}
 	
 	public String toString() {
