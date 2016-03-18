@@ -2,10 +2,10 @@ package model.chromosome;
 
 import java.util.Comparator;
 
-public class AptitudeComparator implements Comparator<BooleanChromosome> {
+public class AptitudeComparator implements Comparator<AbstractChromosome> {
 
 	@Override
-	public int compare(BooleanChromosome o1, BooleanChromosome o2) {
+	public int compare(AbstractChromosome o1, AbstractChromosome o2) {
 		double aptitude = (o1.aptitude - o2.aptitude);
 		
 		if (aptitude > 0)

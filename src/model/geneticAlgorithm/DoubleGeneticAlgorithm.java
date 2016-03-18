@@ -6,31 +6,32 @@ import java.util.Random;
 
 import model.chromosome.AbstractChromosome;
 import model.chromosome.AptitudeComparator;
-import model.chromosome.BooleanChromosome;
+import model.chromosome.DoubleChromosome;
 import model.function.Function;
-import model.gene.BooleanGene;
+import model.gene.DoubleGene;
 
-public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
-	private ArrayList<BooleanChromosome> population;
-	private ArrayList<BooleanChromosome> elite;
-	private BooleanChromosome bestChromosome;
+public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm {
+	
+	private ArrayList<DoubleChromosome> population;
+	private ArrayList<DoubleChromosome> elite;
+	private DoubleChromosome bestChromosome;
 	private ArrayList<Double> inspectedAptitude;
 	private double bestAptitude;
 	private double averageAptitude;
 	private double averageScore;
-	private static Comparator<AbstractChromosome> aptitudeComparator;
 	private ArrayList<Double> bestChromosomeList;
 	private ArrayList<Double> averageAptitudeList;
 	private ArrayList<Double> bestAptitudeList;
+	private static Comparator<AbstractChromosome> aptitudeComparator;
 
-	public BooleanGeneticAlgorithm(Function func, int populationNum,
+	public DoubleGeneticAlgorithm(Function func, int populationNum,
 			boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
 		function = func;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
-		this.population = new ArrayList<BooleanChromosome>(populationNum);
+		this.population = new ArrayList<DoubleChromosome>(populationNum);
 		this.elite = null;
 		this.currentGeneration = 0;
 		this.maxGenerationNum = maxGenerationNum;
@@ -56,44 +57,6 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		}
 		if(aptitudeComparator == null)
 			aptitudeComparator = new AptitudeComparator();
-	}
-	
-	public void restart(Function func, int populationNum, boolean useElitism,
-			double elitePercentage, int maxGenerationNum, double crossProb, double mutationProb,
-			double tolerance, boolean customSeed, long seed) {
-		function = func;
-		this.populationNum = populationNum;
-		this.useElitism = useElitism;
-		this.elitePercentage = elitePercentage;
-		this.population = new ArrayList<BooleanChromosome>(populationNum);
-		this.elite = null;
-		this.currentGeneration = 0;
-		this.maxGenerationNum = maxGenerationNum;
-		this.bestChromosome = null;
-		this.bestAptitude = 0;
-		this.averageAptitude = 0;
-		this.averageScore = 0;
-		this.crossProb = crossProb;
-		this.mutationProb = mutationProb;
-		this.tolerance = tolerance;
-		this.customSeed = customSeed;
-		this.seed = seed;
-		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
-		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
-		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
-		
-		this.initialize();
-	}
-	
-	public void initialize() {
-		this.population.clear();
-		
-		for (int i = 0; i < this.populationNum; i++) {
-			BooleanChromosome chr = new BooleanChromosome(function, this.tolerance, random);
-			chr.initialize();
-			chr.setAptitude(chr.evaluate());
-			this.population.add(chr);
-		}
 	}
 	
 	public void run() {
@@ -124,8 +87,36 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		
 		this.notifyEndRun();
 	}
-	
-	public void evaluatePopulation() {
+
+	private void includeElite(ArrayList<DoubleChromosome> elite2) {
+		// reemplazo de los individuos peor adaptados
+		this.population.sort(aptitudeComparator);
+		
+		for (int i = 0; i < elite.size(); i++) {
+			this.population.set(i, elite.get(i));
+		}
+	}
+
+	private ArrayList<DoubleChromosome> selectElite() {
+		int eliteNum = (int) Math.ceil(this.populationNum * this.elitePercentage);
+		ArrayList<DoubleChromosome> elite = new ArrayList<DoubleChromosome>(eliteNum);
+		
+		this.population.sort(aptitudeComparator);
+		if(this.population.get(0).getFunction().isMinimization()) {
+			for (int i = 0; i < eliteNum; i++) {
+				elite.add(this.population.get(i).clone());
+			}
+		}
+		else {			
+			for (int i = this.populationNum - eliteNum; i < this.populationNum; i++) {
+				elite.add(this.population.get(i).clone());
+			}
+		}
+		
+		return elite;
+	}
+
+	private void evaluatePopulation() {
 		double aggregateScore = 0;
 		double bestAptitude = Double.NEGATIVE_INFINITY;
 		if(this.population.get(0).getFunction().isMinimization()) {
@@ -133,11 +124,11 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		}
 		double aggregateAptitude = 0;
 		double aggregateInspectedAptitude = 0;
-		BooleanChromosome currentBest = null;
+		DoubleChromosome currentBest = null;
 		
 		// compute best and aggregate aptitude
 		int i = 0;
-		for (BooleanChromosome chromosome : this.population) {
+		for (DoubleChromosome chromosome : this.population) {
 			double chromAptitude = chromosome.getAptitude();
 			aggregateAptitude += chromAptitude;
 			aggregateInspectedAptitude += this.inspectedAptitude.get(i);
@@ -159,7 +150,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		
 		// compute and set score of population individuals
 		i = 0;
-		for (BooleanChromosome chromosome : this.population) {
+		for (DoubleChromosome chromosome : this.population) {
 			chromosome.setScore(this.inspectedAptitude.get(i) / aggregateInspectedAptitude);
 			chromosome.setAggregateScore(chromosome.getScore() + aggregateScore);
 			aggregateScore += chromosome.getScore();
@@ -181,28 +172,26 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		this.averageAptitude = aggregateAptitude / this.population.size();
 		this.averageScore = aggregateScore / this.population.size();
 	}
-	
-	/* transform minimization problem into maximization */
+
 	private void aptitudeShifting() {
 		this.inspectedAptitude.clear();
 		Double cmax = Double.NEGATIVE_INFINITY;
 		
-		for (BooleanChromosome chrom : this.population) {
+		for (DoubleChromosome chrom : this.population) {
 			if(chrom.getAptitude() > cmax)
 				cmax = chrom.getAptitude(); // get worst aptitude
 		}
 		cmax = cmax * 1.05; // avoid aggregateAptitude = 0 when population converges
 		
-		for (BooleanChromosome chrom : this.population) {
+		for (DoubleChromosome chrom : this.population) {
 			this.inspectedAptitude.add(cmax - chrom.getAptitude());
 		}
 	}
-	
-	/* GENETIC OPERATORS */
-	
+
+	@Override
 	public void selection() {
 		// roulette selection
-		ArrayList<BooleanChromosome> selectedPopulation = new ArrayList<BooleanChromosome>(this.population.size());
+		ArrayList<DoubleChromosome> selectedPopulation = new ArrayList<DoubleChromosome>(this.population.size());
 		double prob = 0;
 		int positionSelected = 0;
 		
@@ -219,10 +208,11 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		
 		this.population = selectedPopulation;
 	}
-	
+
+	@Override
 	public void reproduction() {
 		ArrayList<Integer> selectedCandidatesIdx = new ArrayList<Integer>(this.population.size());
-		BooleanChromosome child1 = null, child2 = null;
+		DoubleChromosome child1 = null, child2 = null;
 		
 		// select randomly all the candidates for the crossover
 		for (int i = 0; i < this.population.size(); i++) {
@@ -236,96 +226,107 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 		
 		// iterate over pairs
 		for (int i = 0; i < selectedCandidatesIdx.size(); i+=2) {
-			BooleanChromosome parent1 = this.population.get(selectedCandidatesIdx.get(i));
-			BooleanChromosome parent2 = this.population.get(selectedCandidatesIdx.get(i + 1));
-			child1 = parent1.clone(); child1.setGenotype(new ArrayList<BooleanGene>());
-			child2 = parent1.clone(); child2.setGenotype(new ArrayList<BooleanGene>());
+			DoubleChromosome parent1 = this.population.get(selectedCandidatesIdx.get(i));
+			DoubleChromosome parent2 = this.population.get(selectedCandidatesIdx.get(i + 1));
+			child1 = parent1.clone(); child1.setGenotype(new ArrayList<DoubleGene>());
+			child2 = parent1.clone(); child2.setGenotype(new ArrayList<DoubleGene>());
 			crossover(parent1, parent2, child1, child2);
 			
 			this.population.set(selectedCandidatesIdx.get(i), child1);
 			this.population.set(selectedCandidatesIdx.get(i + 1), child2);
 		}
 	}
-	
-	private void crossover(BooleanChromosome parent1, BooleanChromosome parent2, BooleanChromosome child1, BooleanChromosome child2) {
-		int geneNum = this.population.get(0).getGeneNum();
-		for (int i = 0; i < geneNum; i++) {
-			int currentGeneLength = this.population.get(0).getGenotype().get(i).getLength();
+
+	private void crossover(DoubleChromosome parent1, DoubleChromosome parent2,
+			DoubleChromosome child1, DoubleChromosome child2) {
+		
+		int currentGeneLength = this.population.get(0).getLength();
 			
-			// select point over 0 and the current gene length - 1
-			int crossoverPoint = random.nextInt(currentGeneLength);
-			
-			BooleanGene parent1Gene = parent1.getGenotype().get(i);
-			BooleanGene parent2Gene = parent2.getGenotype().get(i);
-			BooleanGene child1Gene = new BooleanGene(currentGeneLength);
-			BooleanGene child2Gene = new BooleanGene(currentGeneLength);
-			
-			// before the crossover point
-			for (int j = 0; j < crossoverPoint; j++) {
-				child1Gene.add(parent1Gene.getInformation().get(j));
-				child2Gene.add(parent2Gene.getInformation().get(j));
-			}
-			
-			// after the crossover point
-			for (int j = crossoverPoint; j < currentGeneLength; j++) {
-				child1Gene.add(parent2Gene.getInformation().get(j));
-				child2Gene.add(parent1Gene.getInformation().get(j));
-			}
-			
-			child1.add(child1Gene);
-			child2.add(child2Gene);
+		// select point over 0 and the current gene length - 1
+		int crossoverPoint = random.nextInt(currentGeneLength);
+		
+		ArrayList<DoubleGene> parent1Gene = parent1.getGenotype();
+		ArrayList<DoubleGene> parent2Gene = parent2.getGenotype();
+		ArrayList<DoubleGene> child1Gene = new ArrayList<DoubleGene>(currentGeneLength);
+		ArrayList<DoubleGene> child2Gene = new ArrayList<DoubleGene>(currentGeneLength);
+		
+		// before the crossover point
+		for (int j = 0; j < crossoverPoint; j++) {
+			child1Gene.add(parent1Gene.get(j));
+			child2Gene.add(parent2Gene.get(j));
 		}
+		
+		// after the crossover point
+		for (int j = crossoverPoint; j < currentGeneLength; j++) {
+			child1Gene.add(parent2Gene.get(j));
+			child2Gene.add(parent1Gene.get(j));
+		}
+		
+		child1.setGenotype(child1Gene);
+		child2.setGenotype(child2Gene);
 		
 		child1.setAptitude(child1.evaluate());
 		child2.setAptitude(child2.evaluate());
 	}
-	
+
+	@Override
 	public void mutation() {
-		ArrayList<BooleanGene> genes;
+		ArrayList<DoubleGene> genes;
 		boolean mutated = false;
 		
-		for (BooleanChromosome chrom : this.population) {
+		for (DoubleChromosome chrom : this.population) {
 			mutated = false;
 			genes = chrom.getGenotype();
 			
-			for (BooleanGene gene : genes) { // each gene can be coded on several bits
-				mutated = gene.mutate(this.mutationProb, random);
+			for (DoubleGene gene : genes) {
+				mutated = gene.mutate(this.mutationProb, random, chrom.getMaxRange());
 			}
 			
 			if(mutated)
 				chrom.setAptitude(chrom.evaluate());
 		}
 	}
-	
-	public ArrayList<BooleanChromosome> selectElite() {
-		int eliteNum = (int) Math.ceil(this.populationNum * this.elitePercentage);
-		ArrayList<BooleanChromosome> elite = new ArrayList<BooleanChromosome>(eliteNum);
+
+	@Override
+	public void restart(Function func, int populationNum, boolean useElitism,
+			double elitePercentage, int maxGenerationNum, double crossProb,
+			double mutationProb, double tolerance, boolean customSeed, long seed) {
+		function = func;
+		this.populationNum = populationNum;
+		this.useElitism = useElitism;
+		this.elitePercentage = elitePercentage;
+		this.population = new ArrayList<DoubleChromosome>(populationNum);
+		this.elite = null;
+		this.currentGeneration = 0;
+		this.maxGenerationNum = maxGenerationNum;
+		this.bestChromosome = null;
+		this.bestAptitude = 0;
+		this.averageAptitude = 0;
+		this.averageScore = 0;
+		this.crossProb = crossProb;
+		this.mutationProb = mutationProb;
+		this.tolerance = tolerance;
+		this.customSeed = customSeed;
+		this.seed = seed;
+		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		
-		this.population.sort(aptitudeComparator);
-		if(this.population.get(0).getFunction().isMinimization()) {
-			for (int i = 0; i < eliteNum; i++) {
-				elite.add(this.population.get(i).clone());
-			}
-		}
-		else {			
-			for (int i = this.populationNum - eliteNum; i < this.populationNum; i++) {
-				elite.add(this.population.get(i).clone());
-			}
-		}
+		this.initialize();
+	}
+
+	private void initialize() {
+		this.population.clear();
 		
-		return elite;
+		for (int i = 0; i < this.populationNum; i++) {
+			DoubleChromosome chr = new DoubleChromosome(function, this.tolerance, random);
+			chr.initialize();
+			chr.setAptitude(chr.evaluate());
+			this.population.add(chr);
+		}
 	}
 	
-	public void includeElite(ArrayList<BooleanChromosome> elite) {
-		// reemplazo de los individuos peor adaptados
-		this.population.sort(aptitudeComparator);
-		
-		for (int i = 0; i < elite.size(); i++) {
-			this.population.set(i, elite.get(i));
-		}
-	}
-	
-	public BooleanChromosome getBestChromosome() {
+	public DoubleChromosome getBestChromosome() {
 		return bestChromosome;
 	}
 	
@@ -352,14 +353,14 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm {
 	public ArrayList<Double> getBestAptitudeList() {
 		return bestAptitudeList;
 	}
-
+	
 	public String toString() {
 		if(this.population == null || this.population.size() == 0) return "";
 		String s = new String();
 		
 		s += "pos     genotype     aptitude phenotype" + System.lineSeparator();
 		for (int i = 0; i < this.population.size(); i++) {
-			BooleanChromosome elem = this.population.get(i);
+			DoubleChromosome elem = this.population.get(i);
 			s += i + " " + elem + " " + String.format("%5f", elem.getAptitude()) + " ";
 			
 			for (Double el : elem.getPhenotype()) {

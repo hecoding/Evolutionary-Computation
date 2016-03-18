@@ -30,6 +30,10 @@ public abstract class AbstractGeneticAlgorithm implements Observable<GeneticAlgo
 	public abstract void reproduction();
 	public abstract void mutation();
 	
+	public abstract void restart(Function func, int populationNum, boolean useElitism,
+			double elitePercentage, int maxGenerationNum, double crossProb, double mutationProb,
+			double tolerance, boolean customSeed, long seed);
+	
 	public void increaseGeneration() {
 		this.currentGeneration++;
 	}
@@ -97,4 +101,14 @@ public abstract class AbstractGeneticAlgorithm implements Observable<GeneticAlgo
 			obs.onEndRun();
 		}
 	}
+
+	public abstract void run();
+
+	public abstract Object getBestChromosome();
+
+	public abstract ArrayList<Double> getBestChromosomeList();
+
+	public abstract ArrayList<Double> getBestAptitudeList();
+
+	public abstract ArrayList<Double> getAverageAptitudeList();
 }

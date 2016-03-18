@@ -76,7 +76,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		});
 		runButton.setVisible(false);
 		buttonPanel.add(runButton, BorderLayout.PAGE_START);
-		doSomth.setText("show in console");
+		doSomth.setText("mostrar args. por consola");
 		doSomth.setToolTipText("Hi");
 		doSomth.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -90,7 +90,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				ctrl.setParameters(transfer);
 			}
 		});
-		buttonPanel.add(meteParams, BorderLayout.PAGE_END);
+		//buttonPanel.add(meteParams, BorderLayout.PAGE_END);
 		this.add(buttonPanel, BorderLayout.PAGE_END);
 		// meter quiza un JScrollPane y/o JSplitPane
 	}
@@ -128,57 +128,57 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		// se pueden a�adir las opciones de forma independiente, o "de seguido"; el resultado es el mismo.
 		config.addOption(new ChoiceOption<TransferGeneticAlgorithm>(	 // -- eleccion de objeto no-configurable
 			    "Función",							 // etiqueta 
-			    "función a optimizar",				 // tooltip
+			    "Función a optimizar",				 // tooltip
 			    "funcion",   							 // campo (debe haber un getColor y un setColor)
 			    funciones))                            // elecciones posibles
 		
 		.addOption(new IntegerOption<TransferGeneticAlgorithm>(  // -- entero
 				"# param func 4", 					     // texto a usar como etiqueta del campo
-				"bla",	         // texto a usar como 'tooltip' cuando pasas el puntero
+				"Número de variables de la función 4",	         // texto a usar como 'tooltip' cuando pasas el puntero
 				"paramFunc4",					     // campo (espera que haya un getGrosor y un setGrosor)
 				1, Integer.MAX_VALUE))
 		.addOption(new StrategyOption<TransferGeneticAlgorithm>( // -- eleccion de objeto configurable
 				"Cromosoma reales",					 // etiqueta
-				"bla			",                // tooltip
+				"Sólo para la función 4",            // tooltip
 				"cromosomaReal",	             // campo
 				check))                             // elecciones (deben implementar Cloneable)
 		
 		.addOption(new DoubleOption<TransferGeneticAlgorithm>(   // -- doble, parecido a entero
 			    "Precisión",	 					 // etiqueta
-			    "bla",				 // tooltip
+			    "Precisión decimal para las cadenas binarias",				 // tooltip
 			    "precision",	                     // campo
 			    0, Double.POSITIVE_INFINITY))	     // min y max, aplicando factor, si hay; vale usar Double.*_INFINITY)
 		  		  
 		.addOption(new IntegerOption<TransferGeneticAlgorithm>(  // -- entero
 				"Población", 					     // texto a usar como etiqueta del campo
-				"bla",	         // texto a usar como 'tooltip' cuando pasas el puntero
+				"Número de individuos",	         // texto a usar como 'tooltip' cuando pasas el puntero
 				"poblacion",					     // campo (espera que haya un getGrosor y un setGrosor)
 				1, Integer.MAX_VALUE))			     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
 		.addOption(new IntegerOption<TransferGeneticAlgorithm>(  // -- entero
 				"Generaciones",					     // texto a usar como etiqueta del campo
-				"bla",       // texto a usar como 'tooltip' cuando pasas el puntero
+				"Número de iteraciones",       // texto a usar como 'tooltip' cuando pasas el puntero
 				"generaciones",					     // campo (espera que haya un getGrosor y un setGrosor)
 				1, Integer.MAX_VALUE))			     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
 		.addOption(new DoubleOption<TransferGeneticAlgorithm>(   // -- doble, parecido a entero
 			    "% cruces", 						 // etiqueta
-			    "bla",           // tooltip
+			    "",           // tooltip
 			    "porcCruces",                     // campo
 			    0, 100,							     // min y max, aplicando factor, si hay; vale usar Double.*_INFINITY) 
 			    100))								 // opcional: factor de multiplicacion != 1.0, para mostrar porcentajes
 		.addOption(new DoubleOption<TransferGeneticAlgorithm>(   // -- doble, parecido a entero
 			    "% mutación", 						 // etiqueta
-			    "bla",           // tooltip
+			    "",           // tooltip
 			    "porcMutacion",                     // campo
 			    0, 100,							     // min y max, aplicando factor, si hay; vale usar Double.*_INFINITY) 
 			    100))								 // opcional: factor de multiplicacion != 1.0, para mostrar porcentajes
 		.addOption(new StrategyOption<TransferGeneticAlgorithm>( // -- eleccion de objeto configurable
 				"Semilla manual",					 // etiqueta
-				"bla			",                // tooltip
+				"Semilla propia para el generador aleatorio",                // tooltip
 				"semillaPersonalizada",             // campo
 				check))                             // elecciones (deben implementar Cloneable)
 		.addOption(new IntegerOption<TransferGeneticAlgorithm>(  // -- entero
 				"Semilla",						     // texto a usar como etiqueta del campo
-				"bla",       // texto a usar como 'tooltip' cuando pasas el puntero
+				"Semilla usada cuando se selecciona semilla personalizada",       // texto a usar como 'tooltip' cuando pasas el puntero
 				"semilla",						     // campo (espera que haya un getGrosor y un setGrosor)
 				0, Integer.MAX_VALUE))			     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
 		
@@ -198,13 +198,13 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		  	  .endInner()*/
 		.addOption(new StrategyOption<TransferGeneticAlgorithm>( // -- eleccion de objeto configurable
 				"Elitismo",							 // etiqueta
-				"bla			",                // tooltip
+				"Usar elitismo en la población",                // tooltip
 				"elitismo",                             // campo
 				check))                             // elecciones (deben implementar Cloneable)
 		.beginInner(new InnerOption<TransferGeneticAlgorithm,Percentage>(
-			  	"% de elitismo", "bla", "porcElite", Percentage.class))
+			  	"% de elitismo", "", "porcElite", Percentage.class))
 		  		  .addInner(new DoubleOption<Double>(
-		  		     "", "bla", "perc", 0, 1))
+		  		     "", "", "perc", 0, 1))
 		  		  .endInner()
 		.endOptions();
 		
