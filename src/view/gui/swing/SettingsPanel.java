@@ -27,10 +27,11 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	private JPanel buttonPanel;
  	JButton runButton;
 
-	public SettingsPanel(Controller ctrl, TransferGeneticAlgorithm transfer, StatusBarPanel status) {
+	public SettingsPanel(Controller ctrl, StatusBarPanel status) {
 		this.ctrl = ctrl;
 		this.ctrl.addModelObserver(this);
-		this.transfer = transfer;
+		this.transfer = new TransferGeneticAlgorithm();
+		this.transfer = ctrl.getParameters();
 		this.status = status;
 		
 		SwingUtilities.invokeLater(new Runnable() {
@@ -66,7 +67,6 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		buttonPanel = new JPanel(new BorderLayout());
 		runButton = new JButton();
 		JButton doSomth = new JButton();
-		JButton meteParams = new JButton();
 		runButton.setText("Lanzar");
 		runButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -74,7 +74,6 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				ctrl.run();
 			}
 		});
-		runButton.setVisible(false);
 		buttonPanel.add(runButton, BorderLayout.PAGE_START);
 		doSomth.setText("mostrar args. por consola");
 		doSomth.setToolTipText("Hi");
@@ -84,15 +83,8 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			}
 		});
 		buttonPanel.add(doSomth, BorderLayout.CENTER);
-		meteParams.setText("meter params");
-		meteParams.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				ctrl.setParameters(transfer);
-			}
-		});
-		//buttonPanel.add(meteParams, BorderLayout.PAGE_END);
 		this.add(buttonPanel, BorderLayout.PAGE_END);
-		// meter quiza un JScrollPane y/o JSplitPane
+		// maybe wrap around a JScrollPane and/or JSplitPane
 	}
 
 	@Override

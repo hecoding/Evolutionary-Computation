@@ -16,12 +16,9 @@ public class MainWindow extends JFrame {
 	private CenterPanel centerPanel;
 	private SettingsPanel settingsPanel;
 	private StatusBarPanel status;
-	private TransferGeneticAlgorithm transfer;
 	
 	public MainWindow(Controller controller) {
 		ctrl = controller;
-		this.transfer = new TransferGeneticAlgorithm();
-		this.transfer = ctrl.getParameters();
 		
 		this.setTitle("Evolutionary computation");
 		SwingUtilities.invokeLater(new Runnable() {
@@ -33,8 +30,8 @@ public class MainWindow extends JFrame {
 
 	private void initGUI() {
 		this.status = new StatusBarPanel(ctrl);
-		this.centerPanel = new CenterPanel(ctrl, this.transfer, this.status);
-		this.settingsPanel = new SettingsPanel(ctrl, this.transfer, this.status);
+		this.centerPanel = new CenterPanel(ctrl, this.status);
+		this.settingsPanel = new SettingsPanel(ctrl, this.status);
 		
 		JPanel mainPanel = new JPanel(new BorderLayout());
 		
@@ -43,7 +40,7 @@ public class MainWindow extends JFrame {
 		this.add(mainPanel);
 		
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.setSize(new Dimension(1024,768));
+		this.setSize(new Dimension(1024,668));
 		this.setMinimumSize(new Dimension(750, 550));
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
