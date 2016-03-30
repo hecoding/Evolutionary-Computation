@@ -104,6 +104,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.inspectedAptitude = new ArrayList<Double>(populationNum);
 		
 		this.initialize();
 	}
@@ -212,7 +213,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void evaluatePopulation() {
+	public void evaluatePopulation() { // VERY IMPORTANT TO CLEAR inspectedAptitude;
 		double aggregateScore = 0;
 		double bestAptitude = Double.NEGATIVE_INFINITY;
 		if(this.population.get(0).getFunction().isMinimization()) {
@@ -227,7 +228,8 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		for (T chromosome : this.population) {
 			double chromAptitude = chromosome.getAptitude();
 			aggregateAptitude += chromAptitude;
-			aggregateInspectedAptitude += this.inspectedAptitude.get(i);
+			if(function.isMinimization())
+				aggregateInspectedAptitude += this.inspectedAptitude.get(i);
 			
 			if(this.population.get(0).getFunction().isMinimization()) {
 				if (chromAptitude < bestAptitude) {
@@ -247,7 +249,10 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		// compute and set score of population individuals
 		i = 0;
 		for (T chromosome : this.population) {
-			chromosome.setScore(this.inspectedAptitude.get(i) / aggregateInspectedAptitude);
+			if(function.isMinimization())
+				chromosome.setScore(this.inspectedAptitude.get(i) / aggregateInspectedAptitude);
+			else
+				chromosome.setScore(chromosome.getAptitude() / aggregateAptitude);
 			chromosome.setAggregateScore(chromosome.getScore() + aggregateScore);
 			aggregateScore += chromosome.getScore();
 			i++;
