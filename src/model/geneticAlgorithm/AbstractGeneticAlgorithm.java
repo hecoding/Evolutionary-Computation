@@ -199,12 +199,16 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 				this.aptitudeShifting();
 			this.evaluatePopulation();
 			
-			this.bestChromosomeList.add(this.getBestChromosome().getAptitude());
-			this.bestAptitudeList.add(this.getBestAptitude());
-			this.averageAptitudeList.add(this.getAverageAptitude());
+			this.gatherStatistics();
 		}
 		
 		this.notifyEndRun();
+	}
+
+	protected void gatherStatistics() {
+		this.bestChromosomeList.add(this.getBestChromosome().getAptitude());
+		this.bestAptitudeList.add(this.getBestAptitude());
+		this.averageAptitudeList.add(this.getAverageAptitude());
 	}
 	
 	@SuppressWarnings("unchecked")
