@@ -8,7 +8,7 @@ public class AptitudeComparator implements Comparator<AbstractChromosome<? exten
 
 	@Override
 	public int compare(AbstractChromosome<?> o1, AbstractChromosome<?> o2) {
-		double aptitude = (o1.aptitude - o2.aptitude);
+		double aptitude = (o1.getAptitude() - o2.getAptitude());
 		
 		if (aptitude > 0)
 			return 1;

@@ -298,8 +298,17 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		// substitution of the worst adapted individuals
 		this.population.sort(aptitudeComparator);
 		
-		for (int i = 0; i < elite.size(); i++) {
-			this.population.set(i, elite.get(i));
+		if(function.isMinimization()) {
+			int j = 0;
+			for (int i = this.populationNum - elite.size(); i < this.populationNum; i++) {
+				this.population.set(i, elite.get(j));
+				j++;
+			}
+		}
+		else {
+			for (int i = 0; i < elite.size(); i++) {
+				this.population.set(i, elite.get(i));
+			}			
 		}
 	}
 	
