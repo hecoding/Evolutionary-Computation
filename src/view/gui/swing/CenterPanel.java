@@ -54,9 +54,9 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				plot.removeAllPlots();
-				plot.addLinePlot("Media de la generación", ctrl.getAverageAptitudeList());
-				plot.addLinePlot("Mejor de la generación", ctrl.getBestAptitudeList());
 				plot.addLinePlot("Mejor absoluto", ctrl.getBestChromosomeList());
+				plot.addLinePlot("Mejor de la generación", ctrl.getBestAptitudeList());
+				plot.addLinePlot("Media de la generación", ctrl.getAverageAptitudeList());
 				plot.setVisible(true);
 			}
 		});
