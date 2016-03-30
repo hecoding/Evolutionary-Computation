@@ -58,7 +58,7 @@ public class BooleanGene extends AbstractGene<ArrayList<Boolean>> {
 	public Object clone() {
 		ArrayList<Boolean> info = new ArrayList<Boolean>();
 		
-		for (Boolean b : this.information) {
+		for (boolean b : this.information) { // primitive type to avoid referencing
 			info.add(b);
 		}
 		

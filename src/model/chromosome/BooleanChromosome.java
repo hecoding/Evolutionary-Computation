@@ -115,8 +115,24 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	}
 	
 	public BooleanChromosome clone() {
+		// deep copy indeed
 		BooleanChromosome chr = new BooleanChromosome(function, this.genes, this.tolerance, random);
-		chr.setAptitude(this.getAptitude());
+		
+		chr.aggregateScore = this.aggregateScore;
+		chr.aptitude = this.aptitude;
+		
+		chr.geneLengths.clear();
+		for(int l : this.geneLengths) // primitive type to avoid referencing (doesn't work?)
+			chr.geneLengths.add(l);
+		
+		for(double p : this.params) // primitive type to avoid referencing
+			chr.params.add(p);
+		
+		chr.phenotype.clear();
+		for(double ph : this.phenotype) // primitive type to avoid referencing
+			chr.phenotype.add(ph);
+		
+		chr.score = this.score;
 		
 		return chr;
 	}

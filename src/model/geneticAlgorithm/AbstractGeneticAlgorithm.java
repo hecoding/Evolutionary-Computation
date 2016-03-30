@@ -216,9 +216,8 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	public void evaluatePopulation() { // VERY IMPORTANT TO CLEAR inspectedAptitude;
 		double aggregateScore = 0;
 		double bestAptitude = Double.NEGATIVE_INFINITY;
-		if(this.population.get(0).getFunction().isMinimization()) {
+		if(function.isMinimization())
 			bestAptitude = Double.POSITIVE_INFINITY;
-		}
 		double aggregateAptitude = 0;
 		double aggregateInspectedAptitude = 0;
 		T currentBest = null;
@@ -231,7 +230,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 			if(function.isMinimization())
 				aggregateInspectedAptitude += this.inspectedAptitude.get(i);
 			
-			if(this.population.get(0).getFunction().isMinimization()) {
+			if(function.isMinimization()) {
 				if (chromAptitude < bestAptitude) {
 					currentBest = chromosome;
 					bestAptitude = chromAptitude;
@@ -259,7 +258,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		}
 		
 		// refresh best individual and aptitude statistics
-		if(this.population.get(0).getFunction().isMinimization()) {
+		if(function.isMinimization()) {
 			if (this.bestChromosome == null || bestAptitude < this.bestChromosome.getAptitude()) {
 				this.bestChromosome = (T) currentBest.clone();
 			}
@@ -280,7 +279,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		ArrayList<T> elite = new ArrayList<T>(eliteNum);
 		
 		this.population.sort(aptitudeComparator);
-		if(this.population.get(0).getFunction().isMinimization()) {
+		if(function.isMinimization()) {
 			for (int i = 0; i < eliteNum; i++) {
 				elite.add((T) this.population.get(i).clone());
 			}

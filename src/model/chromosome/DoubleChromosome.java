@@ -61,8 +61,18 @@ public class DoubleChromosome extends AbstractChromosome<DoubleGene> {
 	}
 	
 	public DoubleChromosome clone() {
+		// deep copy indeed
 		DoubleChromosome chr = new DoubleChromosome(function, this.genes, this.tolerance, random);
-		chr.setAptitude(this.getAptitude());
+		
+		chr.aggregateScore = this.aggregateScore;
+		chr.aptitude = this.aptitude;
+		
+		
+		
+		for(double p : this.params) // primitive type to avoid referencing
+			chr.params.add(p);
+		
+		chr.score = this.score;
 		
 		return chr;
 	}

@@ -24,7 +24,9 @@ public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChrom
 			this.population.add(chr);
 		}
 	}
-
+	
+	/* GENETIC OPERATORS */
+	
 	@Override
 	public void selection() {
 		// roulette selection
@@ -74,9 +76,7 @@ public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChrom
 		}
 	}
 
-	private void crossover(DoubleChromosome parent1, DoubleChromosome parent2,
-			DoubleChromosome child1, DoubleChromosome child2) {
-		
+	private void crossover(DoubleChromosome parent1, DoubleChromosome parent2, DoubleChromosome child1, DoubleChromosome child2) {
 		int currentGeneLength = this.population.get(0).getLength();
 			
 		// select point over 0 and the current gene length - 1
