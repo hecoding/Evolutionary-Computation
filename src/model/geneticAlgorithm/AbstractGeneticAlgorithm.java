@@ -268,6 +268,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 				this.bestChromosome = (T) currentBest.clone();
 			}
 		}
+		
 		this.bestAptitude = bestAptitude;
 		this.averageAptitude = aggregateAptitude / this.population.size();
 		this.averageScore = aggregateScore / this.population.size();
