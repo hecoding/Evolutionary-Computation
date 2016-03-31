@@ -1,4 +1,4 @@
-package model.geneticAlgorithm.selectionMethods;
+package model.geneticAlgorithm.selection;
 
 import java.util.ArrayList;
 import java.util.Random;

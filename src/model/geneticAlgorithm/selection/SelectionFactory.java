@@ -1,4 +1,4 @@
-package model.geneticAlgorithm.selectionMethods;
+package model.geneticAlgorithm.selection;
 
 public class SelectionFactory {
 	private static SelectionFactory instance;

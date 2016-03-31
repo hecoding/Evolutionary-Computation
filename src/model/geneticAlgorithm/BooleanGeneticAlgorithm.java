@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import model.chromosome.BooleanChromosome;
 import model.function.Function;
 import model.gene.BooleanGene;
-import model.geneticAlgorithm.selectionMethods.SelectionInterface;
+import model.geneticAlgorithm.selection.SelectionInterface;
 
 public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm<BooleanChromosome> {
 

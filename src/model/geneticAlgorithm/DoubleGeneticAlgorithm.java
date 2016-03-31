@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import model.chromosome.DoubleChromosome;
 import model.function.Function;
 import model.gene.DoubleGene;
-import model.geneticAlgorithm.selectionMethods.SelectionInterface;
+import model.geneticAlgorithm.selection.SelectionInterface;
 
 public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChromosome> {
 
