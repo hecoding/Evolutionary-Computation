@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import model.chromosome.DoubleChromosome;
 import model.function.Function;
 import model.gene.DoubleGene;
+import model.geneticAlgorithm.selectionMethods.SelectionInterface;
 
 public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChromosome> {
 
-	public DoubleGeneticAlgorithm(Function func, int populationNum,
+	public DoubleGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, int populationNum,
 			boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
-		super(func, populationNum, useElitism, elitePercentage, maxGenerationNum,
+		super(func, selectionStrategy, populationNum, useElitism, elitePercentage, maxGenerationNum,
 				crossProb, mutationProb, tolerance, customSeed, seed);
 	}
 
@@ -27,26 +28,7 @@ public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChrom
 	
 	/* GENETIC OPERATORS */
 	
-	@Override
-	public void selection() {
-		// roulette selection
-		ArrayList<DoubleChromosome> selectedPopulation = new ArrayList<DoubleChromosome>(this.population.size());
-		double prob = 0;
-		int positionSelected = 0;
-		
-		for (int i = 0; i < this.population.size(); i++) {
-			prob = random.nextDouble();
-			positionSelected = 0;
-			
-			while((positionSelected < this.population.size()) &&
-					(prob > this.population.get(positionSelected).getAggregateScore()))
-				positionSelected++;
-			
-			selectedPopulation.add(this.population.get(positionSelected).clone());
-		}
-		
-		this.population = selectedPopulation;
-	}
+	// selection
 
 	@Override
 	public void reproduction() {

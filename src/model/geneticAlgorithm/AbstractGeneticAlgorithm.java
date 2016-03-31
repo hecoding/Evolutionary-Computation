@@ -7,6 +7,7 @@ import java.util.Random;
 import model.chromosome.AbstractChromosome;
 import model.chromosome.AptitudeComparator;
 import model.function.Function;
+import model.geneticAlgorithm.selectionMethods.SelectionInterface;
 import model.observer.GeneticAlgorithmObserver;
 import model.observer.Observable;
 
@@ -37,14 +38,17 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	protected ArrayList<Double> averageAptitudeList;
 	protected ArrayList<Double> bestAptitudeList;
 	
+	protected SelectionInterface selectionStrategy;
+	
 	public AbstractGeneticAlgorithm() {
 		this.observers = new ArrayList<GeneticAlgorithmObserver>();
 	}
 	
-	public AbstractGeneticAlgorithm(Function func, int populationNum,
+	public AbstractGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, int populationNum,
 			boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
 		function = func;
+		this.selectionStrategy = selectionStrategy;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
@@ -77,14 +81,17 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 			aptitudeComparator = new AptitudeComparator();
 	}
 	
-	public abstract void selection();
+	public void selection() {
+		this.selectionStrategy.select(this.population, random);
+	}
 	public abstract void reproduction();
 	public abstract void mutation();
 	
-	public void restart(Function func, int populationNum, boolean useElitism,
+	public void restart(Function func, SelectionInterface selectionStrategy, int populationNum, boolean useElitism,
 			double elitePercentage, int maxGenerationNum, double crossProb,
 			double mutationProb, double tolerance, boolean customSeed, long seed) {
 		function = func;
+		this.selectionStrategy = selectionStrategy;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
@@ -119,6 +126,10 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 
 	public Function getFunction() {
 		return function;
+	}
+	
+	public SelectionInterface getSelectionStrategy() {
+		return this.selectionStrategy;
 	}
 
 	public int getPopulationNum() {

@@ -113,6 +113,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	public ConfigPanel<TransferGeneticAlgorithm> creaPanelConfiguracion() {
 		String[] funciones = new String[] { "función 1", "función 2", "función 3", "función 4", "función 5" };
 		Check[] check = new Check[] {new Si(), new No()};
+		String[] metodoSeleccion = new String[] { "ruleta", "torneo" };
 		
 		ConfigPanel<TransferGeneticAlgorithm> config = new ConfigPanel<TransferGeneticAlgorithm>();
 		
@@ -133,7 +134,11 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				"Sólo para la función 4",            // tooltip
 				"cromosomaReal",	             // campo
 				check))                             // elecciones (deben implementar Cloneable)
-		
+		.addOption(new ChoiceOption<TransferGeneticAlgorithm>(	 // -- eleccion de objeto no-configurable
+			    "Selección",							 // etiqueta 
+			    "Método de selección",				 // tooltip
+			    "seleccion",   							 // campo (debe haber un getColor y un setColor)
+			    metodoSeleccion))                            // elecciones posibles
 		.addOption(new DoubleOption<TransferGeneticAlgorithm>(   // -- doble, parecido a entero
 			    "Precisión",	 					 // etiqueta
 			    "Precisión decimal para las cadenas binarias",				 // tooltip

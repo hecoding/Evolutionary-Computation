@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import model.chromosome.BooleanChromosome;
 import model.function.Function;
 import model.gene.BooleanGene;
+import model.geneticAlgorithm.selectionMethods.SelectionInterface;
 
 public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm<BooleanChromosome> {
 
-	public BooleanGeneticAlgorithm(Function func, int populationNum,
+	public BooleanGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, int populationNum,
 			boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
-		super(func, populationNum, useElitism, elitePercentage, maxGenerationNum,
+		super(func, selectionStrategy, populationNum, useElitism, elitePercentage, maxGenerationNum,
 				crossProb, mutationProb, tolerance, customSeed, seed);
 	}
 	
@@ -27,26 +28,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm<BooleanChr
 	
 	/* GENETIC OPERATORS */
 	
-	@Override
-	public void selection() {
-		// roulette selection
-		ArrayList<BooleanChromosome> selectedPopulation = new ArrayList<BooleanChromosome>(this.population.size());
-		double prob = 0;
-		int positionSelected = 0;
-		
-		for (int i = 0; i < this.population.size(); i++) {
-			prob = random.nextDouble();
-			positionSelected = 0;
-			
-			while((positionSelected < this.population.size()) &&
-					(prob > this.population.get(positionSelected).getAggregateScore()))
-				positionSelected++;
-			
-			selectedPopulation.add(this.population.get(positionSelected).clone());
-		}
-		
-		this.population = selectedPopulation;
-	}
+	// selection
 	
 	public void reproduction() {
 		ArrayList<Integer> selectedCandidatesIdx = new ArrayList<Integer>(this.population.size());

@@ -10,6 +10,9 @@ import model.geneticAlgorithm.AbstractGeneticAlgorithm;
 import model.geneticAlgorithm.BooleanGeneticAlgorithm;
 import model.geneticAlgorithm.DoubleGeneticAlgorithm;
 import model.geneticAlgorithm.TransferGeneticAlgorithm;
+import model.geneticAlgorithm.selectionMethods.RouletteSelection;
+import model.geneticAlgorithm.selectionMethods.SelectionFactory;
+import model.geneticAlgorithm.selectionMethods.SelectionInterface;
 import model.observer.GeneticAlgorithmObserver;
 import view.gui.swing.SettingsPanel.Check;
 import view.gui.swing.SettingsPanel.Si;
@@ -18,8 +21,8 @@ import view.gui.swing.SettingsPanel.Percentage;
 
 public class Controller {
 	private AbstractGeneticAlgorithm<?> ga;
-	private BooleanGeneticAlgorithm ba = new BooleanGeneticAlgorithm(new Function1(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
-	private DoubleGeneticAlgorithm da = new DoubleGeneticAlgorithm(new Function1(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
+	private BooleanGeneticAlgorithm ba = new BooleanGeneticAlgorithm(new Function1(), new RouletteSelection(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
+	private DoubleGeneticAlgorithm da = new DoubleGeneticAlgorithm(new Function1(), new RouletteSelection(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
 	
 	public Controller() {
 	}
@@ -30,14 +33,15 @@ public class Controller {
 			function = FunctionFactory.getInstance().createFunc4(transfer.getParamFunc4(), transfer.getCromosomaReal().getOpcion());
 		else
 			function = FunctionFactory.getInstance().create(transfer.getFuncion());
+		SelectionInterface selection = SelectionFactory.getInstance().create(transfer.getSeleccion());
 		double elitePercentage = 0;
 		boolean elitism = transfer.getElitismo().getOpcion();
 		elitePercentage = transfer.getPorcElite().getPerc();
 		
-		this.ba.restart(function, transfer.getPoblacion(), elitism, elitePercentage,
+		this.ba.restart(function, selection, transfer.getPoblacion(), elitism, elitePercentage,
 				transfer.getGeneraciones(), transfer.getPorcCruces(), transfer.getPorcMutacion(),
 				transfer.getPrecision(), transfer.getSemillaPersonalizada().getOpcion(), transfer.getSemilla());
-		this.da.restart(function, transfer.getPoblacion(), elitism, elitePercentage,
+		this.da.restart(function, selection, transfer.getPoblacion(), elitism, elitePercentage,
 				transfer.getGeneraciones(), transfer.getPorcCruces(), transfer.getPorcMutacion(),
 				transfer.getPrecision(), transfer.getSemillaPersonalizada().getOpcion(), transfer.getSemilla());
 		
@@ -53,6 +57,7 @@ public class Controller {
 		Check elitism;
 		Percentage porcElite;
 		Function funcion = this.ga.getFunction();
+		SelectionInterface seleccion = this.ga.getSelectionStrategy();
 		Check semillaPersonalizada;
 		
 		transfer.setFuncion(funcion.getName());
@@ -61,6 +66,7 @@ public class Controller {
 		if(funcion.getName() == "función 4" && ((Function4) funcion).isReal())
 				real = new Si();
 		transfer.setCromosomaReal(real);
+		transfer.setSeleccion(seleccion.getName());
 		transfer.setPrecision(this.ga.getTolerance());
 		transfer.setPoblacion(this.ga.getPopulationNum());
 		transfer.setGeneraciones(this.ga.getMaxGenerationNum());
