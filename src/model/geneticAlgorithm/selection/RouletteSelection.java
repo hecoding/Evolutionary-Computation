@@ -25,7 +25,8 @@ public class RouletteSelection implements SelectionInterface {
 			selectedPopulation.add((T) population.get(positionSelected).clone());
 		}
 		
-		population = selectedPopulation;
+		population.clear();
+		population.addAll(selectedPopulation);
 	}
 
 	@Override
