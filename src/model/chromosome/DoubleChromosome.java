@@ -67,10 +67,8 @@ public class DoubleChromosome extends AbstractChromosome<DoubleGene> {
 		chr.aggregateScore = this.aggregateScore;
 		chr.aptitude = this.aptitude;
 		
-		
-		
-		for(double p : this.params) // primitive type to avoid referencing
-			chr.params.add(p);
+		for(double p : this.params)
+			chr.params.add(new Double(p));
 		
 		chr.score = this.score;
 		

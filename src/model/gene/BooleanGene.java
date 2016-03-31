@@ -17,13 +17,18 @@ public class BooleanGene extends AbstractGene<ArrayList<Boolean>> {
 	
 	public BooleanGene(boolean b) {
 		ArrayList<Boolean> info = new ArrayList<Boolean>();
-		info.add(b);
+		info.add(new Boolean(b));
 		
 		this.information = info;
 	}
 	
 	public BooleanGene(ArrayList<Boolean> g) {
-		this.information = g;
+		ArrayList<Boolean> inf = new ArrayList<Boolean>(g.size());
+		
+		for (boolean b : g)
+			inf.add(new Boolean(b));
+		
+		this.information = inf;
 	}
 	
 	public BooleanGene(Integer length, Random random) {
@@ -35,15 +40,15 @@ public class BooleanGene extends AbstractGene<ArrayList<Boolean>> {
 	}
 	
 	public void add(boolean b) {
-		this.information.add(b);
+		this.information.add(new Boolean(b));
 	}
 
 	public boolean mutate(double mutationProb, Random random) {
 		boolean mutated = false;
 		
-		for (boolean bit : this.information) {
+		for (int i = 0; i < this.information.size(); i++) {
 			if(random.nextDouble() < mutationProb) {
-				bit = !bit;
+				this.information.set(i, !this.information.get(i));
 				mutated = true;
 			}
 		}
@@ -59,7 +64,7 @@ public class BooleanGene extends AbstractGene<ArrayList<Boolean>> {
 		ArrayList<Boolean> info = new ArrayList<Boolean>();
 		
 		for (boolean b : this.information) { // primitive type to avoid referencing
-			info.add(b);
+			info.add(new Boolean(b));
 		}
 		
 		return new BooleanGene(info);

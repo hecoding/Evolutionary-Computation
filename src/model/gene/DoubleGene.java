@@ -10,7 +10,7 @@ public class DoubleGene extends AbstractGene<Double> {
 	
 	/* Return empty gene with n allocated position */
 	public DoubleGene(double n) {
-		this.information = n;
+		this.information = new Double(n);
 	}
 	
 	public boolean mutate(double mutationProb, Random random) {
@@ -25,9 +25,8 @@ public class DoubleGene extends AbstractGene<Double> {
 	}
 	
 	public DoubleGene clone() {
-		DoubleGene newGene = new DoubleGene(this.information);
 		
-		return newGene;
+		return new DoubleGene(this.information);
 	}
 	
 	public void setMaxRange(double ran) {

@@ -89,9 +89,7 @@ public class Controller {
 	}
 	
 	public double getFunctionResult() {
-		return (this.ga.getBestChromosome()).getFunction().f(
-				this.ga.getBestChromosome().getPhenotype()
-				);
+		return this.ga.getBestChromosome().getAptitude();
 	}
 	
 	public ArrayList<Double> getResult() {

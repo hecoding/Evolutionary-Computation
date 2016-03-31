@@ -122,15 +122,15 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 		chr.aptitude = this.aptitude;
 		
 		chr.geneLengths.clear();
-		for(int l : this.geneLengths) // primitive type to avoid referencing (doesn't work?)
-			chr.geneLengths.add(l);
+		for(int l : this.geneLengths)
+			chr.geneLengths.add(new Integer(l));
 		
-		for(double p : this.params) // primitive type to avoid referencing
-			chr.params.add(p);
+		for(double p : this.params)
+			chr.params.add(new Double(p));
 		
 		chr.phenotype.clear();
-		for(double ph : this.phenotype) // primitive type to avoid referencing
-			chr.phenotype.add(ph);
+		for(double ph : this.phenotype)
+			chr.phenotype.add(new Double(ph));
 		
 		chr.score = this.score;
 		
@@ -138,6 +138,8 @@ public class BooleanChromosome extends AbstractChromosome<BooleanGene> {
 	}
 	
 	public String toString() {
+		if(this.genes == null || this.genes.size() == 0)
+			return "";
 		String s = new String();
 		
 		for (BooleanGene gen : this.genes) {
