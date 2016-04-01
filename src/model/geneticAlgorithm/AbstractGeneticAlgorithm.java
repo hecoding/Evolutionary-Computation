@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.Random;
 
 import model.chromosome.AbstractChromosome;
-import model.chromosome.AptitudeComparator;
+import model.chromosome.comparator.AptitudeComparator;
 import model.function.Function;
 import model.geneticAlgorithm.selection.SelectionInterface;
 import model.observer.GeneticAlgorithmObserver;

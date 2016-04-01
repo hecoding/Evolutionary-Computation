@@ -1,7 +1,8 @@
-package model.chromosome;
+package model.chromosome.comparator;
 
 import java.util.Comparator;
 
+import model.chromosome.AbstractChromosome;
 import model.gene.AbstractGene;
 
 public class AptitudeComparator implements Comparator<AbstractChromosome<? extends AbstractGene<?>>> {

@@ -14,7 +14,7 @@ public class SelectionFactory {
 		if (id == "ruleta")
 			return new RouletteSelection();
 		else if (id == "torneo")
-			return null;
+			return new TournamentSelection();
 		else
 			throw new IllegalArgumentException("Unknown selection method");
 	}
