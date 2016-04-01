@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import model.chromosome.DoubleChromosome;
 import model.function.Function;
 import model.gene.DoubleGene;
+import model.geneticAlgorithm.crossover.CrossoverInterface;
 import model.geneticAlgorithm.selection.SelectionInterface;
 
 public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChromosome> {
 
-	public DoubleGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, int populationNum,
-			boolean useElitism, double elitePercentage, int maxGenerationNum,
+	public DoubleGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
+			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
-		super(func, selectionStrategy, populationNum, useElitism, elitePercentage, maxGenerationNum,
-				crossProb, mutationProb, tolerance, customSeed, seed);
+		super(func, selectionStrategy, crossoverStrategy, populationNum, useElitism, elitePercentage,
+				maxGenerationNum, crossProb, mutationProb, tolerance, customSeed, seed);
 	}
 
 	public void initialize() {
@@ -30,63 +31,7 @@ public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChrom
 	
 	// selection
 
-	@Override
-	public void reproduction() {
-		ArrayList<Integer> selectedCandidatesIdx = new ArrayList<Integer>(this.population.size());
-		DoubleChromosome child1 = null, child2 = null;
-		
-		// select randomly all the candidates for the crossover
-		for (int i = 0; i < this.population.size(); i++) {
-			if(random.nextDouble() < this.crossProb)
-				selectedCandidatesIdx.add(i);
-		}
-		
-		// make size even
-		if((selectedCandidatesIdx.size() % 2) == 1)
-			selectedCandidatesIdx.remove(selectedCandidatesIdx.size() - 1);
-		
-		// iterate over pairs
-		for (int i = 0; i < selectedCandidatesIdx.size(); i+=2) {
-			DoubleChromosome parent1 = this.population.get(selectedCandidatesIdx.get(i));
-			DoubleChromosome parent2 = this.population.get(selectedCandidatesIdx.get(i + 1));
-			child1 = parent1.clone(); child1.setGenotype(new ArrayList<DoubleGene>());
-			child2 = parent1.clone(); child2.setGenotype(new ArrayList<DoubleGene>());
-			crossover(parent1, parent2, child1, child2);
-			
-			this.population.set(selectedCandidatesIdx.get(i), child1);
-			this.population.set(selectedCandidatesIdx.get(i + 1), child2);
-		}
-	}
-
-	private void crossover(DoubleChromosome parent1, DoubleChromosome parent2, DoubleChromosome child1, DoubleChromosome child2) {
-		int currentGeneLength = this.population.get(0).getLength();
-			
-		// select point over 0 and the current gene length - 1
-		int crossoverPoint = random.nextInt(currentGeneLength);
-		
-		ArrayList<DoubleGene> parent1Gene = parent1.getGenotype();
-		ArrayList<DoubleGene> parent2Gene = parent2.getGenotype();
-		ArrayList<DoubleGene> child1Gene = new ArrayList<DoubleGene>(currentGeneLength);
-		ArrayList<DoubleGene> child2Gene = new ArrayList<DoubleGene>(currentGeneLength);
-		
-		// before the crossover point
-		for (int j = 0; j < crossoverPoint; j++) {
-			child1Gene.add(parent1Gene.get(j));
-			child2Gene.add(parent2Gene.get(j));
-		}
-		
-		// after the crossover point
-		for (int j = crossoverPoint; j < currentGeneLength; j++) {
-			child1Gene.add(parent2Gene.get(j));
-			child2Gene.add(parent1Gene.get(j));
-		}
-		
-		child1.setGenotype(child1Gene);
-		child2.setGenotype(child2Gene);
-		
-		child1.setAptitude(child1.evaluate());
-		child2.setAptitude(child2.evaluate());
-	}
+	// reproduction
 
 	@Override
 	public void mutation() {

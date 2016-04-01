@@ -4,15 +4,16 @@ import java.util.ArrayList;
 import model.chromosome.BooleanChromosome;
 import model.function.Function;
 import model.gene.BooleanGene;
+import model.geneticAlgorithm.crossover.CrossoverInterface;
 import model.geneticAlgorithm.selection.SelectionInterface;
 
 public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm<BooleanChromosome> {
 
-	public BooleanGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, int populationNum,
-			boolean useElitism, double elitePercentage, int maxGenerationNum,
+	public BooleanGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
+			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
-		super(func, selectionStrategy, populationNum, useElitism, elitePercentage, maxGenerationNum,
-				crossProb, mutationProb, tolerance, customSeed, seed);
+		super(func, selectionStrategy, crossoverStrategy, populationNum, useElitism, elitePercentage,
+				maxGenerationNum, crossProb, mutationProb, tolerance, customSeed, seed);
 	}
 	
 	public void initialize() {
@@ -30,65 +31,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm<BooleanChr
 	
 	// selection
 	
-	public void reproduction() {
-		ArrayList<Integer> selectedCandidatesIdx = new ArrayList<Integer>(this.population.size());
-		BooleanChromosome child1 = null, child2 = null;
-		
-		// select randomly all the candidates for the crossover
-		for (int i = 0; i < this.population.size(); i++) {
-			if(random.nextDouble() < this.crossProb)
-				selectedCandidatesIdx.add(i);
-		}
-		
-		// make size even
-		if((selectedCandidatesIdx.size() % 2) == 1)
-			selectedCandidatesIdx.remove(selectedCandidatesIdx.size() - 1);
-		
-		// iterate over pairs
-		for (int i = 0; i < selectedCandidatesIdx.size(); i+=2) {
-			BooleanChromosome parent1 = this.population.get(selectedCandidatesIdx.get(i));
-			BooleanChromosome parent2 = this.population.get(selectedCandidatesIdx.get(i + 1));
-			child1 = parent1.clone(); child1.setGenotype(new ArrayList<BooleanGene>());
-			child2 = parent1.clone(); child2.setGenotype(new ArrayList<BooleanGene>());
-			crossover(parent1, parent2, child1, child2);
-			
-			this.population.set(selectedCandidatesIdx.get(i), child1);
-			this.population.set(selectedCandidatesIdx.get(i + 1), child2);
-		}
-	}
-	
-	private void crossover(BooleanChromosome parent1, BooleanChromosome parent2, BooleanChromosome child1, BooleanChromosome child2) {
-		int geneNum = this.population.get(0).getGeneNum();
-		for (int i = 0; i < geneNum; i++) {
-			int currentGeneLength = this.population.get(0).getGenotype().get(i).getLength();
-			
-			// select point over 0 and the current gene length - 1
-			int crossoverPoint = random.nextInt(currentGeneLength);
-			
-			BooleanGene parent1Gene = parent1.getGenotype().get(i);
-			BooleanGene parent2Gene = parent2.getGenotype().get(i);
-			BooleanGene child1Gene = new BooleanGene(currentGeneLength);
-			BooleanGene child2Gene = new BooleanGene(currentGeneLength);
-			
-			// before the crossover point
-			for (int j = 0; j < crossoverPoint; j++) {
-				child1Gene.add(parent1Gene.getInformation().get(j));
-				child2Gene.add(parent2Gene.getInformation().get(j));
-			}
-			
-			// after the crossover point
-			for (int j = crossoverPoint; j < currentGeneLength; j++) {
-				child1Gene.add(parent2Gene.getInformation().get(j));
-				child2Gene.add(parent1Gene.getInformation().get(j));
-			}
-			
-			child1.add(child1Gene);
-			child2.add(child2Gene);
-		}
-		
-		child1.setAptitude(child1.evaluate());
-		child2.setAptitude(child2.evaluate());
-	}
+	// reproduction
 	
 	public void mutation() {
 		ArrayList<BooleanGene> genes;

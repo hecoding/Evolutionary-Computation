@@ -6,6 +6,7 @@ import view.gui.swing.SettingsPanel.Percentage;
 public class TransferGeneticAlgorithm {
 	private String funcion;
 	private String seleccion;
+	private String cruce;
 	private Double precision;
 	private int poblacion;
 	private int generaciones;
@@ -32,6 +33,14 @@ public class TransferGeneticAlgorithm {
 
 	public void setSeleccion(String seleccion) {
 		this.seleccion = seleccion;
+	}
+
+	public String getCruce() {
+		return cruce;
+	}
+
+	public void setCruce(String cruce) {
+		this.cruce = cruce;
 	}
 
 	public Double getPrecision() {
@@ -125,6 +134,7 @@ public class TransferGeneticAlgorithm {
 	public String toString() {
 		return "función: " + this.funcion + System.lineSeparator() +
 				"selección: " + this.seleccion + System.lineSeparator() +
+				"cruce: " + this.cruce + System.lineSeparator() +
 				"param func 4: " + this.paramFunc4 + System.lineSeparator() +
 				"cromosoma real: " + this.cromosomaReal + System.lineSeparator() +
 				"precisión: " + this.precision + System.lineSeparator() +

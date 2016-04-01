@@ -46,10 +46,6 @@ public class DoubleChromosome extends AbstractChromosome<DoubleGene> {
 		this.genes.get(0).setMaxRange(this.getMaxRange());
 	}
 	
-	public int getLength() {
-		return this.genes.size();
-	}
-	
 	public ArrayList<Double> getPhenotype() {
 		ArrayList<Double> a = new ArrayList<Double>();
 		

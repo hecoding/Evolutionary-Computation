@@ -73,6 +73,10 @@ public abstract class AbstractChromosome<T extends AbstractGene<?>> implements C
 	public void setAggregateScore(double aggregateScore) {
 		this.aggregateScore = aggregateScore;
 	}
+
+	public int getLength() {
+		return this.genes.size();
+	}
 	
 	public abstract AbstractChromosome<T> clone();
 	

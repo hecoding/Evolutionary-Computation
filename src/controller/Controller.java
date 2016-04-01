@@ -10,6 +10,9 @@ import model.geneticAlgorithm.AbstractGeneticAlgorithm;
 import model.geneticAlgorithm.BooleanGeneticAlgorithm;
 import model.geneticAlgorithm.DoubleGeneticAlgorithm;
 import model.geneticAlgorithm.TransferGeneticAlgorithm;
+import model.geneticAlgorithm.crossover.CrossoverFactory;
+import model.geneticAlgorithm.crossover.CrossoverInterface;
+import model.geneticAlgorithm.crossover.OnepointBitToBitCrossover;
 import model.geneticAlgorithm.selection.RouletteSelection;
 import model.geneticAlgorithm.selection.SelectionFactory;
 import model.geneticAlgorithm.selection.SelectionInterface;
@@ -21,8 +24,8 @@ import view.gui.swing.SettingsPanel.Percentage;
 
 public class Controller {
 	private AbstractGeneticAlgorithm<?> ga;
-	private BooleanGeneticAlgorithm ba = new BooleanGeneticAlgorithm(new Function1(), new RouletteSelection(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
-	private DoubleGeneticAlgorithm da = new DoubleGeneticAlgorithm(new Function1(), new RouletteSelection(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
+	private BooleanGeneticAlgorithm ba = new BooleanGeneticAlgorithm(new Function1(), new RouletteSelection(), new OnepointBitToBitCrossover(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
+	private DoubleGeneticAlgorithm da = new DoubleGeneticAlgorithm(new Function1(), new RouletteSelection(), new OnepointBitToBitCrossover(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
 	
 	public Controller() {
 	}
@@ -34,14 +37,15 @@ public class Controller {
 		else
 			function = FunctionFactory.getInstance().create(transfer.getFuncion());
 		SelectionInterface selection = SelectionFactory.getInstance().create(transfer.getSeleccion());
+		CrossoverInterface crossover = CrossoverFactory.getInstance().create(transfer.getCruce());
 		double elitePercentage = 0;
 		boolean elitism = transfer.getElitismo().getOpcion();
 		elitePercentage = transfer.getPorcElite().getPerc();
 		
-		this.ba.restart(function, selection, transfer.getPoblacion(), elitism, elitePercentage,
+		this.ba.restart(function, selection, crossover, transfer.getPoblacion(), elitism, elitePercentage,
 				transfer.getGeneraciones(), transfer.getPorcCruces(), transfer.getPorcMutacion(),
 				transfer.getPrecision(), transfer.getSemillaPersonalizada().getOpcion(), transfer.getSemilla());
-		this.da.restart(function, selection, transfer.getPoblacion(), elitism, elitePercentage,
+		this.da.restart(function, selection, crossover, transfer.getPoblacion(), elitism, elitePercentage,
 				transfer.getGeneraciones(), transfer.getPorcCruces(), transfer.getPorcMutacion(),
 				transfer.getPrecision(), transfer.getSemillaPersonalizada().getOpcion(), transfer.getSemilla());
 		
@@ -58,6 +62,7 @@ public class Controller {
 		Percentage porcElite;
 		Function funcion = this.ga.getFunction();
 		SelectionInterface seleccion = this.ga.getSelectionStrategy();
+		CrossoverInterface cruce = this.ga.getCrossoverStrategy();
 		Check semillaPersonalizada;
 		
 		transfer.setFuncion(funcion.getName());
@@ -67,6 +72,7 @@ public class Controller {
 				real = new Si();
 		transfer.setCromosomaReal(real);
 		transfer.setSeleccion(seleccion.getName());
+		transfer.setCruce(cruce.getName());
 		transfer.setPrecision(this.ga.getTolerance());
 		transfer.setPoblacion(this.ga.getPopulationNum());
 		transfer.setGeneraciones(this.ga.getMaxGenerationNum());

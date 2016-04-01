@@ -7,6 +7,7 @@ import java.util.Random;
 import model.chromosome.AbstractChromosome;
 import model.chromosome.comparator.AptitudeComparator;
 import model.function.Function;
+import model.geneticAlgorithm.crossover.CrossoverInterface;
 import model.geneticAlgorithm.selection.SelectionInterface;
 import model.observer.GeneticAlgorithmObserver;
 import model.observer.Observable;
@@ -39,16 +40,18 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	protected ArrayList<Double> bestAptitudeList;
 	
 	protected SelectionInterface selectionStrategy;
+	protected CrossoverInterface crossoverStrategy;
 	
 	public AbstractGeneticAlgorithm() {
 		this.observers = new ArrayList<GeneticAlgorithmObserver>();
 	}
 	
-	public AbstractGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, int populationNum,
-			boolean useElitism, double elitePercentage, int maxGenerationNum,
+	public AbstractGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
+			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
 		function = func;
 		this.selectionStrategy = selectionStrategy;
+		this.crossoverStrategy = crossoverStrategy;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
@@ -84,14 +87,17 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	public void selection() {
 		this.selectionStrategy.select(this.population, random);
 	}
-	public abstract void reproduction();
+	public void reproduction() {
+		this.crossoverStrategy.crossover(this.population, random, this.crossProb);
+	}
 	public abstract void mutation();
 	
-	public void restart(Function func, SelectionInterface selectionStrategy, int populationNum, boolean useElitism,
-			double elitePercentage, int maxGenerationNum, double crossProb,
+	public void restart(Function func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
+			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum, double crossProb,
 			double mutationProb, double tolerance, boolean customSeed, long seed) {
 		function = func;
 		this.selectionStrategy = selectionStrategy;
+		this.crossoverStrategy = crossoverStrategy;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
@@ -130,6 +136,10 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	
 	public SelectionInterface getSelectionStrategy() {
 		return this.selectionStrategy;
+	}
+	
+	public CrossoverInterface getCrossoverStrategy() {
+		return this.crossoverStrategy;
 	}
 
 	public int getPopulationNum() {
@@ -224,7 +234,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void evaluatePopulation() { // VERY IMPORTANT TO CLEAR inspectedAptitude;
+	public void evaluatePopulation() {
 		double aggregateScore = 0;
 		double bestAptitude = Double.NEGATIVE_INFINITY;
 		if(function.isMinimization())
