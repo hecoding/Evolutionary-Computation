@@ -14,8 +14,8 @@ public class OnepointBitToBitCrossover implements CrossoverInterface {
 	@Override
 	public <T extends AbstractChromosome<?>> void crossover(ArrayList<T> population, Random random,
 			double crossProb) {
-		if(!(population.get(0) instanceof BooleanChromosome))
-			throw new IllegalArgumentException("Bad chromosome, " + population.get(0).getClass() + " must be BooleanChromosome");
+		if(!(population.get(0).getGenotype().get(0) instanceof BooleanGene))
+			throw new IllegalChromosomeException("Bad gene, " + population.get(0).getGenotype().get(0).getClass() + " must be BooleanGene");
 		
 		ArrayList<Integer> selectedCandidatesIdx = new ArrayList<Integer>(population.size());
 		T child1 = null, child2 = null;
@@ -81,6 +81,14 @@ public class OnepointBitToBitCrossover implements CrossoverInterface {
 	@Override
 	public String getName() {
 		return "un punto bit";
+	}
+	
+	public class IllegalChromosomeException extends IllegalArgumentException {
+		private static final long serialVersionUID = 1L;
+		
+		public IllegalChromosomeException(String s) {
+			super(s);
+		}
 	}
 
 }
