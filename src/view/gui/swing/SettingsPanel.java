@@ -5,12 +5,14 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
 import controller.Controller;
 import model.geneticAlgorithm.TransferGeneticAlgorithm;
+import model.geneticAlgorithm.crossover.OnepointBitToBitCrossover.IllegalChromosomeException;
 import model.observer.GeneticAlgorithmObserver;
 import view.gui.swing.ConfigPanel.ChoiceOption;
 import view.gui.swing.ConfigPanel.ConfigListener;
@@ -71,7 +73,16 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		runButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ctrl.setParameters(transfer);
-				ctrl.run();
+				try {
+					ctrl.run();
+				} catch(IllegalChromosomeException ex) {
+					JOptionPane.showMessageDialog(null,
+							"No se puede aplicar un cruce bit a bit a un cromosoma que no sea de cadenas de bits.",
+							"Error", JOptionPane.ERROR_MESSAGE);
+					for (Component cmp : buttonPanel.getComponents()) {
+						cmp.setEnabled(true);
+					}
+				}
 			}
 		});
 		buttonPanel.add(runButton, BorderLayout.PAGE_START);
