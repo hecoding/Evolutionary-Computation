@@ -19,6 +19,8 @@ private static CrossoverFactory instance;
 			return new UniformCrossover();
 		else if (id == "aritmético")
 			return new ArithmeticCrossover();
+		else if (id == "SBX")
+			return new SimulatedBinaryCrossover();
 		else
 			throw new IllegalArgumentException("Unknown selection method");
 	}
