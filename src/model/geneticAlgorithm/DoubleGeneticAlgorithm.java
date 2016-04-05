@@ -1,9 +1,7 @@
 package model.geneticAlgorithm;
 
-import java.util.ArrayList;
 import model.chromosome.DoubleChromosome;
 import model.function.Function;
-import model.gene.DoubleGene;
 import model.geneticAlgorithm.crossover.CrossoverInterface;
 import model.geneticAlgorithm.selection.SelectionInterface;
 
@@ -35,11 +33,11 @@ public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChrom
 
 	@Override
 	public void mutation() {
-		ArrayList<DoubleGene> genes;
-		boolean mutated = false;
+		/*ArrayList<DoubleGene> genes;
+		boolean mutated = false;*/
 		
 		for (DoubleChromosome chrom : this.population) {
-			mutated = false;
+			/*mutated = false;
 			genes = chrom.getGenotype();
 			
 			for (DoubleGene gene : genes) {
@@ -47,7 +45,9 @@ public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChrom
 			}
 			
 			if(mutated)
-				chrom.setAptitude(chrom.evaluate());
+				chrom.setAptitude(chrom.evaluate());*/
+			chrom.mutate();
+			chrom.setAptitude(chrom.evaluate());
 		}
 	}
 	

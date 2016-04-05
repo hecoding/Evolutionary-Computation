@@ -3,7 +3,8 @@ package model.gene;
 import java.util.Random;
 
 public class DoubleGene extends AbstractGene<Double> {
-	private static double range;
+	private double minLimit;
+	private double maxLimit;
 	
 	public DoubleGene() {
 	}
@@ -17,7 +18,7 @@ public class DoubleGene extends AbstractGene<Double> {
 		boolean mutated = false;
 		
 		if(random.nextDouble() < mutationProb) {
-			this.information = random.nextDouble() * range;
+			this.information = minLimit + random.nextDouble() * (maxLimit - minLimit);
 			mutated = true;
 		}
 		
@@ -25,20 +26,27 @@ public class DoubleGene extends AbstractGene<Double> {
 	}
 	
 	public DoubleGene clone() {
+		DoubleGene chr = new DoubleGene(this.information);
+		chr.setMinLimit(minLimit);
+		chr.setMaxLimit(maxLimit);
 		
-		return new DoubleGene(this.information);
+		return chr;
 	}
 	
-	public void setMaxRange(double ran) {
-		range = ran;
+	public void setMinLimit(double lim) {
+		minLimit = lim;
 	}
 	
-	public static double getMaxRange() {
-		return range;
+	public double getMinLimit() {
+		return minLimit;
 	}
-
-	public static void setRange(double range) {
-		DoubleGene.range = range;
+	
+	public void setMaxLimit(double lim) {
+		maxLimit = lim;
+	}
+	
+	public double getMaxLimit() {
+		return maxLimit;
 	}
 
 	public String toString() {

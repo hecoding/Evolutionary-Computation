@@ -10,7 +10,6 @@ public class DoubleChromosome extends AbstractChromosome<DoubleGene> {
 	
 	private double tolerance;
 	private Random random;
-	private static double maxRange;
 	
 	public DoubleChromosome(Function func, double tolerance, Random randomGenerator) {
 		function = func;
@@ -18,7 +17,6 @@ public class DoubleChromosome extends AbstractChromosome<DoubleGene> {
 		this.genes = new ArrayList<DoubleGene>();
 		this.random = randomGenerator;
 		this.params = new ArrayList<Double>(function.paramNum());
-		this.setMaxRange(function.paramNum() * 2); // function 4 specific
 	}
 
 	public DoubleChromosome(Function func, ArrayList<DoubleGene> genes, double tolerance, Random randomGenerator) {
@@ -31,7 +29,6 @@ public class DoubleChromosome extends AbstractChromosome<DoubleGene> {
 		this.genes = clonedList;
 		this.random = randomGenerator;
 		this.params = new ArrayList<Double>(function.paramNum());
-		this.setMaxRange(function.paramNum() * 2);
 	}
 
 	@Override
@@ -40,10 +37,19 @@ public class DoubleChromosome extends AbstractChromosome<DoubleGene> {
 			this.genes.clear();
 		
 		for (int i = 0; i < function.paramNum(); i++) {
-			this.genes.add(new DoubleGene( random.nextDouble() * this.getMaxRange() ));
+			this.genes.add(new DoubleGene( function.getLimits().get(i).minx +
+					random.nextDouble() * (function.getLimits().get(i).maxx - function.getLimits().get(i).minx) ));
+			
+			this.genes.get(i).setMinLimit(function.getLimits().get(i).minx);
+			this.genes.get(i).setMaxLimit(function.getLimits().get(i).maxx);
 		}
-		
-		this.genes.get(0).setMaxRange(this.getMaxRange());
+	}
+	
+	public void mutate() {
+		for (int i = 0; i < this.genes.size(); i++) {
+			this.genes.get(i).setInformation(function.getLimits().get(i).minx + 
+					random.nextDouble() * (function.getLimits().get(i).maxx - function.getLimits().get(i).minx));
+		}
 	}
 	
 	public ArrayList<Double> getPhenotype() {
@@ -69,14 +75,6 @@ public class DoubleChromosome extends AbstractChromosome<DoubleGene> {
 		chr.score = this.score;
 		
 		return chr;
-	}
-	
-	public double getMaxRange() {
-		return maxRange;
-	}
-
-	public void setMaxRange(double maxRang) {
-		maxRange = maxRang;
 	}
 
 	public String toString() {

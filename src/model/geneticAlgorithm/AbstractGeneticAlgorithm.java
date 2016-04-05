@@ -211,6 +211,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		while(!this.finished()) {
 			if (this.useElitism)
 				this.elite = this.selectElite();
+			//if(this.currentGeneration < 2 || this.averageAptitudeList.get(this.averageAptitudeList.size() -1) > this.averageAptitudeList.get(this.averageAptitudeList.size() -2))
 			this.increaseGeneration();
 			this.selection();
 			this.reproduction();
