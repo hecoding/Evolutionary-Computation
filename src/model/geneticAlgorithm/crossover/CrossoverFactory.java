@@ -11,7 +11,7 @@ private static CrossoverFactory instance;
 	}
 	
 	public CrossoverInterface create(String id) {
-		if (id == "un punto bit")
+		if (id == "un punto bit a bit")
 			return new OnepointBitToBitCrossover();
 		else if (id == "un punto")
 			return new OnepointCrossover();
