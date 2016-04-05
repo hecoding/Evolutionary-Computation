@@ -14,4 +14,6 @@ public abstract class AbstractGene<T> {
 	public void setInformation(T information) {
 		this.information = information;
 	}
+	
+	public abstract AbstractGene<T> clone();
 }

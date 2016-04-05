@@ -15,6 +15,8 @@ private static CrossoverFactory instance;
 			return new OnepointBitToBitCrossover();
 		else if (id == "un punto")
 			return new OnepointCrossover();
+		else if (id == "discreto uniforme")
+			return new UniformCrossover();
 		else
 			throw new IllegalArgumentException("Unknown selection method");
 	}
