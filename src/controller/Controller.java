@@ -50,7 +50,7 @@ public class Controller {
 				transfer.getPrecision(), transfer.getSemillaPersonalizada().getOpcion(), transfer.getSemilla());
 		
 		this.ga = ba;
-		if(transfer.getFuncion() == "función 4" && transfer.getCromosomaReal().getOpcion()) {
+		if(transfer.getCromosomaReal().getOpcion()) {
 				this.ga = da;
 		}
 	}

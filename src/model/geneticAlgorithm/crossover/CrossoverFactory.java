@@ -17,6 +17,8 @@ private static CrossoverFactory instance;
 			return new OnepointCrossover();
 		else if (id == "discreto uniforme")
 			return new UniformCrossover();
+		else if (id == "aritmético")
+			return new ArithmeticCrossover();
 		else
 			throw new IllegalArgumentException("Unknown selection method");
 	}
