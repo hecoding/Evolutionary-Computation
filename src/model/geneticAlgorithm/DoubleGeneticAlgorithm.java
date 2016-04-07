@@ -49,7 +49,7 @@ public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChrom
 			
 			if(mutated)
 				chrom.setAptitude(chrom.evaluate());*/
-			chrom.mutate();
+			chrom.mutate(this.mutationProb);
 			chrom.setAptitude(chrom.evaluate());
 		}
 	}
