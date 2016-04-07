@@ -60,7 +60,6 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.currentGeneration = 0;
 		this.maxGenerationNum = maxGenerationNum;
 		this.bestChromosome = null;
-		this.inspectedAptitude = new ArrayList<Double>(populationNum);
 		this.bestAptitude = 0;
 		this.averageAptitude = 0;
 		this.averageScore = 0;
@@ -72,6 +71,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.inspectedAptitude = new ArrayList<Double>(populationNum);
 		this.observers = new ArrayList<GeneticAlgorithmObserver>();
 		
 		if(random == null) {
@@ -184,6 +184,14 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	
 	public void removeObserver(GeneticAlgorithmObserver o) {
 		this.observers.remove(o);
+	}
+	
+	public ArrayList<GeneticAlgorithmObserver> getObservers() {
+		return this.observers;
+	}
+	
+	public void setObservers(ArrayList<GeneticAlgorithmObserver> observers) {
+		this.observers = observers;
 	}
 	
 	protected void notifyStartRun() {

@@ -8,7 +8,7 @@ import model.function.Function4;
 import model.function.FunctionFactory;
 import model.geneticAlgorithm.AbstractGeneticAlgorithm;
 import model.geneticAlgorithm.BooleanGeneticAlgorithm;
-import model.geneticAlgorithm.DoubleGeneticAlgorithm;
+import model.geneticAlgorithm.GeneticAlgorithmFactory;
 import model.geneticAlgorithm.TransferGeneticAlgorithm;
 import model.geneticAlgorithm.crossover.CrossoverFactory;
 import model.geneticAlgorithm.crossover.CrossoverInterface;
@@ -24,13 +24,20 @@ import view.gui.swing.SettingsPanel.Percentage;
 
 public class Controller {
 	private AbstractGeneticAlgorithm<?> ga;
-	private BooleanGeneticAlgorithm ba = new BooleanGeneticAlgorithm(new Function1(), new RouletteSelection(), new OnepointBitToBitCrossover(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
-	private DoubleGeneticAlgorithm da = new DoubleGeneticAlgorithm(new Function1(), new RouletteSelection(), new OnepointBitToBitCrossover(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
 	
 	public Controller() {
+		// default genetic algorithm
+		this.ga = new BooleanGeneticAlgorithm(new Function1(), new RouletteSelection(), new OnepointBitToBitCrossover(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
 	}
 	
 	public void setParameters(TransferGeneticAlgorithm transfer) {
+		ArrayList<GeneticAlgorithmObserver> observers = this.ga.getObservers();
+		
+		if(transfer.getCromosomaReal().getOpcion())
+			this.ga = GeneticAlgorithmFactory.getInstance().create("real");
+		else
+			this.ga = GeneticAlgorithmFactory.getInstance().create("booleano");
+		
 		Function function;
 		if(transfer.getFuncion() == "función 4")
 			function = FunctionFactory.getInstance().createFunc4(transfer.getParamFunc4(), transfer.getCromosomaReal().getOpcion());
@@ -42,22 +49,17 @@ public class Controller {
 		boolean elitism = transfer.getElitismo().getOpcion();
 		elitePercentage = transfer.getPorcElite().getPerc();
 		
-		this.ba.restart(function, selection, crossover, transfer.getPoblacion(), elitism, elitePercentage,
-				transfer.getGeneraciones(), transfer.getPorcCruces(), transfer.getPorcMutacion(),
-				transfer.getPrecision(), transfer.getSemillaPersonalizada().getOpcion(), transfer.getSemilla());
-		this.da.restart(function, selection, crossover, transfer.getPoblacion(), elitism, elitePercentage,
+		this.ga.restart(function, selection, crossover, transfer.getPoblacion(), elitism, elitePercentage,
 				transfer.getGeneraciones(), transfer.getPorcCruces(), transfer.getPorcMutacion(),
 				transfer.getPrecision(), transfer.getSemillaPersonalizada().getOpcion(), transfer.getSemilla());
 		
-		this.ga = ba;
-		if(transfer.getCromosomaReal().getOpcion()) {
-				this.ga = da;
-		}
+		this.ga.setObservers(observers);
+		// LAS PROBS PARECE QUE NO VAN
 	}
 	
 	public TransferGeneticAlgorithm getParameters() {
 		TransferGeneticAlgorithm transfer = new TransferGeneticAlgorithm();
-		this.ga = this.ba; // por poner uno
+		
 		Check elitism;
 		Percentage porcElite;
 		Function funcion = this.ga.getFunction();
@@ -125,7 +127,6 @@ public class Controller {
 	}
 	
 	public void addModelObserver(GeneticAlgorithmObserver o) {
-		this.da.addObserver(o);
-		this.ba.addObserver(o);
+		this.ga.addObserver(o);
 	}
 }

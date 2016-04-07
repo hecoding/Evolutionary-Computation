@@ -9,6 +9,10 @@ import model.geneticAlgorithm.selection.SelectionInterface;
 
 public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm<BooleanChromosome> {
 
+	public BooleanGeneticAlgorithm() {
+		
+	}
+	
 	public BooleanGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
 			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
