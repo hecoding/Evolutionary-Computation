@@ -47,9 +47,10 @@ public class DoubleChromosome extends AbstractChromosome<DoubleGene> {
 	
 	public void mutate(double mutationProb) {
 		for (int i = 0; i < this.genes.size(); i++) {
-			if(random.nextDouble() < mutationProb)
+			if(random.nextDouble() < mutationProb) {
 				this.genes.get(i).setInformation(function.getLimits().get(i).minx + 
 						random.nextDouble() * (function.getLimits().get(i).maxx - function.getLimits().get(i).minx));
+			}
 		}
 	}
 	

@@ -45,27 +45,35 @@ public class SimulatedBinaryCrossover implements CrossoverInterface {
 	@SuppressWarnings("unchecked")
 	private <T extends AbstractChromosome<?>> void cross(double crossProb, Random random,
 			T parent1, T parent2, T child1, T child2) {
-		ArrayList<AbstractGene<?>> parent1Genes = (ArrayList<AbstractGene<?>>) parent1.getGenotype();
-		ArrayList<AbstractGene<?>> parent2Genes = (ArrayList<AbstractGene<?>>) parent2.getGenotype();
+		ArrayList<DoubleGene> parent1Genes = (ArrayList<DoubleGene>) parent1.getGenotype();
+		ArrayList<DoubleGene> parent2Genes = (ArrayList<DoubleGene>) parent2.getGenotype();
 		ArrayList<AbstractGene<?>> child1Genes = new ArrayList<AbstractGene<?>>(parent1Genes.size());
 		ArrayList<AbstractGene<?>> child2Genes = new ArrayList<AbstractGene<?>>(parent2Genes.size());
 		
+		double alpha = random.nextDouble();
 		double beta = 0;
 		int n = 1;
-		if(crossProb < 0.5)
-			beta = 2 * Math.pow(crossProb, 1/(n + 1));
+		if(alpha < 0.5)
+			beta = 2 * Math.pow(alpha, 1/(n + 1));
 		else
-			beta = Math.pow( 1 / (2 * (1 - crossProb)) , 1 / (n + 1) );
-		
+			beta = Math.pow( 1 / (2 * (1 - alpha)) , 1 / (n + 1) );
+		beta = 0.5;
 		for (int i = 0; i < parent1.getLength(); i++) {
 			double p1i = (double) parent1Genes.get(i).getInformation();
 			double p2i = (double) parent2Genes.get(i).getInformation();
 			
-			double inf1 = 0.5 * (p1i + p2i) - beta * (Math.abs(p2i - p1i));
-			double inf2 = 0.5 * (p1i + p2i) + beta * (Math.abs(p2i - p1i));
+			double inf1 = 0.5 * (p1i + p2i) - beta * Math.abs(p2i - p1i);
+			double inf2 = 0.5 * (p1i + p2i) + beta * Math.abs(p2i - p1i);
 			
-			child1Genes.add(new DoubleGene(inf1));
-			child2Genes.add(new DoubleGene(inf2));
+			DoubleGene ng1 = new DoubleGene(inf1);
+			ng1.setMaxLimit(parent1Genes.get(i).getMaxLimit());
+			ng1.setMinLimit(parent1Genes.get(i).getMinLimit());
+			DoubleGene ng2 = new DoubleGene(inf2);
+			ng2.setMaxLimit(parent1Genes.get(i).getMaxLimit());
+			ng2.setMinLimit(parent1Genes.get(i).getMinLimit());
+			
+			child1Genes.add(ng1);
+			child2Genes.add(ng2);
 		}
 		
 		child1.setGenotype(child1Genes);
