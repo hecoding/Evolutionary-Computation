@@ -7,7 +7,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 import controller.Controller;
-import model.geneticAlgorithm.TransferGeneticAlgorithm;
 
 
 public class MainWindow extends JFrame {
