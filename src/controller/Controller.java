@@ -9,7 +9,6 @@ import model.function.FunctionFactory;
 import model.geneticAlgorithm.AbstractGeneticAlgorithm;
 import model.geneticAlgorithm.BooleanGeneticAlgorithm;
 import model.geneticAlgorithm.GeneticAlgorithmFactory;
-import model.geneticAlgorithm.TransferGeneticAlgorithm;
 import model.geneticAlgorithm.crossover.CrossoverFactory;
 import model.geneticAlgorithm.crossover.CrossoverInterface;
 import model.geneticAlgorithm.crossover.OnepointBitToBitCrossover;
@@ -17,10 +16,6 @@ import model.geneticAlgorithm.selection.RouletteSelection;
 import model.geneticAlgorithm.selection.SelectionFactory;
 import model.geneticAlgorithm.selection.SelectionInterface;
 import model.observer.GeneticAlgorithmObserver;
-import view.gui.swing.SettingsPanel.Check;
-import view.gui.swing.SettingsPanel.Si;
-import view.gui.swing.SettingsPanel.No;
-import view.gui.swing.SettingsPanel.Percentage;
 
 public class Controller {
 	private AbstractGeneticAlgorithm<?> ga;
@@ -30,7 +25,7 @@ public class Controller {
 		this.ga = new BooleanGeneticAlgorithm(new Function1(), new RouletteSelection(), new OnepointBitToBitCrossover(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
 	}
 	
-	public void setParameters(TransferGeneticAlgorithm transfer) {
+	/*public void setParameters(TransferGeneticAlgorithm transfer) {
 		ArrayList<GeneticAlgorithmObserver> observers = this.ga.getObservers();
 		
 		if(transfer.getCromosomaReal().getOpcion())
@@ -96,7 +91,7 @@ public class Controller {
 		transfer.setPorcElite(porcElite);
 		
 		return transfer;
-	}
+	}*/
 	
 	public void run() {
 		this.ga.run();

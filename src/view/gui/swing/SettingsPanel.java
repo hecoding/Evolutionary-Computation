@@ -1,39 +1,44 @@
 package view.gui.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.InputVerifier;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
 import controller.Controller;
 import model.chromosome.exception.IllegalChromosomeException;
-import model.geneticAlgorithm.TransferGeneticAlgorithm;
 import model.observer.GeneticAlgorithmObserver;
-import view.gui.swing.ConfigPanel.ChoiceOption;
-import view.gui.swing.ConfigPanel.ConfigListener;
-import view.gui.swing.ConfigPanel.DoubleOption;
-import view.gui.swing.ConfigPanel.InnerOption;
-import view.gui.swing.ConfigPanel.IntegerOption;
-import view.gui.swing.ConfigPanel.StrategyOption;
 
 public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private static final long serialVersionUID = 1L;
  	private Controller ctrl;
- 	private TransferGeneticAlgorithm transfer;
- 	private StatusBarPanel status;
+ 	private JPanel settings;
  	private JPanel buttonPanel;
  	JButton runButton;
+ 	JButton resetButton;
+ 	private StatusBarPanel status;
 
 	public SettingsPanel(Controller ctrl, StatusBarPanel status) {
 		this.ctrl = ctrl;
 		this.ctrl.addModelObserver(this);
-		this.transfer = new TransferGeneticAlgorithm();
-		this.transfer = ctrl.getParameters();
 		this.status = status;
 		
 		SwingUtilities.invokeLater(new Runnable() {
@@ -47,37 +52,18 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		this.setLayout(new BorderLayout());
 		this.setBorder(new TitledBorder("Ajustes"));
 		
-		final ConfigPanel<TransferGeneticAlgorithm> settings = creaPanelConfiguracion();
-		settings.setTarget(transfer);
-		settings.initialize();
-		settings.addConfigListener(new ConfigListener() {
-			@Override
-			public void configChanged(boolean isConfigValid) {
-				if (!isConfigValid) {
-					runButton.setEnabled(false);
-					status.setErrors(true);
-				}
-				else {
-					status.setErrors(false);
-					if (!runButton.isEnabled())
-						runButton.setEnabled(true);
-				}
-			}
-		});
+		constructSettings();		
 		this.add(settings, BorderLayout.CENTER);
 		
 		buttonPanel = new JPanel(new BorderLayout());
-		runButton = new JButton();
-		JButton doSomth = new JButton();
-		runButton.setText("Lanzar");
+		runButton = new JButton("Lanzar");
 		runButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ctrl.setParameters(transfer);
+				//ctrl.setParameters(transfer);
 				try {
 					ctrl.run();
 				} catch(IllegalChromosomeException ex) {
 					JOptionPane.showMessageDialog(null,
-							//"No se puede aplicar un cruce bit a bit a un cromosoma que no sea de cadenas de bits.",
 							ex.getMessage(),
 							"Error", JOptionPane.ERROR_MESSAGE);
 					for (Component cmp : buttonPanel.getComponents()) {
@@ -86,17 +72,168 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				}
 			}
 		});
-		buttonPanel.add(runButton, BorderLayout.PAGE_START);
-		doSomth.setText("mostrar args. por consola");
-		doSomth.setToolTipText("Hi");
-		doSomth.addActionListener(new ActionListener() {
+		buttonPanel.add(runButton, BorderLayout.CENTER);
+		resetButton = new JButton("Resetear");
+		resetButton.setToolTipText("Volver a los valores iniciales");
+		resetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(ctrl.getParameters());
+				//System.out.println(ctrl.getParameters());
 			}
 		});
-		//buttonPanel.add(doSomth, BorderLayout.CENTER);
+		buttonPanel.add(resetButton, BorderLayout.PAGE_END);
 		this.add(buttonPanel, BorderLayout.PAGE_END);
 		// maybe wrap around a JScrollPane and/or JSplitPane
+	}
+	
+	private void constructSettings() {
+		settings = new JPanel();
+		settings.setLayout(new BoxLayout(settings, BoxLayout.Y_AXIS));
+		
+		//---------------------------------------------
+		
+		JPanel population = new JPanel();
+		JLabel populationLabel = new JLabel("Población");
+		population.add(populationLabel);
+		JTextField populationText = new JTextField(4);
+		final Border defaultborder = populationText.getBorder();
+		populationText.setInputVerifier(new InputVerifier() {
+			public boolean verify(JComponent input) {
+				try {
+					int a = Integer.parseInt(((JTextField) input).getText());
+					if (a > 0) {
+						populationText.setBorder(defaultborder);
+						return true;
+					}
+					else {
+						populationText.setBorder(BorderFactory.createLineBorder(Color.red));
+						return false;
+					}
+				} catch (NumberFormatException e) {
+					populationText.setBorder(BorderFactory.createLineBorder(Color.red));
+					return false;
+				}
+			}
+		});
+		population.add(populationText);
+		population.setMaximumSize(population.getPreferredSize());
+		population.setMinimumSize(population.getPreferredSize());
+		population.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(population);
+		
+		//---------------------------------------------
+		
+		JPanel generations = new JPanel();
+		JLabel generationsLabel = new JLabel("Generaciones");
+		generations.add(generationsLabel);
+		JTextField generationText = new JTextField(4);
+		generations.add(generationText);
+		generations.setMaximumSize(generations.getPreferredSize());
+		generations.setMinimumSize(generations.getPreferredSize());
+		generations.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(generations);
+		
+		//---------------------------------------------
+		
+		JPanel crossoverPerc = new JPanel();
+		JLabel crossoverPercLabel = new JLabel("Cruce");
+		crossoverPerc.add(crossoverPercLabel);
+		JTextField crossoverPercText = new JTextField(4);
+		crossoverPerc.add(crossoverPercText);
+		crossoverPerc.setMaximumSize(crossoverPerc.getPreferredSize());
+		crossoverPerc.setMinimumSize(crossoverPerc.getPreferredSize());
+		crossoverPerc.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(crossoverPerc);
+		
+		//---------------------------------------------
+		
+		JPanel mutationPerc = new JPanel();
+		JLabel mutationPercLabel = new JLabel("Mutación");
+		mutationPerc.add(mutationPercLabel);
+		JTextField mutationPercText = new JTextField(4);
+		mutationPerc.add(mutationPercText);
+		mutationPerc.setMaximumSize(mutationPerc.getPreferredSize());
+		mutationPerc.setMinimumSize(mutationPerc.getPreferredSize());
+		mutationPerc.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(mutationPerc);
+		
+		//---------------------------------------------
+		
+		JPanel elitism = new JPanel(new BorderLayout());
+		
+		JPanel elitismMain = new JPanel();
+		JLabel elitismLabel = new JLabel("Elitismo");
+		elitismMain.add(elitismLabel);
+		JCheckBox elitismCheck = new JCheckBox();
+		JPanel el = new JPanel();
+		elitismCheck.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					el.setVisible(true);
+					elitism.setMaximumSize(elitism.getPreferredSize());
+					elitism.setBorder(BorderFactory.createLineBorder(Color.lightGray));
+				}
+				else if(e.getStateChange() == ItemEvent.DESELECTED) {
+					el.setVisible(false);
+					elitism.setMaximumSize(elitism.getPreferredSize());
+					elitism.setBorder(null);
+				}
+			}
+		});
+		elitismMain.add(elitismCheck);
+		elitism.add(elitismMain, BorderLayout.CENTER);
+		
+		el.add(new JLabel("Porcentaje"));
+		el.add(new JTextField(3));
+		el.setMaximumSize(el.getPreferredSize());
+		el.setMinimumSize(el.getPreferredSize());
+		el.setVisible(false);
+		elitism.add(el, BorderLayout.PAGE_END);
+		
+		elitism.setMaximumSize(elitism.getPreferredSize());
+		elitism.setMinimumSize(elitism.getPreferredSize());
+		elitism.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(elitism);
+		
+		//---------------------------------------------
+		
+		JPanel selection = new JPanel();
+		JLabel selectionLabel = new JLabel("Selección");
+		selection.add(selectionLabel);
+		String[] cosas = {"bla", "blabla"};
+		JComboBox selectionBox = new JComboBox(cosas);
+		selection.add(selectionBox);
+		selection.setMaximumSize(selection.getPreferredSize());
+		selection.setMinimumSize(selection.getPreferredSize());
+		selection.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(selection);
+		
+		//---------------------------------------------
+		
+		JPanel crossover = new JPanel();
+		JLabel crossoverLabel = new JLabel("Cruce");
+		crossover.add(crossoverLabel);
+		String[] cosas1 = {"bla", "blabla"};
+		JComboBox crossoverBox = new JComboBox(cosas1);
+		crossover.add(crossoverBox);
+		crossover.setMaximumSize(crossover.getPreferredSize());
+		crossover.setMinimumSize(crossover.getPreferredSize());
+		crossover.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(crossover);
+		
+		//---------------------------------------------
+		
+		JPanel mutation = new JPanel();
+		JLabel mutationLabel = new JLabel("Mutación");
+		mutation.add(mutationLabel);
+		String[] cosas2 = {"bla", "blabla"};
+		JComboBox mutationBox = new JComboBox(cosas2);
+		mutation.add(mutationBox);
+		mutation.setMaximumSize(mutation.getPreferredSize());
+		mutation.setMinimumSize(mutation.getPreferredSize());
+		mutation.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(mutation);
+		
+		// misma población inicial
 	}
 
 	@Override
@@ -121,7 +258,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			}
 		});
 	}
-	
+	/*
 	public ConfigPanel<TransferGeneticAlgorithm> creaPanelConfiguracion() {
 		String[] funciones = new String[] { "función 1", "función 2", "función 3", "función 4", "función 5" };
 		Check[] check = new Check[] {new Si(), new No()};
@@ -196,7 +333,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				"semilla",						     // campo (espera que haya un getGrosor y un setGrosor)
 				0, Integer.MAX_VALUE))			     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
 		
-		/*.addOption(new ConfigPanel.StrategyOption<TransferGeneticAlgorithm>( // -- eleccion de objeto configurable
+		.addOption(new ConfigPanel.StrategyOption<TransferGeneticAlgorithm>( // -- eleccion de objeto configurable
 				"forma",							 // etiqueta
 				"forma de la figura",                // tooltip
 				"forma",                             // campo
@@ -209,7 +346,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		  		     "ancho", "ancho del rectangulo", "ancho", 0, Double.POSITIVE_INFINITY))
 		  		  .addInner(new ConfigPanel.DoubleOption<Forma>(
 		  		     "alto", "alto del rectangulo", "alto", 0, Double.POSITIVE_INFINITY))
-		  	  .endInner()*/
+		  	  .endInner()
 		.addOption(new StrategyOption<TransferGeneticAlgorithm>( // -- eleccion de objeto configurable
 				"Elitismo",							 // etiqueta
 				"Usar elitismo en la población",                // tooltip
@@ -254,7 +391,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			this.opcion = true;
 		}
 		
-		public void dibuja() { /* ... */ };
+		public void dibuja() {  ...  };
 		
 		public String toString() {
 			return "Sí"; 
@@ -268,7 +405,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			this.opcion = false;
 		}
 		
-		public void dibuja() { /* ... */ };
+		public void dibuja() {  ...  };
 		
 		public String toString() {
 			return "No"; 
@@ -287,7 +424,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		}
 	}
 	
-	/** una forma; implementa cloneable */
+	*//** una forma; implementa cloneable *//*
 	public static abstract class Forma implements Cloneable {			
 		public abstract void dibuja();
 		
@@ -301,7 +438,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		}
 	}
 	
-	/** un rectangulo (una forma, y por tanto 'cloneable') */
+	*//** un rectangulo (una forma, y por tanto 'cloneable') *//*
 	public static class Rectangulo extends Forma {
 		private double ancho = 1, alto = 1;
 	
@@ -310,11 +447,11 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		public double getAlto() { return alto; }
 		public void setAlto(double alto) { this.alto = alto; }
 
-		public void dibuja() { /* ... */ };
+		public void dibuja() {  ...  };
 
 		public String toString() {
 			return "rect. de " + ancho  + "x" + alto; 
 		}
-	}
+	}*/
 
 }
