@@ -2,19 +2,13 @@ package controller;
 
 import java.util.ArrayList;
 
-import model.function.Function;
 import model.function.Function1;
-import model.function.Function4;
-import model.function.FunctionFactory;
 import model.geneticAlgorithm.AbstractGeneticAlgorithm;
 import model.geneticAlgorithm.BooleanGeneticAlgorithm;
-import model.geneticAlgorithm.GeneticAlgorithmFactory;
 import model.geneticAlgorithm.crossover.CrossoverFactory;
-import model.geneticAlgorithm.crossover.CrossoverInterface;
 import model.geneticAlgorithm.crossover.OnepointBitToBitCrossover;
 import model.geneticAlgorithm.selection.RouletteSelection;
 import model.geneticAlgorithm.selection.SelectionFactory;
-import model.geneticAlgorithm.selection.SelectionInterface;
 import model.observer.GeneticAlgorithmObserver;
 
 public class Controller {
@@ -92,6 +86,42 @@ public class Controller {
 		
 		return transfer;
 	}*/
+	
+	public int getPopulation() {
+		return this.ga.getPopulationNum();
+	}
+	
+	public int getGenerations() {
+		return this.ga.getMaxGenerationNum();
+	}
+	
+	public double getCrossoverProb() {
+		return this.ga.getCrossProb();
+	}
+	
+	public double getMutationProb() {
+		return this.ga.getMutationProb();
+	}
+	
+	public double getElitismPercentage() {
+		return this.ga.getElitePercentage();
+	}
+	
+	public boolean getElitism() {
+		return this.ga.isUseElitism();
+	}
+	
+	public String[] getSelectionStrategyList() {
+		return SelectionFactory.selectionList();
+	}
+	
+	public String[] getCrossoverStrategyList() {
+		return CrossoverFactory.selectionList();
+	}
+	
+	public String[] getMutationStrategyList() {
+		return null;
+	}
 	
 	public void run() {
 		this.ga.run();

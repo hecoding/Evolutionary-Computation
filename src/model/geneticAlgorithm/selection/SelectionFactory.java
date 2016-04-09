@@ -2,6 +2,7 @@ package model.geneticAlgorithm.selection;
 
 public class SelectionFactory {
 	private static SelectionFactory instance;
+	private static String[] strategies = {"ruleta", "torneo"};
  	
 	public static SelectionFactory getInstance() {
 		if (instance == null){
@@ -17,6 +18,10 @@ public class SelectionFactory {
 			return new TournamentSelection();
 		else
 			throw new IllegalArgumentException("Unknown selection method");
+	}
+	
+	public static String[] selectionList() {
+		return strategies;
 	}
 	
 }

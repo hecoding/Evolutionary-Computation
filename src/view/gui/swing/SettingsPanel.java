@@ -28,6 +28,7 @@ import javax.swing.event.ChangeListener;
 
 import controller.Controller;
 import model.chromosome.exception.IllegalChromosomeException;
+import model.geneticAlgorithm.selection.SelectionFactory;
 import model.observer.GeneticAlgorithmObserver;
 
 public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
@@ -38,6 +39,19 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	JButton runButton;
  	JButton resetButton;
  	private StatusBarPanel status;
+ 	
+ 	JTextField populationText;
+ 	JTextField generationText;
+ 	JSlider crossoverSlider;
+ 	JSlider mutationSlider;
+ 	JCheckBox elitismCheck;
+ 	JSlider elitismSlider;
+ 	JPanel selection;
+ 	JComboBox selectionBox;
+ 	JPanel crossover;
+ 	JComboBox crossoverBox;
+ 	JPanel mutation;
+ 	JComboBox mutationBox;
 
 	public SettingsPanel(Controller ctrl, StatusBarPanel status) {
 		this.ctrl = ctrl;
@@ -55,15 +69,15 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		this.setLayout(new BorderLayout());
 		this.setBorder(new TitledBorder("Ajustes"));
 		
-		constructSettings();		
+		initSettings();		
 		this.add(settings, BorderLayout.CENTER);
 		
 		buttonPanel = new JPanel(new BorderLayout());
 		runButton = new JButton("Lanzar");
 		runButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//ctrl.setParameters(transfer);
 				try {
+					//ctrl.setParameters(transfer);
 					ctrl.run();
 				} catch(IllegalChromosomeException ex) {
 					JOptionPane.showMessageDialog(null,
@@ -86,9 +100,11 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		buttonPanel.add(resetButton, BorderLayout.PAGE_END);
 		this.add(buttonPanel, BorderLayout.PAGE_END);
 		// maybe wrap around a JScrollPane and/or JSplitPane
+		
+		fillFields();
 	}
 	
-	private void constructSettings() {
+	private void initSettings() {
 		settings = new JPanel();
 		settings.setLayout(new BoxLayout(settings, BoxLayout.Y_AXIS));
 		
@@ -97,7 +113,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		JPanel population = new JPanel();
 		JLabel populationLabel = new JLabel("Población");
 		population.add(populationLabel);
-		JTextField populationText = new JTextField(4);
+		populationText = new JTextField(4);
 		final Border defaultborder = populationText.getBorder();
 		populationText.setInputVerifier(new InputVerifier() {
 			public boolean verify(JComponent input) {
@@ -131,7 +147,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		JPanel generations = new JPanel();
 		JLabel generationsLabel = new JLabel("Generaciones");
 		generations.add(generationsLabel);
-		JTextField generationText = new JTextField(4);
+		generationText = new JTextField(4);
 		generationText.setInputVerifier(new InputVerifier() {
 			public boolean verify(JComponent input) {
 				try {
@@ -164,7 +180,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		JPanel crossoverPerc = new JPanel(new BorderLayout());
 		JLabel crossoverPercLabel = new JLabel("Cruce");
 		crossoverPerc.add(crossoverPercLabel, BorderLayout.PAGE_START);
-		JSlider crossoverSlider = new JSlider(0,100,60);
+		crossoverSlider = new JSlider(0,100);
 		crossoverSlider.setMajorTickSpacing(30);
 		crossoverSlider.setMinorTickSpacing(5);
 		crossoverSlider.setPaintTicks(true);
@@ -182,7 +198,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		JPanel mutationPerc = new JPanel(new BorderLayout());
 		JLabel mutationPercLabel = new JLabel("Mutación");
 		mutationPerc.add(mutationPercLabel, BorderLayout.PAGE_START);
-		JSlider mutationSlider = new JSlider(0,100,5);
+		mutationSlider = new JSlider(0,100);
 		mutationSlider.setMajorTickSpacing(30);
 		mutationSlider.setMinorTickSpacing(5);
 		mutationSlider.setPaintTicks(true);
@@ -202,8 +218,8 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		JPanel elitismMain = new JPanel();
 		JLabel elitismLabel = new JLabel("Elitismo");
 		elitismMain.add(elitismLabel);
-		JSlider elitismSlider = new JSlider(0,100,10);;
-		JCheckBox elitismCheck = new JCheckBox();
+		elitismSlider = new JSlider(0,100);
+		elitismCheck = new JCheckBox();
 		elitismCheck.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
@@ -237,11 +253,10 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		
 		//---------------------------------------------
 		
-		JPanel selection = new JPanel();
+		selection = new JPanel();
 		JLabel selectionLabel = new JLabel("Selección");
 		selection.add(selectionLabel);
-		String[] cosas = {"bla", "blabla"};
-		JComboBox selectionBox = new JComboBox(cosas);
+		selectionBox = new JComboBox();
 		selection.add(selectionBox);
 		selection.setMaximumSize(selection.getPreferredSize());
 		selection.setMinimumSize(selection.getPreferredSize());
@@ -250,11 +265,10 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		
 		//---------------------------------------------
 		
-		JPanel crossover = new JPanel();
+		crossover = new JPanel();
 		JLabel crossoverLabel = new JLabel("Cruce");
 		crossover.add(crossoverLabel);
-		String[] cosas1 = {"bla", "blabla"};
-		JComboBox crossoverBox = new JComboBox(cosas1);
+		crossoverBox = new JComboBox();
 		crossover.add(crossoverBox);
 		crossover.setMaximumSize(crossover.getPreferredSize());
 		crossover.setMinimumSize(crossover.getPreferredSize());
@@ -263,11 +277,10 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		
 		//---------------------------------------------
 		
-		JPanel mutation = new JPanel();
+		mutation = new JPanel();
 		JLabel mutationLabel = new JLabel("Mutación");
 		mutation.add(mutationLabel);
-		String[] cosas2 = {"bla", "blabla"};
-		JComboBox mutationBox = new JComboBox(cosas2);
+		mutationBox = new JComboBox();
 		mutation.add(mutationBox);
 		mutation.setMaximumSize(mutation.getPreferredSize());
 		mutation.setMinimumSize(mutation.getPreferredSize());
@@ -275,6 +288,30 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		settings.add(mutation);
 		
 		// misma población inicial
+	}
+	
+	private void fillFields() {
+		this.populationText.setText(String.valueOf(this.ctrl.getPopulation()));
+		this.generationText.setText(String.valueOf(this.ctrl.getGenerations()));
+		this.crossoverSlider.setValue((int) (this.ctrl.getCrossoverProb() * 100));
+		this.mutationSlider.setValue((int) (this.ctrl.getMutationProb() * 100));
+		this.elitismCheck.setSelected(this.ctrl.getElitism());
+		this.elitismSlider.setValue((int) (this.ctrl.getElitismPercentage() * 100));
+		for (String item : this.ctrl.getSelectionStrategyList()) {
+			this.selectionBox.addItem(item);			
+		}
+		selection.setMaximumSize(selection.getPreferredSize());
+		selection.setMinimumSize(selection.getPreferredSize());
+		for (String item : this.ctrl.getCrossoverStrategyList()) {
+			this.crossoverBox.addItem(item);			
+		}
+		crossover.setMaximumSize(crossover.getPreferredSize());
+		crossover.setMinimumSize(crossover.getPreferredSize());
+		/*for (String item : this.ctrl.getMutationStrategyList()) {
+			this.mutationBox.addItem(item);			
+		}
+		mutation.setMaximumSize(mutation.getPreferredSize());
+		mutation.setMinimumSize(mutation.getPreferredSize());*/
 	}
 
 	@Override

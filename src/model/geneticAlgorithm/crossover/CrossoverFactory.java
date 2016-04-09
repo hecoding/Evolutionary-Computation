@@ -1,7 +1,8 @@
 package model.geneticAlgorithm.crossover;
 
 public class CrossoverFactory {
-private static CrossoverFactory instance;
+	private static CrossoverFactory instance;
+	private static String[] strategies = {"un punto bit a bit", "un punto", "discreto uniforme", "aritmético", "SBX"};
  	
 	public static CrossoverFactory getInstance() {
 		if (instance == null){
@@ -23,5 +24,9 @@ private static CrossoverFactory instance;
 			return new SimulatedBinaryCrossover();
 		else
 			throw new IllegalArgumentException("Unknown selection method");
+	}
+	
+	public static String[] selectionList() {
+		return strategies;
 	}
 }
