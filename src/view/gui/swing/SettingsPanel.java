@@ -18,10 +18,13 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import controller.Controller;
 import model.chromosome.exception.IllegalChromosomeException;
@@ -100,16 +103,19 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			public boolean verify(JComponent input) {
 				try {
 					int a = Integer.parseInt(((JTextField) input).getText());
-					if (a > 0) {
+					if (a >= 1) {
 						populationText.setBorder(defaultborder);
+						status.setErrors(false);
 						return true;
 					}
 					else {
 						populationText.setBorder(BorderFactory.createLineBorder(Color.red));
+						status.setErrors(true);
 						return false;
 					}
 				} catch (NumberFormatException e) {
 					populationText.setBorder(BorderFactory.createLineBorder(Color.red));
+					status.setErrors(true);
 					return false;
 				}
 			}
@@ -126,6 +132,27 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		JLabel generationsLabel = new JLabel("Generaciones");
 		generations.add(generationsLabel);
 		JTextField generationText = new JTextField(4);
+		generationText.setInputVerifier(new InputVerifier() {
+			public boolean verify(JComponent input) {
+				try {
+					int a = Integer.parseInt(((JTextField) input).getText());
+					if (a >= 1) {
+						generationText.setBorder(defaultborder);
+						status.setErrors(false);
+						return true;
+					}
+					else {
+						generationText.setBorder(BorderFactory.createLineBorder(Color.red));
+						status.setErrors(true);
+						return false;
+					}
+				} catch (NumberFormatException e) {
+					generationText.setBorder(BorderFactory.createLineBorder(Color.red));
+					status.setErrors(true);
+					return false;
+				}
+			}
+		});
 		generations.add(generationText);
 		generations.setMaximumSize(generations.getPreferredSize());
 		generations.setMinimumSize(generations.getPreferredSize());
@@ -134,11 +161,17 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		
 		//---------------------------------------------
 		
-		JPanel crossoverPerc = new JPanel();
+		JPanel crossoverPerc = new JPanel(new BorderLayout());
 		JLabel crossoverPercLabel = new JLabel("Cruce");
-		crossoverPerc.add(crossoverPercLabel);
-		JTextField crossoverPercText = new JTextField(4);
-		crossoverPerc.add(crossoverPercText);
+		crossoverPerc.add(crossoverPercLabel, BorderLayout.PAGE_START);
+		JSlider crossoverSlider = new JSlider(0,100,60);
+		crossoverSlider.setMajorTickSpacing(30);
+		crossoverSlider.setMinorTickSpacing(5);
+		crossoverSlider.setPaintTicks(true);
+		crossoverSlider.setPaintLabels(true);
+		crossoverSlider.setToolTipText(crossoverSlider.getValue() + " %");
+		crossoverSlider.addChangeListener(new SliderListener());
+		crossoverPerc.add(crossoverSlider, BorderLayout.CENTER);
 		crossoverPerc.setMaximumSize(crossoverPerc.getPreferredSize());
 		crossoverPerc.setMinimumSize(crossoverPerc.getPreferredSize());
 		crossoverPerc.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -146,11 +179,17 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		
 		//---------------------------------------------
 		
-		JPanel mutationPerc = new JPanel();
+		JPanel mutationPerc = new JPanel(new BorderLayout());
 		JLabel mutationPercLabel = new JLabel("Mutación");
-		mutationPerc.add(mutationPercLabel);
-		JTextField mutationPercText = new JTextField(4);
-		mutationPerc.add(mutationPercText);
+		mutationPerc.add(mutationPercLabel, BorderLayout.PAGE_START);
+		JSlider mutationSlider = new JSlider(0,100,5);
+		mutationSlider.setMajorTickSpacing(30);
+		mutationSlider.setMinorTickSpacing(5);
+		mutationSlider.setPaintTicks(true);
+		mutationSlider.setPaintLabels(true);
+		mutationSlider.setToolTipText(mutationSlider.getValue() + " %");
+		mutationSlider.addChangeListener(new SliderListener());
+		mutationPerc.add(mutationSlider, BorderLayout.CENTER);
 		mutationPerc.setMaximumSize(mutationPerc.getPreferredSize());
 		mutationPerc.setMinimumSize(mutationPerc.getPreferredSize());
 		mutationPerc.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -163,17 +202,17 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		JPanel elitismMain = new JPanel();
 		JLabel elitismLabel = new JLabel("Elitismo");
 		elitismMain.add(elitismLabel);
+		JSlider elitismSlider = new JSlider(0,100,10);;
 		JCheckBox elitismCheck = new JCheckBox();
-		JPanel el = new JPanel();
 		elitismCheck.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
-					el.setVisible(true);
+					elitismSlider.setVisible(true);
 					elitism.setMaximumSize(elitism.getPreferredSize());
 					elitism.setBorder(BorderFactory.createLineBorder(Color.lightGray));
 				}
 				else if(e.getStateChange() == ItemEvent.DESELECTED) {
-					el.setVisible(false);
+					elitismSlider.setVisible(false);
 					elitism.setMaximumSize(elitism.getPreferredSize());
 					elitism.setBorder(null);
 				}
@@ -182,12 +221,14 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		elitismMain.add(elitismCheck);
 		elitism.add(elitismMain, BorderLayout.CENTER);
 		
-		el.add(new JLabel("Porcentaje"));
-		el.add(new JTextField(3));
-		el.setMaximumSize(el.getPreferredSize());
-		el.setMinimumSize(el.getPreferredSize());
-		el.setVisible(false);
-		elitism.add(el, BorderLayout.PAGE_END);
+		elitismSlider.setMajorTickSpacing(30);
+		elitismSlider.setMinorTickSpacing(5);
+		elitismSlider.setPaintTicks(true);
+		elitismSlider.setPaintLabels(true);
+		elitismSlider.setToolTipText(elitismSlider.getValue() + " %");
+		elitismSlider.addChangeListener(new SliderListener());
+		elitismSlider.setVisible(false);
+		elitism.add(elitismSlider, BorderLayout.PAGE_END);
 		
 		elitism.setMaximumSize(elitism.getPreferredSize());
 		elitism.setMinimumSize(elitism.getPreferredSize());
@@ -258,200 +299,15 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			}
 		});
 	}
-	/*
-	public ConfigPanel<TransferGeneticAlgorithm> creaPanelConfiguracion() {
-		String[] funciones = new String[] { "función 1", "función 2", "función 3", "función 4", "función 5" };
-		Check[] check = new Check[] {new Si(), new No()};
-		String[] metodoSeleccion = new String[] { "ruleta", "torneo" };
-		String[] metodoCruce = new String[] { "un punto bit a bit", "un punto", "discreto uniforme", "aritmético", "SBX" };
-		
-		ConfigPanel<TransferGeneticAlgorithm> config = new ConfigPanel<TransferGeneticAlgorithm>();
-		
-		// se pueden a�adir las opciones de forma independiente, o "de seguido"; el resultado es el mismo.
-		config.addOption(new ChoiceOption<TransferGeneticAlgorithm>(	 // -- eleccion de objeto no-configurable
-			    "Función",							 // etiqueta 
-			    "Función a optimizar",				 // tooltip
-			    "funcion",   							 // campo (debe haber un getColor y un setColor)
-			    funciones))                            // elecciones posibles
-		
-		.addOption(new IntegerOption<TransferGeneticAlgorithm>(  // -- entero
-				"# param func 4", 					     // texto a usar como etiqueta del campo
-				"Número de variables de la función 4",	         // texto a usar como 'tooltip' cuando pasas el puntero
-				"paramFunc4",					     // campo (espera que haya un getGrosor y un setGrosor)
-				1, Integer.MAX_VALUE))
-		.addOption(new StrategyOption<TransferGeneticAlgorithm>( // -- eleccion de objeto configurable
-				"Cromosoma reales",					 // etiqueta
-				"Cambia de cadenas de bits a reales, para todas las funciones",            // tooltip
-				"cromosomaReal",	             // campo
-				check))                             // elecciones (deben implementar Cloneable)
-		.addOption(new ChoiceOption<TransferGeneticAlgorithm>(	 // -- eleccion de objeto no-configurable
-			    "Selección",							 // etiqueta 
-			    "Método de selección",				 // tooltip
-			    "seleccion",   							 // campo (debe haber un getColor y un setColor)
-			    metodoSeleccion))                            // elecciones posibles
-		.addOption(new ChoiceOption<TransferGeneticAlgorithm>(	 // -- eleccion de objeto no-configurable
-			    "Cruce",							 // etiqueta 
-			    "Método de cruce",				 // tooltip
-			    "cruce",   							 // campo (debe haber un getColor y un setColor)
-			    metodoCruce))                            // elecciones posibles
-		.addOption(new DoubleOption<TransferGeneticAlgorithm>(   // -- doble, parecido a entero
-			    "Precisión",	 					 // etiqueta
-			    "Precisión decimal para las cadenas binarias",				 // tooltip
-			    "precision",	                     // campo
-			    0, Double.POSITIVE_INFINITY))	     // min y max, aplicando factor, si hay; vale usar Double.*_INFINITY)
-		  		  
-		.addOption(new IntegerOption<TransferGeneticAlgorithm>(  // -- entero
-				"Población", 					     // texto a usar como etiqueta del campo
-				"Número de individuos",	         // texto a usar como 'tooltip' cuando pasas el puntero
-				"poblacion",					     // campo (espera que haya un getGrosor y un setGrosor)
-				1, Integer.MAX_VALUE))			     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-		.addOption(new IntegerOption<TransferGeneticAlgorithm>(  // -- entero
-				"Generaciones",					     // texto a usar como etiqueta del campo
-				"Número de iteraciones",       // texto a usar como 'tooltip' cuando pasas el puntero
-				"generaciones",					     // campo (espera que haya un getGrosor y un setGrosor)
-				1, Integer.MAX_VALUE))			     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-		.addOption(new DoubleOption<TransferGeneticAlgorithm>(   // -- doble, parecido a entero
-			    "% cruces", 						 // etiqueta
-			    "",           // tooltip
-			    "porcCruces",                     // campo
-			    0, 100,							     // min y max, aplicando factor, si hay; vale usar Double.*_INFINITY) 
-			    100))								 // opcional: factor de multiplicacion != 1.0, para mostrar porcentajes
-		.addOption(new DoubleOption<TransferGeneticAlgorithm>(   // -- doble, parecido a entero
-			    "% mutación", 						 // etiqueta
-			    "",           // tooltip
-			    "porcMutacion",                     // campo
-			    0, 100,							     // min y max, aplicando factor, si hay; vale usar Double.*_INFINITY) 
-			    100))								 // opcional: factor de multiplicacion != 1.0, para mostrar porcentajes
-		.addOption(new StrategyOption<TransferGeneticAlgorithm>( // -- eleccion de objeto configurable
-				"Semilla manual",					 // etiqueta
-				"Semilla propia para el generador aleatorio",                // tooltip
-				"semillaPersonalizada",             // campo
-				check))                             // elecciones (deben implementar Cloneable)
-		.addOption(new IntegerOption<TransferGeneticAlgorithm>(  // -- entero
-				"Semilla",						     // texto a usar como etiqueta del campo
-				"Semilla usada cuando se selecciona semilla personalizada",       // texto a usar como 'tooltip' cuando pasas el puntero
-				"semilla",						     // campo (espera que haya un getGrosor y un setGrosor)
-				0, Integer.MAX_VALUE))			     // min y max (usa Integer.MIN_VALUE /MAX_VALUE para infinitos)
-		
-		.addOption(new ConfigPanel.StrategyOption<TransferGeneticAlgorithm>( // -- eleccion de objeto configurable
-				"forma",							 // etiqueta
-				"forma de la figura",                // tooltip
-				"forma",                             // campo
-				formas))                             // elecciones (deben implementar Cloneable)
-				
-			  // para cada clase de objeto interno, hay que definir sus opciones entre un beginInner y un endInner 
-			  .beginInner(new ConfigPanel.InnerOption<TransferGeneticAlgorithm,Forma>( 
-			  	"rectangulo", "opciones del rectangulo", "forma", Rectangulo.class))
-		  		  .addInner(new ConfigPanel.DoubleOption<Forma>(
-		  		     "ancho", "ancho del rectangulo", "ancho", 0, Double.POSITIVE_INFINITY))
-		  		  .addInner(new ConfigPanel.DoubleOption<Forma>(
-		  		     "alto", "alto del rectangulo", "alto", 0, Double.POSITIVE_INFINITY))
-		  	  .endInner()
-		.addOption(new StrategyOption<TransferGeneticAlgorithm>( // -- eleccion de objeto configurable
-				"Elitismo",							 // etiqueta
-				"Usar elitismo en la población",                // tooltip
-				"elitismo",                             // campo
-				check))                             // elecciones (deben implementar Cloneable)
-		.beginInner(new InnerOption<TransferGeneticAlgorithm,Percentage>(
-			  	"% de elitismo", "", "porcElite", Percentage.class))
-		  		  .addInner(new DoubleOption<Double>(
-		  		     "", "", "perc", 0, 1))
-		  		  .endInner()
-		.endOptions();
-		
-		return config;
-	}
 	
-	public static abstract class Check implements Cloneable {
-		protected boolean opcion;
-		public abstract void dibuja();
-		
-		// implementacion de 'clone' por defecto, suficiente para objetos sencillos
-		public Check clone() { 
-			try {
-				return (Check)super.clone();
-			} catch (CloneNotSupportedException e) {
-				throw new IllegalArgumentException(e);
-			} 
-		}
-
-		public boolean getOpcion() {
-			return opcion;
-		}
-
-		public void setOpcion(boolean opcion) {
-			this.opcion = opcion;
+	class SliderListener implements ChangeListener {
+		public void stateChanged(ChangeEvent e) {
+			JSlider source = (JSlider)e.getSource();
+	        if (!source.getValueIsAdjusting()) {
+	            int num = (int)source.getValue();
+	            source.setToolTipText(String.valueOf(num) + " %");
+	        }
 		}
 	}
-	
-	public static class Si extends Check {
-		
-		public Si() {
-			super();
-			this.opcion = true;
-		}
-		
-		public void dibuja() {  ...  };
-		
-		public String toString() {
-			return "Sí"; 
-		}
-	}
-	
-	public static class No extends Check {
-		
-		public No() {
-			super();
-			this.opcion = false;
-		}
-		
-		public void dibuja() {  ...  };
-		
-		public String toString() {
-			return "No"; 
-		}
-	}
-	
-	public static class Percentage {
-		private double perc;
-
-		public double getPerc() {
-			return perc;
-		}
-
-		public void setPerc(double perc) {
-			this.perc = perc;
-		}
-	}
-	
-	*//** una forma; implementa cloneable *//*
-	public static abstract class Forma implements Cloneable {			
-		public abstract void dibuja();
-		
-		// implementacion de 'clone' por defecto, suficiente para objetos sencillos
-		public Forma clone() { 
-			try {
-				return (Forma)super.clone();
-			} catch (CloneNotSupportedException e) {
-				throw new IllegalArgumentException(e);
-			} 
-		}
-	}
-	
-	*//** un rectangulo (una forma, y por tanto 'cloneable') *//*
-	public static class Rectangulo extends Forma {
-		private double ancho = 1, alto = 1;
-	
-		public double getAncho() { return ancho; }
-		public void setAncho(double ancho) { this.ancho = ancho; }
-		public double getAlto() { return alto; }
-		public void setAlto(double alto) { this.alto = alto; }
-
-		public void dibuja() {  ...  };
-
-		public String toString() {
-			return "rect. de " + ancho  + "x" + alto; 
-		}
-	}*/
 
 }
