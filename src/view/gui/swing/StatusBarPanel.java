@@ -1,28 +1,23 @@
 package view.gui.swing;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
-
 import controller.Controller;
 import model.observer.GeneticAlgorithmObserver;
 
 public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 	private static final long serialVersionUID = 1L;
 	private Controller ctrl;
-	private JLabel result;
-	private JLabel status;
-	private JLabel errors;
+	private JTextArea outputTextArea;
+	private Color defaultColor = new Color(245,245,245);
 	
 	public StatusBarPanel(Controller ctrl) {
 		this.ctrl = ctrl;
 		this.ctrl.addModelObserver(this);
-		this.result = new JLabel();
-		this.status = new JLabel();
-		this.errors = new JLabel();
-		this.errors.setForeground(Color.red);
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -32,21 +27,29 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 	}
 	
 	private void initGUI() {
-		this.add(this.errors);
-		this.add(this.status);
-		this.add(this.result);
-		this.result.setToolTipText("Mejor xi y f(xi)");
+		outputTextArea = new JTextArea();
+		outputTextArea.setEditable(false);
+		outputTextArea.setBackground(defaultColor);
+		outputTextArea.setLineWrap(true);
+		outputTextArea.setWrapStyleWord(true);
+		this.setLayout(new BorderLayout());
+		this.add(new JScrollPane(outputTextArea), BorderLayout.CENTER);
 	}
 	
 	public void setErrors(Boolean b) {
-		if(b)
-			this.errors.setText("Hay errores");
-		else
-			this.errors.setText("");
+		if(b) {
+			this.outputTextArea.setForeground(Color.red);
+			this.outputTextArea.setText("Hay errores");
+		}
+		else {
+			this.outputTextArea.setForeground(defaultColor);
+			this.outputTextArea.setText("");
+		}
 	}
 	
 	public void setStatus(String s) {
-		this.status.setText(s);
+		this.outputTextArea.setForeground(defaultColor);
+		this.outputTextArea.setText(s);
 	}
 
 	@Override
@@ -68,7 +71,7 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 					s = "Mejor: " + s;
 				
 				s = s + " Resultado: " + String.format("%.4f", ctrl.getFunctionResult());
-				result.setText(s);
+				setStatus(s);
 			}
 		});
 	}
