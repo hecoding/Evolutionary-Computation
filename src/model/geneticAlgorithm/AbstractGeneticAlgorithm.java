@@ -52,6 +52,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		function = func;
 		this.selectionStrategy = selectionStrategy;
 		this.crossoverStrategy = crossoverStrategy;
+		//this.mutationStrategy = mutationStrategy;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
@@ -98,6 +99,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		function = func;
 		this.selectionStrategy = selectionStrategy;
 		this.crossoverStrategy = crossoverStrategy;
+		//this.mutationStrategy = mutationStrategy;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
@@ -122,6 +124,26 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.initialize();
 	}
 	
+	public void restart() {
+		//function = func;
+		this.population = new ArrayList<T>(populationNum);
+		this.elite = null;
+		this.currentGeneration = 0;
+		this.bestChromosome = null;
+		this.bestAptitude = 0;
+		this.averageAptitude = 0;
+		this.averageScore = 0;
+		//this.tolerance = tolerance;
+		//this.customSeed = customSeed;
+		//this.seed = seed;
+		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
+		this.inspectedAptitude = new ArrayList<Double>(populationNum);
+		
+		this.initialize();
+	}
+	
 	public void increaseGeneration() {
 		this.currentGeneration++;
 	}
@@ -138,12 +160,24 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		return this.selectionStrategy;
 	}
 	
+	public void setSelectionStrategy(SelectionInterface strategy) {
+		this.selectionStrategy = strategy;
+	}
+	
 	public CrossoverInterface getCrossoverStrategy() {
 		return this.crossoverStrategy;
+	}
+	
+	public void setCrossoverStrategy(CrossoverInterface strategy) {
+		this.crossoverStrategy = strategy;
 	}
 
 	public int getPopulationNum() {
 		return populationNum;
+	}
+	
+	public void setPopulation(int population) {
+		this.populationNum = population;
 	}
 
 	public double getTolerance() {
@@ -153,13 +187,25 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	public int getMaxGenerationNum() {
 		return maxGenerationNum;
 	}
+	
+	public void setMaxGenerations(int maxGenerations) {
+		this.maxGenerationNum = maxGenerations;
+	}
 
 	public double getCrossProb() {
 		return crossProb;
 	}
+	
+	public void setCrossProb(double prob) {
+		this.crossProb = prob;
+	}
 
 	public double getMutationProb() {
 		return mutationProb;
+	}
+	
+	public void setMutationProb(double prob) {
+		this.mutationProb = prob;
 	}
 
 	public boolean isCustomSeed() {
@@ -173,9 +219,17 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	public boolean isUseElitism() {
 		return useElitism;
 	}
+	
+	public void useElitism(boolean elitism) {
+		this.useElitism = elitism;
+	}
 
 	public double getElitePercentage() {
 		return elitePercentage;
+	}
+	
+	public void setElitePercentage(int percentage) {
+		this.elitePercentage = (double) percentage / 100;
 	}
 	
 	public void addObserver(GeneticAlgorithmObserver o) {
@@ -208,6 +262,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 
 	public abstract void initialize();
 
+	/** If you have modified parameters between launches of the algorithm, you must call reset() method (the one with no parameters) */
 	public void run() {
 		this.notifyStartRun();
 		

@@ -2,7 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 
-import model.function.Function1;
+import model.function.Function3;
 import model.geneticAlgorithm.AbstractGeneticAlgorithm;
 import model.geneticAlgorithm.BooleanGeneticAlgorithm;
 import model.geneticAlgorithm.crossover.CrossoverFactory;
@@ -16,99 +16,85 @@ public class Controller {
 	
 	public Controller() {
 		// default genetic algorithm
-		this.ga = new BooleanGeneticAlgorithm(new Function1(), new RouletteSelection(), new OnepointBitToBitCrossover(), 100, false, 0.1, 100, 0.6, 0.05, 0.001, false, 0);
+		this.ga = new BooleanGeneticAlgorithm(
+									new Function3(),
+									new RouletteSelection(),
+									new OnepointBitToBitCrossover(),
+									100,
+									false,
+									0.1,
+									100,
+									0.6,
+									0.05,
+									0.001,
+									false,
+									0);
 	}
-	
-	/*public void setParameters(TransferGeneticAlgorithm transfer) {
-		ArrayList<GeneticAlgorithmObserver> observers = this.ga.getObservers();
-		
-		if(transfer.getCromosomaReal().getOpcion())
-			this.ga = GeneticAlgorithmFactory.getInstance().create("real");
-		else
-			this.ga = GeneticAlgorithmFactory.getInstance().create("booleano");
-		
-		Function function;
-		if(transfer.getFuncion() == "función 4")
-			function = FunctionFactory.getInstance().createFunc4(transfer.getParamFunc4(), transfer.getCromosomaReal().getOpcion());
-		else
-			function = FunctionFactory.getInstance().create(transfer.getFuncion());
-		SelectionInterface selection = SelectionFactory.getInstance().create(transfer.getSeleccion());
-		CrossoverInterface crossover = CrossoverFactory.getInstance().create(transfer.getCruce());
-		double elitePercentage = 0;
-		boolean elitism = transfer.getElitismo().getOpcion();
-		elitePercentage = transfer.getPorcElite().getPerc();
-		
-		this.ga.restart(function, selection, crossover, transfer.getPoblacion(), elitism, elitePercentage,
-				transfer.getGeneraciones(), transfer.getPorcCruces(), transfer.getPorcMutacion(),
-				transfer.getPrecision(), transfer.getSemillaPersonalizada().getOpcion(), transfer.getSemilla());
-		
-		this.ga.setObservers(observers);
 		// LAS PROBS PARECE QUE NO VAN
-	}
 	
-	public TransferGeneticAlgorithm getParameters() {
-		TransferGeneticAlgorithm transfer = new TransferGeneticAlgorithm();
-		
-		Check elitism;
-		Percentage porcElite;
-		Function funcion = this.ga.getFunction();
-		SelectionInterface seleccion = this.ga.getSelectionStrategy();
-		CrossoverInterface cruce = this.ga.getCrossoverStrategy();
-		Check semillaPersonalizada;
-		
-		transfer.setFuncion(funcion.getName());
-		transfer.setParamFunc4(funcion.paramNum());
-		Check real = new No();
-		if(funcion.getName() == "función 4" && ((Function4) funcion).isReal())
-				real = new Si();
-		transfer.setCromosomaReal(real);
-		transfer.setSeleccion(seleccion.getName());
-		transfer.setCruce(cruce.getName());
-		transfer.setPrecision(this.ga.getTolerance());
-		transfer.setPoblacion(this.ga.getPopulationNum());
-		transfer.setGeneraciones(this.ga.getMaxGenerationNum());
-		transfer.setPorcCruces(this.ga.getCrossProb());
-		transfer.setPorcMutacion(this.ga.getMutationProb());
-		if(this.ga.isCustomSeed())
-			semillaPersonalizada = new Si();
-		else
-			semillaPersonalizada = new No();
-		transfer.setSemillaPersonalizada(semillaPersonalizada);
-		transfer.setSemilla((int) this.ga.getSeed());
-		if (this.ga.isUseElitism())
-			elitism = new Si();
-		else
-			elitism = new No();
-		transfer.setElitismo(elitism);
-		porcElite = new Percentage();
-		porcElite.setPerc(this.ga.getElitePercentage());
-		transfer.setPorcElite(porcElite);
-		
-		return transfer;
-	}*/
+	public void run() {
+		this.ga.restart();
+		this.ga.run();
+	}
 	
 	public int getPopulation() {
 		return this.ga.getPopulationNum();
+	}
+	
+	public void setPopulation(int population) {
+		this.ga.setPopulation(population);
 	}
 	
 	public int getGenerations() {
 		return this.ga.getMaxGenerationNum();
 	}
 	
-	public double getCrossoverProb() {
-		return this.ga.getCrossProb();
+	public void setGenerations(int generations) {
+		this.ga.setMaxGenerations(generations);
 	}
 	
-	public double getMutationProb() {
-		return this.ga.getMutationProb();
+	public int getCrossoverPercentage() {
+		return (int) (this.ga.getCrossProb() * 100);
 	}
 	
-	public double getElitismPercentage() {
-		return this.ga.getElitePercentage();
+	public void setCrossoverPercentage(int perc) {
+		this.ga.setCrossProb((double) perc / 100);
+	}
+	
+	public int getMutationPercentage() {
+		return (int) (this.ga.getMutationProb() * 100);
+	}
+	
+	public void setMutationPercentage(int perc) {
+		this.ga.setMutationProb((double) perc / 100);
+	}
+	
+	public int getElitismPercentage() {
+		return (int) (this.ga.getElitePercentage() * 100);
+	}
+	
+	public void setElitismPercentage(int perc) {
+		this.ga.setElitePercentage(perc);
 	}
 	
 	public boolean getElitism() {
 		return this.ga.isUseElitism();
+	}
+	
+	public void setElitism(boolean elitism) {
+		this.ga.useElitism(elitism);
+	}
+	
+	public void setSelectionStrategy(String strategy) {
+		this.ga.setSelectionStrategy(SelectionFactory.getInstance().create(strategy));
+	}
+	
+	public void setCrossoverStrategy(String strategy) {
+		this.ga.setCrossoverStrategy(CrossoverFactory.getInstance().create(strategy));
+	}
+	
+	public void setMutationStrategy(String strategy) {
+		throw new IllegalArgumentException();
 	}
 	
 	public String[] getSelectionStrategyList() {
@@ -121,10 +107,6 @@ public class Controller {
 	
 	public String[] getMutationStrategyList() {
 		return null;
-	}
-	
-	public void run() {
-		this.ga.run();
 	}
 	
 	public double getFunctionResult() {

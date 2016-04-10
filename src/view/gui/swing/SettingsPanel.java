@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
+import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.InputVerifier;
@@ -28,7 +28,6 @@ import javax.swing.event.ChangeListener;
 
 import controller.Controller;
 import model.chromosome.exception.IllegalChromosomeException;
-import model.geneticAlgorithm.selection.SelectionFactory;
 import model.observer.GeneticAlgorithmObserver;
 
 public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
@@ -47,11 +46,11 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	JCheckBox elitismCheck;
  	JSlider elitismSlider;
  	JPanel selection;
- 	JComboBox selectionBox;
+ 	JComboBox<String> selectionBox;
  	JPanel crossover;
- 	JComboBox crossoverBox;
+ 	JComboBox<String> crossoverBox;
  	JPanel mutation;
- 	JComboBox mutationBox;
+ 	JComboBox<String> mutationBox;
 
 	public SettingsPanel(Controller ctrl, StatusBarPanel status) {
 		this.ctrl = ctrl;
@@ -74,10 +73,19 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		
 		buttonPanel = new JPanel(new BorderLayout());
 		runButton = new JButton("Lanzar");
+		runButton.setMnemonic(KeyEvent.VK_L);
 		runButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
-					//ctrl.setParameters(transfer);
+					ctrl.setPopulation(Integer.parseInt(populationText.getText()));
+					ctrl.setGenerations(Integer.parseInt(generationText.getText()));
+					ctrl.setCrossoverPercentage(crossoverSlider.getValue());
+					ctrl.setMutationPercentage(mutationSlider.getValue());
+					ctrl.setElitism(elitismCheck.isSelected());
+					ctrl.setElitismPercentage(elitismSlider.getValue());
+					ctrl.setSelectionStrategy((String) selectionBox.getSelectedItem());
+					ctrl.setCrossoverStrategy((String) crossoverBox.getSelectedItem());
+					//ctrl.setMutationStrategy((String) mutationBox.getSelectedItem());
 					ctrl.run();
 				} catch(IllegalChromosomeException ex) {
 					JOptionPane.showMessageDialog(null,
@@ -86,11 +94,16 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					for (Component cmp : buttonPanel.getComponents()) {
 						cmp.setEnabled(true);
 					}
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(null,
+							ex.getMessage(),
+							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
 		buttonPanel.add(runButton, BorderLayout.CENTER);
 		resetButton = new JButton("Resetear");
+		resetButton.setMnemonic(KeyEvent.VK_R);
 		resetButton.setToolTipText("Volver a los valores iniciales");
 		resetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -256,7 +269,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		selection = new JPanel();
 		JLabel selectionLabel = new JLabel("Selección");
 		selection.add(selectionLabel);
-		selectionBox = new JComboBox();
+		selectionBox = new JComboBox<String>();
 		selection.add(selectionBox);
 		selection.setMaximumSize(selection.getPreferredSize());
 		selection.setMinimumSize(selection.getPreferredSize());
@@ -268,7 +281,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		crossover = new JPanel();
 		JLabel crossoverLabel = new JLabel("Cruce");
 		crossover.add(crossoverLabel);
-		crossoverBox = new JComboBox();
+		crossoverBox = new JComboBox<String>();
 		crossover.add(crossoverBox);
 		crossover.setMaximumSize(crossover.getPreferredSize());
 		crossover.setMinimumSize(crossover.getPreferredSize());
@@ -280,7 +293,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		mutation = new JPanel();
 		JLabel mutationLabel = new JLabel("Mutación");
 		mutation.add(mutationLabel);
-		mutationBox = new JComboBox();
+		mutationBox = new JComboBox<String>();
 		mutation.add(mutationBox);
 		mutation.setMaximumSize(mutation.getPreferredSize());
 		mutation.setMinimumSize(mutation.getPreferredSize());
@@ -293,10 +306,10 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private void fillFields() {
 		this.populationText.setText(String.valueOf(this.ctrl.getPopulation()));
 		this.generationText.setText(String.valueOf(this.ctrl.getGenerations()));
-		this.crossoverSlider.setValue((int) (this.ctrl.getCrossoverProb() * 100));
-		this.mutationSlider.setValue((int) (this.ctrl.getMutationProb() * 100));
+		this.crossoverSlider.setValue(this.ctrl.getCrossoverPercentage());
+		this.mutationSlider.setValue(this.ctrl.getMutationPercentage());
 		this.elitismCheck.setSelected(this.ctrl.getElitism());
-		this.elitismSlider.setValue((int) (this.ctrl.getElitismPercentage() * 100));
+		this.elitismSlider.setValue((int) (this.ctrl.getElitismPercentage()));
 		for (String item : this.ctrl.getSelectionStrategyList()) {
 			this.selectionBox.addItem(item);			
 		}
