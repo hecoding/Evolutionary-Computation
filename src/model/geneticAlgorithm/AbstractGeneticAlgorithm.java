@@ -93,37 +93,6 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	}
 	public abstract void mutation();
 	
-	public void restart(Function func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
-			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum, double crossProb,
-			double mutationProb, double tolerance, boolean customSeed, long seed) {
-		function = func;
-		this.selectionStrategy = selectionStrategy;
-		this.crossoverStrategy = crossoverStrategy;
-		//this.mutationStrategy = mutationStrategy;
-		this.populationNum = populationNum;
-		this.useElitism = useElitism;
-		this.elitePercentage = elitePercentage;
-		this.population = new ArrayList<T>(populationNum);
-		this.elite = null;
-		this.currentGeneration = 0;
-		this.maxGenerationNum = maxGenerationNum;
-		this.bestChromosome = null;
-		this.bestAptitude = 0;
-		this.averageAptitude = 0;
-		this.averageScore = 0;
-		this.crossProb = crossProb;
-		this.mutationProb = mutationProb;
-		this.tolerance = tolerance;
-		this.customSeed = customSeed;
-		this.seed = seed;
-		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
-		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
-		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
-		this.inspectedAptitude = new ArrayList<Double>(populationNum);
-		
-		this.initialize();
-	}
-	
 	public void restart() {
 		//function = func;
 		this.population = new ArrayList<T>(populationNum);
@@ -142,122 +111,6 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.inspectedAptitude = new ArrayList<Double>(populationNum);
 		
 		this.initialize();
-	}
-	
-	public void increaseGeneration() {
-		this.currentGeneration++;
-	}
-	
-	public boolean finished() {
-		return this.currentGeneration == this.maxGenerationNum;
-	}
-
-	public Function getFunction() {
-		return function;
-	}
-	
-	public SelectionInterface getSelectionStrategy() {
-		return this.selectionStrategy;
-	}
-	
-	public void setSelectionStrategy(SelectionInterface strategy) {
-		this.selectionStrategy = strategy;
-	}
-	
-	public CrossoverInterface getCrossoverStrategy() {
-		return this.crossoverStrategy;
-	}
-	
-	public void setCrossoverStrategy(CrossoverInterface strategy) {
-		this.crossoverStrategy = strategy;
-	}
-
-	public int getPopulationNum() {
-		return populationNum;
-	}
-	
-	public void setPopulation(int population) {
-		this.populationNum = population;
-	}
-
-	public double getTolerance() {
-		return tolerance;
-	}
-
-	public int getMaxGenerationNum() {
-		return maxGenerationNum;
-	}
-	
-	public void setMaxGenerations(int maxGenerations) {
-		this.maxGenerationNum = maxGenerations;
-	}
-
-	public double getCrossProb() {
-		return crossProb;
-	}
-	
-	public void setCrossProb(double prob) {
-		this.crossProb = prob;
-	}
-
-	public double getMutationProb() {
-		return mutationProb;
-	}
-	
-	public void setMutationProb(double prob) {
-		this.mutationProb = prob;
-	}
-
-	public boolean isCustomSeed() {
-		return customSeed;
-	}
-
-	public long getSeed() {
-		return seed;
-	}
-
-	public boolean isUseElitism() {
-		return useElitism;
-	}
-	
-	public void useElitism(boolean elitism) {
-		this.useElitism = elitism;
-	}
-
-	public double getElitePercentage() {
-		return elitePercentage;
-	}
-	
-	public void setElitePercentage(int percentage) {
-		this.elitePercentage = (double) percentage / 100;
-	}
-	
-	public void addObserver(GeneticAlgorithmObserver o) {
-		this.observers.add(o);
-	}
-	
-	public void removeObserver(GeneticAlgorithmObserver o) {
-		this.observers.remove(o);
-	}
-	
-	public ArrayList<GeneticAlgorithmObserver> getObservers() {
-		return this.observers;
-	}
-	
-	public void setObservers(ArrayList<GeneticAlgorithmObserver> observers) {
-		this.observers = observers;
-	}
-	
-	protected void notifyStartRun() {
-		for (GeneticAlgorithmObserver obs : this.observers) {
-			obs.onStartRun();
-		}
-	}
-	
-	protected void notifyEndRun() {
-		for (GeneticAlgorithmObserver obs : this.observers) {
-			obs.onEndRun();
-		}
 	}
 
 	public abstract void initialize();
@@ -397,7 +250,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		}
 	}
 	
-	/* transform minimization problem into maximization */
+	/** Transform minimization problem into maximization */
 	private void aptitudeShifting() {
 		this.inspectedAptitude.clear();
 		Double cmax = Double.NEGATIVE_INFINITY;
@@ -411,6 +264,94 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		for (T chrom : this.population) {
 			this.inspectedAptitude.add(cmax - chrom.getAptitude());
 		}
+	}
+	
+	public void increaseGeneration() {
+		this.currentGeneration++;
+	}
+	
+	public boolean finished() {
+		return this.currentGeneration == this.maxGenerationNum;
+	}
+
+	public Function getFunction() {
+		return function;
+	}
+	
+	public SelectionInterface getSelectionStrategy() {
+		return this.selectionStrategy;
+	}
+	
+	public void setSelectionStrategy(SelectionInterface strategy) {
+		this.selectionStrategy = strategy;
+	}
+	
+	public CrossoverInterface getCrossoverStrategy() {
+		return this.crossoverStrategy;
+	}
+	
+	public void setCrossoverStrategy(CrossoverInterface strategy) {
+		this.crossoverStrategy = strategy;
+	}
+
+	public int getPopulationNum() {
+		return populationNum;
+	}
+	
+	public void setPopulation(int population) {
+		this.populationNum = population;
+	}
+
+	public double getTolerance() {
+		return tolerance;
+	}
+
+	public int getMaxGenerationNum() {
+		return maxGenerationNum;
+	}
+	
+	public void setMaxGenerations(int maxGenerations) {
+		this.maxGenerationNum = maxGenerations;
+	}
+
+	public double getCrossProb() {
+		return crossProb;
+	}
+	
+	public void setCrossProb(double prob) {
+		this.crossProb = prob;
+	}
+
+	public double getMutationProb() {
+		return mutationProb;
+	}
+	
+	public void setMutationProb(double prob) {
+		this.mutationProb = prob;
+	}
+
+	public boolean isCustomSeed() {
+		return customSeed;
+	}
+
+	public long getSeed() {
+		return seed;
+	}
+
+	public boolean isUseElitism() {
+		return useElitism;
+	}
+	
+	public void useElitism(boolean elitism) {
+		this.useElitism = elitism;
+	}
+
+	public double getElitePercentage() {
+		return elitePercentage;
+	}
+	
+	public void setElitePercentage(int percentage) {
+		this.elitePercentage = (double) percentage / 100;
 	}
 
 	public T getBestChromosome() {
@@ -439,5 +380,33 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 
 	public ArrayList<Double> getBestAptitudeList() {
 		return bestAptitudeList;
+	}
+	
+	public void addObserver(GeneticAlgorithmObserver o) {
+		this.observers.add(o);
+	}
+	
+	public void removeObserver(GeneticAlgorithmObserver o) {
+		this.observers.remove(o);
+	}
+	
+	public ArrayList<GeneticAlgorithmObserver> getObservers() {
+		return this.observers;
+	}
+	
+	public void setObservers(ArrayList<GeneticAlgorithmObserver> observers) {
+		this.observers = observers;
+	}
+	
+	protected void notifyStartRun() {
+		for (GeneticAlgorithmObserver obs : this.observers) {
+			obs.onStartRun();
+		}
+	}
+	
+	protected void notifyEndRun() {
+		for (GeneticAlgorithmObserver obs : this.observers) {
+			obs.onEndRun();
+		}
 	}
 }

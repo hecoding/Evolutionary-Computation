@@ -9,10 +9,6 @@ public class Main {
 		Controller ctrl = new Controller();
 		@SuppressWarnings("unused")
 		MainWindow view = new MainWindow(ctrl);
-		
-		/*ga.run();
-		System.out.println(ga);
-		System.out.println("best: " + ga.getBestChromosome() + " " + ga.getBestChromosome().getAptitude() + " " + ga.getBestChromosome().getPhenotype());*/
 	}
 	
 }

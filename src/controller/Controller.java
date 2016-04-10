@@ -30,7 +30,6 @@ public class Controller {
 									false,
 									0);
 	}
-		// LAS PROBS PARECE QUE NO VAN
 	
 	public void run() {
 		this.ga.restart();
