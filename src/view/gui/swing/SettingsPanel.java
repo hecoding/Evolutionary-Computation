@@ -51,6 +51,16 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	JComboBox<String> crossoverBox;
  	JPanel mutation;
  	JComboBox<String> mutationBox;
+ 	
+ 	String populationTextDefault;
+	String generationTextDefault;
+	int crossoverSliderDefault;
+	int mutationSliderDefault;
+	boolean elitismCheckDefault;
+	int elitismSliderDefault;
+	Object selectionBoxDefault;
+	Object crossoverBoxDefault;
+	Object mutationBoxDefault;
 
 	public SettingsPanel(Controller ctrl, StatusBarPanel status) {
 		this.ctrl = ctrl;
@@ -107,7 +117,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		resetButton.setToolTipText("Volver a los valores iniciales");
 		resetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//System.out.println(ctrl.getParameters());
+				restoreDefaults();
 			}
 		});
 		buttonPanel.add(resetButton, BorderLayout.PAGE_END);
@@ -325,6 +335,32 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		}
 		mutation.setMaximumSize(mutation.getPreferredSize());
 		mutation.setMinimumSize(mutation.getPreferredSize());*/
+		
+		saveDefaults();
+	}
+	
+	private void saveDefaults() {
+		populationTextDefault = populationText.getText();
+		generationTextDefault = generationText.getText();
+		crossoverSliderDefault = crossoverSlider.getValue();
+		mutationSliderDefault = mutationSlider.getValue();
+		elitismCheckDefault = elitismCheck.isSelected();
+		elitismSliderDefault = elitismSlider.getValue();
+		selectionBoxDefault = selectionBox.getSelectedItem();
+		crossoverBoxDefault = crossoverBox.getSelectedItem();
+		mutationBoxDefault = mutationBox.getSelectedItem();
+	}
+	
+	private void restoreDefaults() {
+		populationText.setText(populationTextDefault);
+		generationText.setText(generationTextDefault);
+		crossoverSlider.setValue(crossoverSliderDefault);
+		mutationSlider.setValue(mutationSliderDefault);
+		elitismCheck.setSelected(elitismCheckDefault);
+		elitismSlider.setValue(elitismSliderDefault);
+		selectionBox.setSelectedItem(selectionBoxDefault);
+		crossoverBox.setSelectedItem(crossoverBoxDefault);
+		mutationBox.setSelectedItem(mutationBoxDefault);
 	}
 
 	@Override
