@@ -3,6 +3,7 @@ package view.gui.swing;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -18,6 +19,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
@@ -47,9 +49,11 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	JSlider elitismSlider;
  	JPanel selection;
  	JComboBox<String> selectionBox;
- 	JPanel crossover;
+ 	JPanel crossoverMethodPanel;
  	JComboBox<String> crossoverBox;
- 	JPanel mutation;
+ 	JPanel tournamentGroups;
+ 	JTextField SBXGroups;
+ 	JPanel mutationMethodPanel;
  	JComboBox<String> mutationBox;
  	
  	String populationTextDefault;
@@ -197,12 +201,69 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		generations.setMinimumSize(generations.getPreferredSize());
 		generations.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		settings.add(generations);
-		
+
+		//---------------------------------------------
+		JSeparator a = new JSeparator();
+		a.setMaximumSize(new Dimension(420, 1));
+		settings.add(a);
 		//---------------------------------------------
 		
-		JPanel crossoverPerc = new JPanel(new BorderLayout());
-		JLabel crossoverPercLabel = new JLabel("Cruce");
-		crossoverPerc.add(crossoverPercLabel, BorderLayout.PAGE_START);
+		selection = new JPanel();
+		selection.setLayout(new BoxLayout(selection, BoxLayout.Y_AXIS));
+		JPanel selectionSel = new JPanel();
+		JLabel selectionLabel = new JLabel("Selección");
+		selectionSel.add(selectionLabel);
+		selectionBox = new JComboBox<String>();
+		selectionBox.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getItem() == "torneo") {
+					if(e.getStateChange() == ItemEvent.SELECTED) {
+						tournamentGroups.setVisible(true);
+						selection.setMaximumSize(selection.getPreferredSize());
+					}
+					else if(e.getStateChange() == ItemEvent.DESELECTED) {
+						tournamentGroups.setVisible(false);
+						selection.setMaximumSize(selection.getPreferredSize());
+					}
+				}
+			}
+		});
+		selectionSel.add(selectionBox);
+		selection.add(selectionSel);
+			tournamentGroups = new JPanel();
+			tournamentGroups.add(new JLabel("Tamaño grupos"));
+			SBXGroups = new JTextField(4);
+			tournamentGroups.add(SBXGroups);
+			tournamentGroups.setVisible(false);
+			selection.add(tournamentGroups);
+		selection.setMaximumSize(selection.getPreferredSize());
+		selection.setMinimumSize(selection.getPreferredSize());
+		selection.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(selection);
+		
+
+		//---------------------------------------------
+		JSeparator b = new JSeparator();
+		b.setMaximumSize(new Dimension(420, 1));
+		settings.add(b);
+		//---------------------------------------------
+		
+		JPanel crossoverPanel = new JPanel();
+		crossoverPanel.setLayout(new BoxLayout(crossoverPanel, BoxLayout.Y_AXIS));
+		
+		crossoverMethodPanel = new JPanel();
+		crossoverMethodPanel.setLayout(new BoxLayout(crossoverMethodPanel, BoxLayout.Y_AXIS));
+		JLabel crossoverLabel = new JLabel("Cruce");
+		JPanel crossSel = new JPanel();
+		crossSel.add(crossoverLabel);
+		crossoverBox = new JComboBox<String>();
+		crossSel.add(crossoverBox);
+		crossoverMethodPanel.add(crossSel);
+		crossoverMethodPanel.setMaximumSize(crossoverMethodPanel.getPreferredSize());
+		crossoverMethodPanel.setMinimumSize(crossoverMethodPanel.getPreferredSize());
+		crossoverMethodPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		crossoverPanel.add(crossoverMethodPanel);
+		
 		crossoverSlider = new JSlider(0,100);
 		crossoverSlider.setMajorTickSpacing(30);
 		crossoverSlider.setMinorTickSpacing(5);
@@ -210,17 +271,34 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		crossoverSlider.setPaintLabels(true);
 		crossoverSlider.setToolTipText(crossoverSlider.getValue() + " %");
 		crossoverSlider.addChangeListener(new SliderListener());
-		crossoverPerc.add(crossoverSlider, BorderLayout.CENTER);
-		crossoverPerc.setMaximumSize(crossoverPerc.getPreferredSize());
-		crossoverPerc.setMinimumSize(crossoverPerc.getPreferredSize());
-		crossoverPerc.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		settings.add(crossoverPerc);
+		crossoverSlider.setMaximumSize(crossoverSlider.getPreferredSize());
+		crossoverSlider.setMinimumSize(crossoverSlider.getPreferredSize());
+		crossoverSlider.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		crossoverPanel.add(crossoverSlider);
 		
+		crossoverPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(crossoverPanel);
+		
+
+		//---------------------------------------------
+		JSeparator c = new JSeparator();
+		c.setMaximumSize(new Dimension(420, 1));
+		settings.add(c);
 		//---------------------------------------------
 		
-		JPanel mutationPerc = new JPanel(new BorderLayout());
-		JLabel mutationPercLabel = new JLabel("Mutación");
-		mutationPerc.add(mutationPercLabel, BorderLayout.PAGE_START);
+		JPanel mutationPanel = new JPanel();
+		mutationPanel.setLayout(new BoxLayout(mutationPanel, BoxLayout.Y_AXIS));
+		
+		mutationMethodPanel = new JPanel();
+		JLabel mutationLabel = new JLabel("Mutación");
+		mutationMethodPanel.add(mutationLabel);
+		mutationBox = new JComboBox<String>();
+		mutationMethodPanel.add(mutationBox);
+		mutationMethodPanel.setMaximumSize(mutationMethodPanel.getPreferredSize());
+		mutationMethodPanel.setMinimumSize(mutationMethodPanel.getPreferredSize());
+		mutationMethodPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		mutationPanel.add(mutationMethodPanel);
+		
 		mutationSlider = new JSlider(0,100);
 		mutationSlider.setMajorTickSpacing(30);
 		mutationSlider.setMinorTickSpacing(5);
@@ -228,12 +306,18 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		mutationSlider.setPaintLabels(true);
 		mutationSlider.setToolTipText(mutationSlider.getValue() + " %");
 		mutationSlider.addChangeListener(new SliderListener());
-		mutationPerc.add(mutationSlider, BorderLayout.CENTER);
-		mutationPerc.setMaximumSize(mutationPerc.getPreferredSize());
-		mutationPerc.setMinimumSize(mutationPerc.getPreferredSize());
-		mutationPerc.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		settings.add(mutationPerc);
+		mutationSlider.setMaximumSize(mutationSlider.getPreferredSize());
+		mutationSlider.setMinimumSize(mutationSlider.getPreferredSize());
+		mutationSlider.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		mutationPanel.add(mutationSlider);
 		
+		mutationPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(mutationPanel);
+		
+		//---------------------------------------------
+		JSeparator d = new JSeparator();
+		d.setMaximumSize(new Dimension(420, 1));
+		settings.add(d);
 		//---------------------------------------------
 		
 		JPanel elitism = new JPanel(new BorderLayout());
@@ -274,42 +358,6 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		elitism.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		settings.add(elitism);
 		
-		//---------------------------------------------
-		
-		selection = new JPanel();
-		JLabel selectionLabel = new JLabel("Selección");
-		selection.add(selectionLabel);
-		selectionBox = new JComboBox<String>();
-		selection.add(selectionBox);
-		selection.setMaximumSize(selection.getPreferredSize());
-		selection.setMinimumSize(selection.getPreferredSize());
-		selection.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		settings.add(selection);
-		
-		//---------------------------------------------
-		
-		crossover = new JPanel();
-		JLabel crossoverLabel = new JLabel("Cruce");
-		crossover.add(crossoverLabel);
-		crossoverBox = new JComboBox<String>();
-		crossover.add(crossoverBox);
-		crossover.setMaximumSize(crossover.getPreferredSize());
-		crossover.setMinimumSize(crossover.getPreferredSize());
-		crossover.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		settings.add(crossover);
-		
-		//---------------------------------------------
-		
-		mutation = new JPanel();
-		JLabel mutationLabel = new JLabel("Mutación");
-		mutation.add(mutationLabel);
-		mutationBox = new JComboBox<String>();
-		mutation.add(mutationBox);
-		mutation.setMaximumSize(mutation.getPreferredSize());
-		mutation.setMinimumSize(mutation.getPreferredSize());
-		mutation.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		settings.add(mutation);
-		
 		// misma población inicial
 	}
 	
@@ -328,8 +376,8 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		for (String item : this.ctrl.getCrossoverStrategyList()) {
 			this.crossoverBox.addItem(item);			
 		}
-		crossover.setMaximumSize(crossover.getPreferredSize());
-		crossover.setMinimumSize(crossover.getPreferredSize());
+		crossoverMethodPanel.setMaximumSize(crossoverMethodPanel.getPreferredSize());
+		crossoverMethodPanel.setMinimumSize(crossoverMethodPanel.getPreferredSize());
 		/*for (String item : this.ctrl.getMutationStrategyList()) {
 			this.mutationBox.addItem(item);			
 		}
