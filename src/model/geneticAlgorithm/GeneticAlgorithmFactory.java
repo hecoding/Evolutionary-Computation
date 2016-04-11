@@ -15,6 +15,8 @@ public class GeneticAlgorithmFactory {
 			return new BooleanGeneticAlgorithm();
 		else if (id == "real")
 			return new DoubleGeneticAlgorithm();
+		else if (id == "TSP")
+			return new TSPGeneticAlgorithm();
 		else
 			throw new IllegalArgumentException("Unknown genetic algorithm");
 	}
