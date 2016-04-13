@@ -1,10 +1,9 @@
 package model.geneticAlgorithm;
 
-import java.util.ArrayList;
 import model.chromosome.BooleanChromosome;
 import model.function.Function;
-import model.gene.BooleanGene;
 import model.geneticAlgorithm.crossover.CrossoverInterface;
+import model.geneticAlgorithm.mutation.MutationInterface;
 import model.geneticAlgorithm.selection.SelectionInterface;
 
 public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm<BooleanChromosome> {
@@ -14,9 +13,9 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm<BooleanChr
 	}
 	
 	public BooleanGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
-			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
+			MutationInterface mutationStrategy, int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
-		super(func, selectionStrategy, crossoverStrategy, populationNum, useElitism, elitePercentage,
+		super(func, selectionStrategy, crossoverStrategy, mutationStrategy, populationNum, useElitism, elitePercentage,
 				maxGenerationNum, crossProb, mutationProb, tolerance, customSeed, seed);
 	}
 	
@@ -37,22 +36,7 @@ public class BooleanGeneticAlgorithm extends AbstractGeneticAlgorithm<BooleanChr
 	
 	// reproduction
 	
-	public void mutation() {
-		ArrayList<BooleanGene> genes;
-		boolean mutated = false;
-		
-		for (BooleanChromosome chrom : this.population) {
-			mutated = false;
-			genes = chrom.getGenotype();
-			
-			for (BooleanGene gene : genes) { // each gene can be coded on several bits
-				mutated = gene.mutate(this.mutationProb, random);
-			}
-			
-			if(mutated)
-				chrom.setAptitude(chrom.evaluate());
-		}
-	}
+	// mutation
 
 	public String toString() {
 		if(this.population == null || this.population.size() == 0) return "";

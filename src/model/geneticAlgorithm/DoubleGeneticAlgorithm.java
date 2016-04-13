@@ -3,6 +3,7 @@ package model.geneticAlgorithm;
 import model.chromosome.DoubleChromosome;
 import model.function.Function;
 import model.geneticAlgorithm.crossover.CrossoverInterface;
+import model.geneticAlgorithm.mutation.MutationInterface;
 import model.geneticAlgorithm.selection.SelectionInterface;
 
 public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChromosome> {
@@ -11,9 +12,9 @@ public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChrom
 	}
 	
 	public DoubleGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
-			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
+			MutationInterface mutationStrategy, int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
-		super(func, selectionStrategy, crossoverStrategy, populationNum, useElitism, elitePercentage,
+		super(func, selectionStrategy, crossoverStrategy, mutationStrategy, populationNum, useElitism, elitePercentage,
 				maxGenerationNum, crossProb, mutationProb, tolerance, customSeed, seed);
 	}
 
@@ -34,25 +35,7 @@ public class DoubleGeneticAlgorithm extends AbstractGeneticAlgorithm<DoubleChrom
 
 	// reproduction
 
-	@Override
-	public void mutation() {
-		/*ArrayList<DoubleGene> genes;
-		boolean mutated = false;*/
-		
-		for (DoubleChromosome chrom : this.population) {
-			/*mutated = false;
-			genes = chrom.getGenotype();
-			
-			for (DoubleGene gene : genes) {
-				mutated = gene.mutate(this.mutationProb, random);
-			}
-			
-			if(mutated)
-				chrom.setAptitude(chrom.evaluate());*/
-			chrom.mutate(this.mutationProb);
-			chrom.setAptitude(chrom.evaluate());
-		}
-	}
+	// mutation
 	
 	public String toString() {
 		if(this.population == null || this.population.size() == 0) return "";

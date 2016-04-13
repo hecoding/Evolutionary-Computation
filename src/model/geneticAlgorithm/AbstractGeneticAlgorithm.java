@@ -8,6 +8,7 @@ import model.chromosome.AbstractChromosome;
 import model.chromosome.comparator.AptitudeComparator;
 import model.function.Function;
 import model.geneticAlgorithm.crossover.CrossoverInterface;
+import model.geneticAlgorithm.mutation.MutationInterface;
 import model.geneticAlgorithm.selection.SelectionInterface;
 import model.observer.GeneticAlgorithmObserver;
 import model.observer.Observable;
@@ -41,18 +42,19 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	
 	protected SelectionInterface selectionStrategy;
 	protected CrossoverInterface crossoverStrategy;
+	protected MutationInterface mutationStrategy;
 	
 	public AbstractGeneticAlgorithm() {
 		this.observers = new ArrayList<GeneticAlgorithmObserver>();
 	}
 	
 	public AbstractGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
-			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
+			MutationInterface mutationStrategy, int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
 		function = func;
 		this.selectionStrategy = selectionStrategy;
 		this.crossoverStrategy = crossoverStrategy;
-		//this.mutationStrategy = mutationStrategy;
+		this.mutationStrategy = mutationStrategy;
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
@@ -91,7 +93,9 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	public void reproduction() {
 		this.crossoverStrategy.crossover(this.population, random, this.crossProb);
 	}
-	public abstract void mutation();
+	public void mutation() {
+		this.mutationStrategy.mutate(this.population, this.mutationProb);
+	}
 	
 	public void restart() {
 		//function = func;
@@ -292,6 +296,14 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	
 	public void setCrossoverStrategy(CrossoverInterface strategy) {
 		this.crossoverStrategy = strategy;
+	}
+	
+	public MutationInterface getMutationStrategy() {
+		return this.mutationStrategy;
+	}
+	
+	public void setMutationStrategy(MutationInterface strategy) {
+		this.mutationStrategy = strategy;
 	}
 
 	public int getPopulationNum() {

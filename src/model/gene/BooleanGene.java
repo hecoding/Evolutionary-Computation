@@ -42,19 +42,6 @@ public class BooleanGene extends AbstractGene<ArrayList<Boolean>> {
 	public void add(boolean b) {
 		this.information.add(new Boolean(b));
 	}
-
-	public boolean mutate(double mutationProb, Random random) {
-		boolean mutated = false;
-		
-		for (int i = 0; i < this.information.size(); i++) {
-			if(random.nextDouble() < mutationProb) {
-				this.information.set(i, !this.information.get(i));
-				mutated = true;
-			}
-		}
-		
-		return mutated;
-	}
 	
 	public int getLength() {
 		return this.information.size();

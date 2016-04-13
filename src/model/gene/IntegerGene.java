@@ -1,17 +1,9 @@
 package model.gene;
 
-import java.util.Random;
-
 public class IntegerGene extends AbstractGene<Integer> {
 
 	public IntegerGene(int n) {
 		this.information = new Integer(n);
-	}
-	
-	@Override
-	public boolean mutate(double mutationProb, Random random) {
-		// TODO Auto-generated method stub
-		return false;
 	}
 	
 	@Override

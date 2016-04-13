@@ -7,6 +7,8 @@ import model.geneticAlgorithm.AbstractGeneticAlgorithm;
 import model.geneticAlgorithm.BooleanGeneticAlgorithm;
 import model.geneticAlgorithm.crossover.CrossoverFactory;
 import model.geneticAlgorithm.crossover.OnepointBitToBitCrossover;
+import model.geneticAlgorithm.mutation.BitFlipMutation;
+import model.geneticAlgorithm.mutation.MutationFactory;
 import model.geneticAlgorithm.selection.RouletteSelection;
 import model.geneticAlgorithm.selection.SelectionFactory;
 import model.observer.GeneticAlgorithmObserver;
@@ -20,6 +22,7 @@ public class Controller {
 									new Function3(),
 									new RouletteSelection(),
 									new OnepointBitToBitCrossover(),
+									new BitFlipMutation(),
 									100,
 									false,
 									0.1,
@@ -93,7 +96,7 @@ public class Controller {
 	}
 	
 	public void setMutationStrategy(String strategy) {
-		throw new IllegalArgumentException();
+		this.ga.setMutationStrategy(MutationFactory.getInstance().create(strategy));
 	}
 	
 	public String[] getSelectionStrategyList() {
@@ -105,7 +108,7 @@ public class Controller {
 	}
 	
 	public String[] getMutationStrategyList() {
-		return null;
+		return MutationFactory.selectionList();
 	}
 	
 	public double getFunctionResult() {

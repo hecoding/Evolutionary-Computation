@@ -1,7 +1,5 @@
 package model.gene;
 
-import java.util.Random;
-
 public class DoubleGene extends AbstractGene<Double> {
 	private double minLimit;
 	private double maxLimit;
@@ -12,17 +10,6 @@ public class DoubleGene extends AbstractGene<Double> {
 	/* Return empty gene with n allocated position */
 	public DoubleGene(double n) {
 		this.information = new Double(n);
-	}
-	
-	public boolean mutate(double mutationProb, Random random) {
-		boolean mutated = false;
-		
-		if(random.nextDouble() < mutationProb) {
-			this.information = minLimit + random.nextDouble() * (maxLimit - minLimit);
-			mutated = true;
-		}
-		
-		return mutated;
 	}
 	
 	public DoubleGene clone() {

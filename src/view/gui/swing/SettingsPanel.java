@@ -99,7 +99,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					ctrl.setElitismPercentage(elitismSlider.getValue());
 					ctrl.setSelectionStrategy((String) selectionBox.getSelectedItem());
 					ctrl.setCrossoverStrategy((String) crossoverBox.getSelectedItem());
-					//ctrl.setMutationStrategy((String) mutationBox.getSelectedItem());
+					ctrl.setMutationStrategy((String) mutationBox.getSelectedItem());
 					ctrl.run();
 				} catch(IllegalChromosomeException ex) {
 					JOptionPane.showMessageDialog(null,
@@ -378,11 +378,11 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		}
 		crossoverMethodPanel.setMaximumSize(crossoverMethodPanel.getPreferredSize());
 		crossoverMethodPanel.setMinimumSize(crossoverMethodPanel.getPreferredSize());
-		/*for (String item : this.ctrl.getMutationStrategyList()) {
+		for (String item : this.ctrl.getMutationStrategyList()) {
 			this.mutationBox.addItem(item);			
 		}
-		mutation.setMaximumSize(mutation.getPreferredSize());
-		mutation.setMinimumSize(mutation.getPreferredSize());*/
+		mutationMethodPanel.setMaximumSize(mutationMethodPanel.getPreferredSize());
+		mutationMethodPanel.setMinimumSize(mutationMethodPanel.getPreferredSize());
 		
 		saveDefaults();
 	}
