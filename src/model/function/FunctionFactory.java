@@ -3,6 +3,8 @@ package model.function;
 public class FunctionFactory {
  	private static FunctionFactory instance;
  	
+ 	private FunctionFactory() {}
+ 	
 	public static FunctionFactory getInstance() {
 		if (instance == null){
 			instance = new FunctionFactory();

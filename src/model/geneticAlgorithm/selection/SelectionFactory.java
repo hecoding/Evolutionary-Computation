@@ -3,6 +3,8 @@ package model.geneticAlgorithm.selection;
 public class SelectionFactory {
 	private static SelectionFactory instance;
 	private static String[] strategies = {"ruleta", "torneo"};
+	
+	private SelectionFactory() {}
  	
 	public static SelectionFactory getInstance() {
 		if (instance == null){

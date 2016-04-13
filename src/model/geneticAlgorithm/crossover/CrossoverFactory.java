@@ -3,6 +3,8 @@ package model.geneticAlgorithm.crossover;
 public class CrossoverFactory {
 	private static CrossoverFactory instance;
 	private static String[] strategies = {"un punto bit a bit", "un punto", "discreto uniforme", "aritmético", "SBX"};
+	
+	private CrossoverFactory() {}
  	
 	public static CrossoverFactory getInstance() {
 		if (instance == null){
