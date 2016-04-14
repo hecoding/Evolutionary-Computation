@@ -1,8 +1,6 @@
 package model.geneticAlgorithm.selection;
 
 import java.util.ArrayList;
-import java.util.Random;
-
 import model.chromosome.AbstractChromosome;
 import model.chromosome.comparator.ScoreComparator;
 
@@ -10,7 +8,7 @@ public class TournamentSelection implements SelectionInterface {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractChromosome<?>> void select(ArrayList<T> population, Random random) {
+	public <T extends AbstractChromosome<?>> void select(ArrayList<T> population) {
 		ArrayList<T> selectedPopulation = new ArrayList<T>(population.size());
 		int tournamentGroups = 2;
 		ArrayList<T> group = new ArrayList<T>(tournamentGroups);

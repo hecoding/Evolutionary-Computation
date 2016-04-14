@@ -78,10 +78,10 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	}
 	
 	public void selection() {
-		this.selectionStrategy.select(this.population, random);
+		this.selectionStrategy.select(this.population);
 	}
 	public void reproduction() {
-		this.crossoverStrategy.crossover(this.population, random, this.crossProb);
+		this.crossoverStrategy.crossover(this.population, this.crossProb);
 	}
 	public void mutation() {
 		this.mutationStrategy.mutate(this.population, this.mutationProb);
