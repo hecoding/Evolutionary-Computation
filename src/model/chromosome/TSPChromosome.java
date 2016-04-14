@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import model.gene.IntegerGene;
 import model.geneticAlgorithm.TSPGeneticAlgorithm;
 import model.geneticAlgorithm.fitnessFunction.FitnessFunctionInterface;
+import util.RandGenerator;
 
 public class TSPChromosome extends AbstractChromosome<IntegerGene> {
 	
@@ -22,9 +23,10 @@ public class TSPChromosome extends AbstractChromosome<IntegerGene> {
 		if (!this.genes.isEmpty())
 			this.genes.clear();
 		
+		RandGenerator random = RandGenerator.getInstance();
 		int i = 0;
 		while (i < TSPGeneticAlgorithm.Cities.number) {
-			IntegerGene newGene = new IntegerGene((int)( Math.random() * TSPGeneticAlgorithm.Cities.number) + 1 );
+			IntegerGene newGene = new IntegerGene( random.nextInt(TSPGeneticAlgorithm.Cities.number) );
 			if(!this.genes.contains(newGene)) { // Overrode .equals()
 				this.genes.add( newGene );
 				i++;

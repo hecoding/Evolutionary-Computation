@@ -48,7 +48,6 @@ public class TSPGeneticAlgorithm extends AbstractGeneticAlgorithm<TSPChromosome>
 	}
 	
 	public static class Cities {
-		public static int number = 27;
 		private static int[][] DIST = {
 			{0},
 			{171},
@@ -79,7 +78,7 @@ public class TSPGeneticAlgorithm extends AbstractGeneticAlgorithm<TSPChromosome>
 			{473, 482, 219, 644, 436, 997, 939, 781, 506, 265, 713, 388, 187, 1153, 615, 1097, 129, 602, 313, 941, 209, 877, 1009, 880, 1055, 544},
 			{150, 75, 219, 516, 675, 590, 796, 638, 654, 613, 306, 357, 444, 1010, 292, 690, 278, 459, 628, 611, 340, 734, 583, 694, 912, 401, 407}
 		};
-		
+		public static int number = DIST.length;
 		public static int distance(cityNames from, cityNames to) {
 			return distance(from.ordinal(), to.ordinal());
 		}
