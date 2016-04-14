@@ -2,14 +2,10 @@ package controller;
 
 import java.util.ArrayList;
 
-import model.function.Function3;
 import model.geneticAlgorithm.AbstractGeneticAlgorithm;
-import model.geneticAlgorithm.BooleanGeneticAlgorithm;
+import model.geneticAlgorithm.TSPGeneticAlgorithm;
 import model.geneticAlgorithm.crossover.CrossoverFactory;
-import model.geneticAlgorithm.crossover.OnepointBitToBitCrossover;
-import model.geneticAlgorithm.mutation.BitFlipMutation;
 import model.geneticAlgorithm.mutation.MutationFactory;
-import model.geneticAlgorithm.selection.RouletteSelection;
 import model.geneticAlgorithm.selection.SelectionFactory;
 import model.observer.GeneticAlgorithmObserver;
 
@@ -18,8 +14,8 @@ public class Controller {
 	
 	public Controller() {
 		// default genetic algorithm
-		this.ga = new BooleanGeneticAlgorithm(
-									new Function3(),
+		this.ga = new TSPGeneticAlgorithm();
+									/*new Function3(),
 									new RouletteSelection(),
 									new OnepointBitToBitCrossover(),
 									new BitFlipMutation(),
@@ -31,7 +27,7 @@ public class Controller {
 									0.05,
 									0.001,
 									false,
-									0);
+									0);*/
 	}
 	
 	public void run() {

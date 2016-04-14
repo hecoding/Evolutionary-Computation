@@ -11,11 +11,7 @@ public class GeneticAlgorithmFactory {
 	}
 	
 	public AbstractGeneticAlgorithm<?> create(String id) {
-		if (id == "booleano")
-			return new BooleanGeneticAlgorithm();
-		else if (id == "real")
-			return new DoubleGeneticAlgorithm();
-		else if (id == "TSP")
+		if (id == "TSP")
 			return new TSPGeneticAlgorithm();
 		else
 			throw new IllegalArgumentException("Unknown genetic algorithm");

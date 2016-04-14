@@ -6,7 +6,7 @@ import java.util.Random;
 
 import model.chromosome.AbstractChromosome;
 import model.chromosome.comparator.AptitudeComparator;
-import model.function.Function;
+import model.function.FitnessFunctionInterface;
 import model.geneticAlgorithm.crossover.CrossoverInterface;
 import model.geneticAlgorithm.mutation.MutationInterface;
 import model.geneticAlgorithm.selection.SelectionInterface;
@@ -15,7 +15,7 @@ import model.observer.Observable;
 
 public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> implements Observable<GeneticAlgorithmObserver> {
 	protected ArrayList<T> population;
-	protected static Function function;
+	protected static FitnessFunctionInterface function;
 	protected int populationNum;
 	protected double tolerance;
 	protected int currentGeneration;
@@ -48,7 +48,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.observers = new ArrayList<GeneticAlgorithmObserver>();
 	}
 	
-	public AbstractGeneticAlgorithm(Function func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
+	public AbstractGeneticAlgorithm(FitnessFunctionInterface func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
 			MutationInterface mutationStrategy, int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
 			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
 		function = func;
@@ -278,7 +278,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		return this.currentGeneration == this.maxGenerationNum;
 	}
 
-	public Function getFunction() {
+	public FitnessFunctionInterface getFunction() {
 		return function;
 	}
 	

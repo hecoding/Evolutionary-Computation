@@ -15,9 +15,7 @@ public class MutationFactory {
 	
 	public MutationInterface create(String id) {
 		if (id == "bit a bit")
-			return new BitFlipMutation();
-		else if (id == "uniforme")
-			return new UniformMutation();
+			return null;
 		else
 			throw new IllegalArgumentException("Unknown selection method");
 	}

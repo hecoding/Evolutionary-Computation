@@ -2,11 +2,11 @@ package model.chromosome;
 
 import java.util.ArrayList;
 
-import model.function.Function;
+import model.function.FitnessFunctionInterface;
 import model.gene.AbstractGene;
 
 public abstract class AbstractChromosome<T extends AbstractGene<?>> implements Cloneable {
-	protected static Function function;
+	protected static FitnessFunctionInterface function;
 	protected ArrayList<T> genes;
 	protected ArrayList<Double> phenotype;
 	protected double aptitude;
@@ -28,11 +28,11 @@ public abstract class AbstractChromosome<T extends AbstractGene<?>> implements C
 		return function.f(params);
 	}
 	
-	public Function getFunction() {
+	public FitnessFunctionInterface getFunction() {
 		return function;
 	}
 
-	public void setFunction(Function func) {
+	public void setFunction(FitnessFunctionInterface func) {
 		function = func;
 	}
 	
