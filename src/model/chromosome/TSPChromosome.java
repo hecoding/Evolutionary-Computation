@@ -4,11 +4,17 @@ import java.util.ArrayList;
 
 import model.gene.IntegerGene;
 import model.geneticAlgorithm.TSPGeneticAlgorithm;
+import model.geneticAlgorithm.fitnessFunction.FitnessFunctionInterface;
 
 public class TSPChromosome extends AbstractChromosome<IntegerGene> {
 	
 	public TSPChromosome() {
 		this.genes = new ArrayList<IntegerGene>();
+	}
+	
+	public TSPChromosome(int geneNumber, FitnessFunctionInterface function) {
+		fitnessFunc = function;
+		this.genes = new ArrayList<IntegerGene>(geneNumber);
 	}
 
 	@Override
@@ -18,9 +24,9 @@ public class TSPChromosome extends AbstractChromosome<IntegerGene> {
 		
 		int i = 0;
 		while (i < TSPGeneticAlgorithm.Cities.number) {
-			IntegerGene caca = new IntegerGene((int)( Math.random() * TSPGeneticAlgorithm.Cities.number) + 1 );
-			if(!this.genes.contains(caca)) {
-				this.genes.add( caca );
+			IntegerGene newGene = new IntegerGene((int)( Math.random() * TSPGeneticAlgorithm.Cities.number) + 1 );
+			if(!this.genes.contains(newGene)) { // Overrode .equals()
+				this.genes.add( newGene );
 				i++;
 			}
 		}

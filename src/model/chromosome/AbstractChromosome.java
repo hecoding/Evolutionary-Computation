@@ -6,13 +6,11 @@ import model.gene.AbstractGene;
 import model.geneticAlgorithm.fitnessFunction.FitnessFunctionInterface;
 
 public abstract class AbstractChromosome<T extends AbstractGene<?>> implements Cloneable {
-	protected static FitnessFunctionInterface function;
+	protected static FitnessFunctionInterface fitnessFunc;
 	protected ArrayList<T> genes;
-	protected ArrayList<Double> phenotype;
 	protected double aptitude;
 	protected double score;
 	protected double aggregateScore;
-	ArrayList<Double> params;
 	
 	public AbstractChromosome() {
 		this.aptitude = 0;
@@ -23,17 +21,15 @@ public abstract class AbstractChromosome<T extends AbstractGene<?>> implements C
 	public abstract void initialize();
 	
 	public double evaluate() {
-		params.clear();
-		params.addAll(this.getPhenotype());
-		return function.f(params);
+		return fitnessFunc.f(this.getPhenotype());
 	}
 	
 	public FitnessFunctionInterface getFunction() {
-		return function;
+		return fitnessFunc;
 	}
 
 	public void setFunction(FitnessFunctionInterface func) {
-		function = func;
+		fitnessFunc = func;
 	}
 	
 	public void add(T gene) {

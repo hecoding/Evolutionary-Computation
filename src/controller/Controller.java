@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import model.geneticAlgorithm.AbstractGeneticAlgorithm;
 import model.geneticAlgorithm.TSPGeneticAlgorithm;
 import model.geneticAlgorithm.crossover.CrossoverFactory;
+import model.geneticAlgorithm.crossover.PMXCrossover;
+import model.geneticAlgorithm.fitnessFunction.TSPFitness;
+import model.geneticAlgorithm.mutation.InsertionMutation;
 import model.geneticAlgorithm.mutation.MutationFactory;
+import model.geneticAlgorithm.selection.RouletteSelection;
 import model.geneticAlgorithm.selection.SelectionFactory;
 import model.observer.GeneticAlgorithmObserver;
 
@@ -14,20 +18,17 @@ public class Controller {
 	
 	public Controller() {
 		// default genetic algorithm
-		this.ga = new TSPGeneticAlgorithm();
-									/*new Function3(),
+		this.ga = new TSPGeneticAlgorithm(
+									new TSPFitness(),
 									new RouletteSelection(),
-									new OnepointBitToBitCrossover(),
-									new BitFlipMutation(),
+									new PMXCrossover(),
+									new InsertionMutation(),
 									100,
 									false,
 									0.1,
 									100,
 									0.6,
-									0.05,
-									0.001,
-									false,
-									0);*/
+									0.05);
 	}
 	
 	public void run() {

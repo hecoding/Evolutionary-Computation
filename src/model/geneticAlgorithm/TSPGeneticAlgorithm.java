@@ -1,13 +1,50 @@
 package model.geneticAlgorithm;
 
 import model.chromosome.TSPChromosome;
+import model.geneticAlgorithm.crossover.CrossoverInterface;
+import model.geneticAlgorithm.fitnessFunction.FitnessFunctionInterface;
+import model.geneticAlgorithm.mutation.MutationInterface;
+import model.geneticAlgorithm.selection.SelectionInterface;
 
 public class TSPGeneticAlgorithm extends AbstractGeneticAlgorithm<TSPChromosome> {
 
+	public TSPGeneticAlgorithm(FitnessFunctionInterface func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
+			MutationInterface mutationStrategy, int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
+			double crossProb, double mutationProb) {
+		super(func, selectionStrategy, crossoverStrategy, mutationStrategy, populationNum, useElitism, elitePercentage,
+				maxGenerationNum, crossProb, mutationProb);
+	}
+
 	@Override
 	public void initialize() {
-		// TODO Auto-generated method stub
+		this.population.clear();
 		
+		for (int i = 0; i < this.populationNum; i++) {
+			TSPChromosome chr = new TSPChromosome(Cities.number, this.fitnessFunc);
+			chr.initialize();
+			chr.setAptitude(chr.evaluate());
+			this.population.add(chr);
+		}
+	}
+	
+	public String toString() {
+		if(this.population == null || this.population.size() == 0) return "";
+		String s = new String();
+		
+		s += "pos     genotype     aptitude phenotype" + System.lineSeparator();
+		for (int i = 0; i < this.population.size(); i++) {
+			TSPChromosome elem = this.population.get(i);
+			s += i + " " + elem + " " + String.format("%5f", elem.getAptitude()) + " ";
+			
+			for (Double el : elem.getPhenotype()) {
+				s += String.format("%.5f", el) + " ";
+			}
+			s = s.substring(0, s.length() - 1);
+			
+			s += System.lineSeparator();
+		}
+		
+		return s;
 	}
 	
 	public static class Cities {
