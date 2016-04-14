@@ -2,7 +2,7 @@ package model.geneticAlgorithm.mutation;
 
 public class MutationFactory {
 	private static MutationFactory instance;
-	private static String[] strategies = {"bit a bit", "uniforme"};
+	private static String[] strategies = {"hacer"};
 	
 	private MutationFactory() {}
 	

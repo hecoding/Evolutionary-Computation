@@ -2,7 +2,7 @@ package model.geneticAlgorithm.crossover;
 
 public class CrossoverFactory {
 	private static CrossoverFactory instance;
-	private static String[] strategies = {"un punto bit a bit", "un punto", "discreto uniforme", "aritmético", "SBX"};
+	private static String[] strategies = {"hacer"};
 	
 	private CrossoverFactory() {}
  	
@@ -15,15 +15,7 @@ public class CrossoverFactory {
 	
 	public CrossoverInterface create(String id) {
 		if (id == "un punto bit a bit")
-			return new OnepointBitToBitCrossover();
-		else if (id == "un punto")
-			return new OnepointCrossover();
-		else if (id == "discreto uniforme")
-			return new UniformCrossover();
-		else if (id == "aritmético")
-			return new ArithmeticCrossover();
-		else if (id == "SBX")
-			return new SimulatedBinaryCrossover();
+			return null;
 		else
 			throw new IllegalArgumentException("Unknown selection method");
 	}

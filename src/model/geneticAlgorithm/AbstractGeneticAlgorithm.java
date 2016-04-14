@@ -6,31 +6,29 @@ import java.util.Random;
 
 import model.chromosome.AbstractChromosome;
 import model.chromosome.comparator.AptitudeComparator;
-import model.function.FitnessFunctionInterface;
 import model.geneticAlgorithm.crossover.CrossoverInterface;
+import model.geneticAlgorithm.fitnessFunction.FitnessFunctionInterface;
 import model.geneticAlgorithm.mutation.MutationInterface;
 import model.geneticAlgorithm.selection.SelectionInterface;
 import model.observer.GeneticAlgorithmObserver;
 import model.observer.Observable;
+import util.RandGenerator;
 
 public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> implements Observable<GeneticAlgorithmObserver> {
 	protected ArrayList<T> population;
-	protected static FitnessFunctionInterface function;
+	protected FitnessFunctionInterface fitnessFunc;
 	protected int populationNum;
-	protected double tolerance;
 	protected int currentGeneration;
 	protected int maxGenerationNum;
 	protected double crossProb;
 	protected double mutationProb;
-	protected boolean customSeed;
-	protected long seed;
 	protected boolean useElitism;
 	protected double elitePercentage;
+	protected ArrayList<T> elite;
 	protected ArrayList<Double> inspectedAptitude;
 	protected static Random random;
 	protected ArrayList<GeneticAlgorithmObserver> observers;
 	
-	protected ArrayList<T> elite;
 	protected T bestChromosome;
 	protected double bestAptitude;
 	protected double averageAptitude;
@@ -50,8 +48,8 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	
 	public AbstractGeneticAlgorithm(FitnessFunctionInterface func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
 			MutationInterface mutationStrategy, int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
-			double crossProb, double mutationProb, double tolerance, boolean customSeed, long seed) {
-		function = func;
+			double crossProb, double mutationProb) {
+		this.fitnessFunc = func;
 		this.selectionStrategy = selectionStrategy;
 		this.crossoverStrategy = crossoverStrategy;
 		this.mutationStrategy = mutationStrategy;
@@ -68,21 +66,13 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.averageScore = 0;
 		this.crossProb = crossProb;
 		this.mutationProb = mutationProb;
-		this.tolerance = tolerance;
-		this.customSeed = customSeed;
-		this.seed = seed;
 		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.inspectedAptitude = new ArrayList<Double>(populationNum);
 		this.observers = new ArrayList<GeneticAlgorithmObserver>();
 		
-		if(random == null) {
-			if(customSeed)
-				random = new Random(this.seed);
-			else
-				random = new Random();
-		}
+		random = RandGenerator.getInstance();
 		if(aptitudeComparator == null)
 			aptitudeComparator = new AptitudeComparator();
 	}
@@ -98,7 +88,6 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	}
 	
 	public void restart() {
-		//function = func;
 		this.population = new ArrayList<T>(populationNum);
 		this.elite = null;
 		this.currentGeneration = 0;
@@ -106,9 +95,6 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.bestAptitude = 0;
 		this.averageAptitude = 0;
 		this.averageScore = 0;
-		//this.tolerance = tolerance;
-		//this.customSeed = customSeed;
-		//this.seed = seed;
 		this.bestChromosomeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
@@ -124,7 +110,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.notifyStartRun();
 		
 		this.initialize();
-		if(function.isMinimization())
+		if(this.fitnessFunc.isMinimization())
 			this.aptitudeShifting();
 		this.evaluatePopulation();
 		
@@ -138,7 +124,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 			this.mutation();
 			if (this.useElitism)
 				this.includeElite(this.elite);
-			if(function.isMinimization())
+			if(this.fitnessFunc.isMinimization())
 				this.aptitudeShifting();
 			this.evaluatePopulation();
 			
@@ -158,7 +144,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	public void evaluatePopulation() {
 		double aggregateScore = 0;
 		double bestAptitude = Double.NEGATIVE_INFINITY;
-		if(function.isMinimization())
+		if(this.fitnessFunc.isMinimization())
 			bestAptitude = Double.POSITIVE_INFINITY;
 		double aggregateAptitude = 0;
 		double aggregateInspectedAptitude = 0;
@@ -169,10 +155,10 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		for (T chromosome : this.population) {
 			double chromAptitude = chromosome.getAptitude();
 			aggregateAptitude += chromAptitude;
-			if(function.isMinimization())
+			if(this.fitnessFunc.isMinimization())
 				aggregateInspectedAptitude += this.inspectedAptitude.get(i);
 			
-			if(function.isMinimization()) {
+			if(this.fitnessFunc.isMinimization()) {
 				if (chromAptitude < bestAptitude) {
 					currentBest = chromosome;
 					bestAptitude = chromAptitude;
@@ -190,7 +176,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		// compute and set score of population individuals
 		i = 0;
 		for (T chromosome : this.population) {
-			if(function.isMinimization())
+			if(this.fitnessFunc.isMinimization())
 				chromosome.setScore(this.inspectedAptitude.get(i) / aggregateInspectedAptitude);
 			else
 				chromosome.setScore(chromosome.getAptitude() / aggregateAptitude);
@@ -200,7 +186,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		}
 		
 		// refresh best individual and aptitude statistics
-		if(function.isMinimization()) {
+		if(this.fitnessFunc.isMinimization()) {
 			if (this.bestChromosome == null || bestAptitude < this.bestChromosome.getAptitude()) {
 				this.bestChromosome = (T) currentBest.clone();
 			}
@@ -222,7 +208,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		ArrayList<T> elite = new ArrayList<T>(eliteNum);
 		
 		this.population.sort(aptitudeComparator);
-		if(function.isMinimization()) {
+		if(this.fitnessFunc.isMinimization()) {
 			for (int i = 0; i < eliteNum; i++) {
 				elite.add((T) this.population.get(i).clone());
 			}
@@ -240,7 +226,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		// substitution of the worst adapted individuals
 		this.population.sort(aptitudeComparator);
 		
-		if(function.isMinimization()) {
+		if(this.fitnessFunc.isMinimization()) {
 			int j = 0;
 			for (int i = this.populationNum - elite.size(); i < this.populationNum; i++) {
 				this.population.set(i, elite.get(j));
@@ -278,8 +264,12 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		return this.currentGeneration == this.maxGenerationNum;
 	}
 
-	public FitnessFunctionInterface getFunction() {
-		return function;
+	public FitnessFunctionInterface getFitnessFunction() {
+		return this.fitnessFunc;
+	}
+	
+	public void setFitnessFunction(FitnessFunctionInterface func) {
+		this.fitnessFunc = func;
 	}
 	
 	public SelectionInterface getSelectionStrategy() {
@@ -314,10 +304,6 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.populationNum = population;
 	}
 
-	public double getTolerance() {
-		return tolerance;
-	}
-
 	public int getMaxGenerationNum() {
 		return maxGenerationNum;
 	}
@@ -340,14 +326,6 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	
 	public void setMutationProb(double prob) {
 		this.mutationProb = prob;
-	}
-
-	public boolean isCustomSeed() {
-		return customSeed;
-	}
-
-	public long getSeed() {
-		return seed;
 	}
 
 	public boolean isUseElitism() {

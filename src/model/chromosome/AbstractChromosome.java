@@ -2,8 +2,8 @@ package model.chromosome;
 
 import java.util.ArrayList;
 
-import model.function.FitnessFunctionInterface;
 import model.gene.AbstractGene;
+import model.geneticAlgorithm.fitnessFunction.FitnessFunctionInterface;
 
 public abstract class AbstractChromosome<T extends AbstractGene<?>> implements Cloneable {
 	protected static FitnessFunctionInterface function;

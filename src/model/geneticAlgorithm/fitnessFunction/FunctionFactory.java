@@ -1,4 +1,4 @@
-package model.function;
+package model.geneticAlgorithm.fitnessFunction;
 
 public class FunctionFactory {
  	private static FunctionFactory instance;
