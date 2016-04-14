@@ -2,7 +2,7 @@ package model.geneticAlgorithm.crossover;
 
 public class CrossoverFactory {
 	private static CrossoverFactory instance;
-	private static String[] strategies = {"hacer"};
+	private static String[] strategies = {"PMX"};
 	
 	private CrossoverFactory() {}
  	
@@ -14,8 +14,8 @@ public class CrossoverFactory {
 	}
 	
 	public CrossoverInterface create(String id) {
-		if (id == "un punto bit a bit")
-			return null;
+		if (id == "PMX")
+			return new PMXCrossover();
 		else
 			throw new IllegalArgumentException("Unknown selection method");
 	}

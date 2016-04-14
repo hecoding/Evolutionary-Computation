@@ -7,7 +7,7 @@ import model.geneticAlgorithm.TSPGeneticAlgorithm;
 import model.geneticAlgorithm.crossover.CrossoverFactory;
 import model.geneticAlgorithm.crossover.PMXCrossover;
 import model.geneticAlgorithm.fitnessFunction.TSPFitness;
-import model.geneticAlgorithm.mutation.InsertionMutation;
+import model.geneticAlgorithm.mutation.InversionMutation;
 import model.geneticAlgorithm.mutation.MutationFactory;
 import model.geneticAlgorithm.selection.RouletteSelection;
 import model.geneticAlgorithm.selection.SelectionFactory;
@@ -22,7 +22,7 @@ public class Controller {
 									new TSPFitness(),
 									new RouletteSelection(),
 									new PMXCrossover(),
-									new InsertionMutation(),
+									new InversionMutation(),
 									100,
 									false,
 									0.1,

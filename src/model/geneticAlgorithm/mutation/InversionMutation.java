@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import model.chromosome.AbstractChromosome;
 
-public class InsertionMutation implements MutationInterface {
+public class InversionMutation implements MutationInterface {
 
 	@Override
 	public <T extends AbstractChromosome<?>> void mutate(ArrayList<T> population, double mutationProb) {
@@ -14,7 +14,7 @@ public class InsertionMutation implements MutationInterface {
 
 	@Override
 	public String getName() {
-		return "Inserción";
+		return "Inversión";
 	}
 
 }
