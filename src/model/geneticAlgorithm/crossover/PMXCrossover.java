@@ -53,6 +53,11 @@ public class PMXCrossover implements CrossoverInterface {
 		// select two points over 0 and the current gene length - 1
 		int point1 = random.nextInt(TSPGeneticAlgorithm.Cities.number);
 		int point2 = random.nextInt(TSPGeneticAlgorithm.Cities.number);
+		if (point1 > point2) {
+			int temp = point1;
+			point1 = point2;
+			point2 = temp;
+		}
 		
 		// fill genes with not valid items so that the .set doesn't blows up
 		for (int i = 0; i < parent1Gene.size(); i++) {
