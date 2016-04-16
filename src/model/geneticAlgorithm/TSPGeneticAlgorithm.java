@@ -20,7 +20,7 @@ public class TSPGeneticAlgorithm extends AbstractGeneticAlgorithm<TSPChromosome>
 		this.population.clear();
 		
 		for (int i = 0; i < this.populationNum; i++) {
-			TSPChromosome chr = new TSPChromosome(Cities.number, this.fitnessFunc);
+			TSPChromosome chr = new TSPChromosome(Cities.number - 1, this.fitnessFunc);
 			chr.initialize();
 			chr.setAptitude(chr.evaluate());
 			this.population.add(chr);

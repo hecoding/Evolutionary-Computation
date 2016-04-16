@@ -16,6 +16,8 @@ public class TSPFitness implements FitnessFunctionInterface {
 			
 			distance += TSPGeneticAlgorithm.Cities.distance(city1, city2);
 		}
+		// because it's a circuit
+		distance += TSPGeneticAlgorithm.Cities.distance(params.get(0).intValue(), params.get(params.size() - 1).intValue());
 		
 		return distance;
 	}
