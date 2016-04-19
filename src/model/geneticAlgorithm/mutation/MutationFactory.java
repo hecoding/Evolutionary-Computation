@@ -2,7 +2,7 @@ package model.geneticAlgorithm.mutation;
 
 public class MutationFactory {
 	private static MutationFactory instance;
-	private static String[] strategies = {"Inversión", "Intercambio", "Inserción"};
+	private static String[] strategies = {"Inversión", "Intercambio", "Inserción", "Heurística"};
 	
 	private MutationFactory() {}
 	
@@ -20,6 +20,8 @@ public class MutationFactory {
 			return new ExchangeMutation();
 		else if (id == "Inserción")
 			return new InsertionMutation();
+		else if (id == "Heurística")
+			return new HeuristicMutation();
 		else
 			throw new IllegalArgumentException("Unknown selection method");
 	}
