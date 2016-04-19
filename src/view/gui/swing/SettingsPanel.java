@@ -216,7 +216,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		selectionBox = new JComboBox<String>();
 		selectionBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				if(e.getItem() == "torneo") {
+				if(e.getItem() == "Torneo") {
 					if(e.getStateChange() == ItemEvent.SELECTED) {
 						tournamentGroups.setVisible(true);
 						selection.setMaximumSize(selection.getPreferredSize());

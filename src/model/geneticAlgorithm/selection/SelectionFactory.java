@@ -2,7 +2,7 @@ package model.geneticAlgorithm.selection;
 
 public class SelectionFactory {
 	private static SelectionFactory instance;
-	private static String[] strategies = {"ruleta", "torneo", "Truncamiento"};
+	private static String[] strategies = {"Ruleta", "Torneo", "Truncamiento"};
 	
 	private SelectionFactory() {}
  	
@@ -14,9 +14,9 @@ public class SelectionFactory {
 	}
 	
 	public SelectionInterface create(String id) {
-		if (id == "ruleta")
+		if (id == "Ruleta")
 			return new RouletteSelection();
-		else if (id == "torneo")
+		else if (id == "Torneo")
 			return new TournamentSelection();
 		else if (id == "Truncamiento")
 			return new TruncationSelection();
