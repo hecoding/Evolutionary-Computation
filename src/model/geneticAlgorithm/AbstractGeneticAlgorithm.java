@@ -84,6 +84,10 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.crossoverStrategy.crossover(this.population, this.crossProb);
 	}
 	public void mutation() {
+		/*int n = this.population.get(0).getLength();
+		int T = this.maxGenerationNum;
+		int t = this.currentGeneration;
+		double variableMutationRate = Math.pow((2 + (( (n - 2)/(T - 1.0) ) * t)), -1);*/
 		this.mutationStrategy.mutate(this.population, this.mutationProb);
 	}
 	
