@@ -88,6 +88,16 @@ public class Controller {
 		this.ga.setSelectionStrategy(SelectionFactory.getInstance().create(strategy));
 	}
 	
+	public void setSelectionParameter(String param) {
+		if(!param.isEmpty()) {
+			double num = Double.parseDouble(param);
+			if(num <= 0)
+				throw new IllegalArgumentException("Mal parámetro");
+			else
+				SelectionFactory.getInstance().setParameter(num);
+		}
+	}
+	
 	public void setCrossoverStrategy(String strategy) {
 		this.ga.setCrossoverStrategy(CrossoverFactory.getInstance().create(strategy));
 	}

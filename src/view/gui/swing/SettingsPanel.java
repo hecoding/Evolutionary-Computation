@@ -97,6 +97,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					ctrl.setMutationPercentage(mutationSlider.getValue());
 					ctrl.setElitism(elitismCheck.isSelected());
 					ctrl.setElitismPercentage(elitismSlider.getValue());
+					ctrl.setSelectionParameter(SBXGroups.getText());
 					ctrl.setSelectionStrategy((String) selectionBox.getSelectedItem());
 					ctrl.setCrossoverStrategy((String) crossoverBox.getSelectedItem());
 					ctrl.setMutationStrategy((String) mutationBox.getSelectedItem());
@@ -109,6 +110,10 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 						cmp.setEnabled(true);
 					}
 				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(null,
+							ex.getMessage(),
+							"Error", JOptionPane.ERROR_MESSAGE);
+				} catch (IllegalArgumentException ex) {
 					JOptionPane.showMessageDialog(null,
 							ex.getMessage(),
 							"Error", JOptionPane.ERROR_MESSAGE);
