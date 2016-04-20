@@ -2,7 +2,7 @@ package model.geneticAlgorithm.selection;
 
 public class SelectionFactory {
 	private static SelectionFactory instance;
-	private static String[] strategies = {"Ruleta", "Torneo", "Truncamiento"};
+	private static String[] strategies = {"Ruleta", "Torneo", "Truncamiento", "Ranking"};
 	
 	private SelectionFactory() {}
  	
@@ -20,6 +20,8 @@ public class SelectionFactory {
 			return new TournamentSelection();
 		else if (id == "Truncamiento")
 			return new TruncationSelection();
+		else if (id == "Ranking")
+			return new LinearRankSelection();
 		else
 			throw new IllegalArgumentException("Unknown selection method");
 	}
