@@ -126,6 +126,14 @@ public class Controller {
 		return this.ga.getBestChromosome().getPhenotype();
 	}
 	
+	public boolean getVariableMutation() {
+		return this.ga.isVariableMutation();
+	}
+	
+	public void setVariableMutation(boolean b) {
+		this.ga.setVariableMutation(b);
+	}
+	
 	public double[] getBestChromosomeList() {
 		return toPrimitiveArray(this.ga.getBestChromosomeList());
 	}

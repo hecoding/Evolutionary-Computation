@@ -55,6 +55,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	JTextField SBXGroups;
  	JPanel mutationMethodPanel;
  	JComboBox<String> mutationBox;
+ 	JCheckBox variableMutationCheck;
  	
  	String populationTextDefault;
 	String generationTextDefault;
@@ -65,6 +66,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	Object selectionBoxDefault;
 	Object crossoverBoxDefault;
 	Object mutationBoxDefault;
+	boolean variableMutationCheckDefault;
 
 	public SettingsPanel(Controller ctrl, StatusBarPanel status) {
 		this.ctrl = ctrl;
@@ -363,6 +365,31 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		elitism.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		settings.add(elitism);
 		
+		//---------------------------------------------
+		
+		JPanel variableMutation = new JPanel();
+		JLabel varMutLabel = new JLabel("Mutación variable");
+		variableMutation.add(varMutLabel);
+		variableMutationCheck = new JCheckBox();
+		variableMutationCheck.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					ctrl.setVariableMutation(true);
+					mutationSlider.setEnabled(false);
+				}
+				else if(e.getStateChange() == ItemEvent.DESELECTED) {
+					ctrl.setVariableMutation(false);
+					mutationSlider.setEnabled(true);
+				}
+			}
+		});
+		variableMutation.add(variableMutationCheck);
+		variableMutation.setMaximumSize(variableMutation.getPreferredSize());
+		variableMutation.setMinimumSize(variableMutation.getPreferredSize());
+		variableMutation.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		variableMutation.setToolTipText("El ratio de mutación va disminuyendo conforme avanzan las generaciones");
+		settings.add(variableMutation);
+		
 		// misma población inicial
 	}
 	
@@ -388,6 +415,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		}
 		mutationMethodPanel.setMaximumSize(mutationMethodPanel.getPreferredSize());
 		mutationMethodPanel.setMinimumSize(mutationMethodPanel.getPreferredSize());
+		this.variableMutationCheck.setSelected(this.ctrl.getVariableMutation());
 		
 		saveDefaults();
 	}
@@ -402,6 +430,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		selectionBoxDefault = selectionBox.getSelectedItem();
 		crossoverBoxDefault = crossoverBox.getSelectedItem();
 		mutationBoxDefault = mutationBox.getSelectedItem();
+		variableMutationCheckDefault = variableMutationCheck.isSelected();
 	}
 	
 	private void restoreDefaults() {
@@ -414,6 +443,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		selectionBox.setSelectedItem(selectionBoxDefault);
 		crossoverBox.setSelectedItem(crossoverBoxDefault);
 		mutationBox.setSelectedItem(mutationBoxDefault);
+		variableMutationCheck.setSelected(variableMutationCheckDefault);
 	}
 
 	@Override

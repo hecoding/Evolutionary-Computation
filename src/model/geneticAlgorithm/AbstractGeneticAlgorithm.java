@@ -27,6 +27,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	protected ArrayList<T> elite;
 	protected ArrayList<Double> inspectedAptitude;
 	protected static Random random;
+	protected boolean variableMutation;
 	protected ArrayList<GeneticAlgorithmObserver> observers;
 	
 	protected T bestChromosome;
@@ -70,6 +71,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.inspectedAptitude = new ArrayList<Double>(populationNum);
+		this.variableMutation = false;
 		this.observers = new ArrayList<GeneticAlgorithmObserver>();
 		
 		random = RandGenerator.getInstance();
@@ -84,11 +86,16 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.crossoverStrategy.crossover(this.population, this.crossProb);
 	}
 	public void mutation() {
-		/*int n = this.population.get(0).getLength();
-		int T = this.maxGenerationNum;
-		int t = this.currentGeneration;
-		double variableMutationRate = Math.pow((2 + (( (n - 2)/(T - 1.0) ) * t)), -1);*/
-		this.mutationStrategy.mutate(this.population, this.mutationProb);
+		if(this.variableMutation) {
+			int n = this.population.get(0).getLength();
+			int T = this.maxGenerationNum;
+			int t = this.currentGeneration;
+			double variableMutationRate = Math.pow((2 + (( (n - 2)/(T - 1.0) ) * t)), -1);
+			
+			this.mutationStrategy.mutate(this.population, variableMutationRate);
+		}
+		else
+			this.mutationStrategy.mutate(this.population, this.mutationProb);
 	}
 	
 	public void restart() {
@@ -346,6 +353,14 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	
 	public void setElitePercentage(int percentage) {
 		this.elitePercentage = (double) percentage / 100;
+	}
+
+	public boolean isVariableMutation() {
+		return variableMutation;
+	}
+
+	public void setVariableMutation(boolean variableMutation) {
+		this.variableMutation = variableMutation;
 	}
 
 	public T getBestChromosome() {
