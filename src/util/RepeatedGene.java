@@ -8,7 +8,7 @@ import model.gene.IntegerGene;
 
 public class RepeatedGene {
 	
-	public boolean uniqueGenes(TSPChromosome tspChromosome) {
+	public static boolean uniqueGenes(TSPChromosome tspChromosome) {
 		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
 		
 		for (AbstractGene<?> gene : tspChromosome.getGenotype()) {
@@ -20,7 +20,7 @@ public class RepeatedGene {
 		}
 		
 		for (Integer val : map.values()) {
-			if(val > 1)
+			if(val != 1)
 				return false;
 		}
 		
