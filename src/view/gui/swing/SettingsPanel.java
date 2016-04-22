@@ -56,6 +56,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	JPanel mutationMethodPanel;
  	JComboBox<String> mutationBox;
  	JCheckBox variableMutationCheck;
+ 	JCheckBox contentBasedTerminationCheck;
  	
  	String populationTextDefault;
 	String generationTextDefault;
@@ -67,6 +68,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	Object crossoverBoxDefault;
 	Object mutationBoxDefault;
 	boolean variableMutationCheckDefault;
+	boolean contentBasedTerminationCheckDefault;
 
 	public SettingsPanel(Controller ctrl, StatusBarPanel status) {
 		this.ctrl = ctrl;
@@ -390,6 +392,36 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		variableMutation.setToolTipText("El ratio de mutación va disminuyendo conforme avanzan las generaciones");
 		settings.add(variableMutation);
 		
+		//---------------------------------------------
+		
+		JPanel contentBasedTermination = new JPanel();
+		JLabel cbterm = new JLabel("Terminación por calidad");
+		contentBasedTermination.add(cbterm);
+		contentBasedTerminationCheck = new JCheckBox();
+		contentBasedTerminationCheck.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					ctrl.setContentBasedTermination(true);
+					generationsLabel.setText("Generaciones relat.");
+					generations.setMaximumSize(generations.getPreferredSize());
+					generations.setMinimumSize(generations.getPreferredSize());
+				}
+				else if(e.getStateChange() == ItemEvent.DESELECTED) {
+					ctrl.setContentBasedTermination(false);
+					generationsLabel.setText("Generaciones");
+					generations.setMaximumSize(generations.getPreferredSize());
+					generations.setMinimumSize(generations.getPreferredSize());
+				}
+			}
+		});
+		contentBasedTermination.add(contentBasedTerminationCheck);
+		contentBasedTermination.setMaximumSize(contentBasedTermination.getPreferredSize());
+		contentBasedTermination.setMinimumSize(contentBasedTermination.getPreferredSize());
+		contentBasedTermination.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		contentBasedTermination.setToolTipText("Criterio de terminación basada o enfocada en el contenido." + 
+				"Sólo incrementa la generación cuando hay un incremento global de la aptitud.");
+		settings.add(contentBasedTermination);
+		
 		// misma población inicial
 	}
 	
@@ -416,6 +448,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		mutationMethodPanel.setMaximumSize(mutationMethodPanel.getPreferredSize());
 		mutationMethodPanel.setMinimumSize(mutationMethodPanel.getPreferredSize());
 		this.variableMutationCheck.setSelected(this.ctrl.getVariableMutation());
+		this.contentBasedTerminationCheck.setSelected(this.ctrl.isContentBasedTermination());
 		
 		saveDefaults();
 	}
@@ -431,6 +464,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		crossoverBoxDefault = crossoverBox.getSelectedItem();
 		mutationBoxDefault = mutationBox.getSelectedItem();
 		variableMutationCheckDefault = variableMutationCheck.isSelected();
+		contentBasedTerminationCheckDefault = contentBasedTerminationCheck.isSelected();
 	}
 	
 	private void restoreDefaults() {
@@ -444,6 +478,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		crossoverBox.setSelectedItem(crossoverBoxDefault);
 		mutationBox.setSelectedItem(mutationBoxDefault);
 		variableMutationCheck.setSelected(variableMutationCheckDefault);
+		contentBasedTerminationCheck.setSelected(contentBasedTerminationCheckDefault);
 	}
 
 	@Override

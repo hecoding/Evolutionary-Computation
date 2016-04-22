@@ -28,6 +28,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	protected ArrayList<Double> inspectedAptitude;
 	protected static Random random;
 	protected boolean variableMutation;
+	protected boolean contentBasedTermination;
 	protected ArrayList<GeneticAlgorithmObserver> observers;
 	
 	protected T bestChromosome;
@@ -72,6 +73,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.inspectedAptitude = new ArrayList<Double>(populationNum);
 		this.variableMutation = false;
+		this.contentBasedTermination = false;
 		this.observers = new ArrayList<GeneticAlgorithmObserver>();
 		
 		random = RandGenerator.getInstance();
@@ -128,8 +130,11 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		while(!this.finished()) {
 			if (this.useElitism)
 				this.elite = this.selectElite();
-			//if(this.currentGeneration < 2 || this.averageAptitudeList.get(this.averageAptitudeList.size() -1) > this.averageAptitudeList.get(this.averageAptitudeList.size() -2))
-			this.increaseGeneration();
+			if(!this.contentBasedTermination || // increase generations as usual or as the condition below
+				(this.currentGeneration < 2 ||
+						this.averageAptitudeList.get(this.averageAptitudeList.size() - 1)
+						> this.averageAptitudeList.get(this.averageAptitudeList.size() - 2)))
+				this.increaseGeneration();
 			this.selection();
 			this.reproduction();
 			this.mutation();
@@ -361,6 +366,14 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 
 	public void setVariableMutation(boolean variableMutation) {
 		this.variableMutation = variableMutation;
+	}
+
+	public boolean isContentBasedTermination() {
+		return contentBasedTermination;
+	}
+
+	public void setContentBasedTermination(boolean contentBasedTermination) {
+		this.contentBasedTermination = contentBasedTermination;
 	}
 
 	public T getBestChromosome() {

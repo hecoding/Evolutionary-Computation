@@ -134,6 +134,14 @@ public class Controller {
 		this.ga.setVariableMutation(b);
 	}
 	
+	public boolean isContentBasedTermination() {
+		return this.ga.isContentBasedTermination();
+	}
+	
+	public void setContentBasedTermination(boolean contentBasedTermination) {
+		this.ga.setContentBasedTermination(contentBasedTermination);
+	}
+	
 	public double[] getBestChromosomeList() {
 		return toPrimitiveArray(this.ga.getBestChromosomeList());
 	}
