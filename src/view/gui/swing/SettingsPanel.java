@@ -52,7 +52,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	JPanel crossoverMethodPanel;
  	JComboBox<String> crossoverBox;
  	JPanel tournamentGroups;
- 	JTextField SBXGroups;
+ 	JTextField tournamentGroupsText;
  	JPanel mutationMethodPanel;
  	JComboBox<String> mutationBox;
  	JCheckBox variableMutationCheck;
@@ -60,6 +60,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	
  	String populationTextDefault;
 	String generationTextDefault;
+	String tournamentGroupsTextDefault;
 	int crossoverSliderDefault;
 	int mutationSliderDefault;
 	boolean elitismCheckDefault;
@@ -101,7 +102,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					ctrl.setMutationPercentage(mutationSlider.getValue());
 					ctrl.setElitism(elitismCheck.isSelected());
 					ctrl.setElitismPercentage(elitismSlider.getValue());
-					ctrl.setSelectionParameter(SBXGroups.getText());
+					ctrl.setSelectionParameter(tournamentGroupsText.getText());
 					ctrl.setSelectionStrategy((String) selectionBox.getSelectedItem());
 					ctrl.setCrossoverStrategy((String) crossoverBox.getSelectedItem());
 					ctrl.setMutationStrategy((String) mutationBox.getSelectedItem());
@@ -241,8 +242,8 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		selection.add(selectionSel);
 			tournamentGroups = new JPanel();
 			tournamentGroups.add(new JLabel("Tamaño grupos"));
-			SBXGroups = new JTextField(4);
-			tournamentGroups.add(SBXGroups);
+			tournamentGroupsText = new JTextField(4);
+			tournamentGroups.add(tournamentGroupsText);
 			tournamentGroups.setVisible(false);
 			selection.add(tournamentGroups);
 		selection.setMaximumSize(selection.getPreferredSize());
@@ -428,6 +429,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private void fillFields() {
 		this.populationText.setText(String.valueOf(this.ctrl.getPopulation()));
 		this.generationText.setText(String.valueOf(this.ctrl.getGenerations()));
+		this.tournamentGroupsText.setText(Integer.toString( this.ctrl.getTournamentSelectionGroups() ));
 		this.crossoverSlider.setValue(this.ctrl.getCrossoverPercentage());
 		this.mutationSlider.setValue(this.ctrl.getMutationPercentage());
 		this.elitismCheck.setSelected(this.ctrl.getElitism());
@@ -456,6 +458,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private void saveDefaults() {
 		populationTextDefault = populationText.getText();
 		generationTextDefault = generationText.getText();
+		tournamentGroupsTextDefault = tournamentGroupsText.getText();
 		crossoverSliderDefault = crossoverSlider.getValue();
 		mutationSliderDefault = mutationSlider.getValue();
 		elitismCheckDefault = elitismCheck.isSelected();
@@ -470,6 +473,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private void restoreDefaults() {
 		populationText.setText(populationTextDefault);
 		generationText.setText(generationTextDefault);
+		tournamentGroupsText.setText(tournamentGroupsTextDefault);
 		crossoverSlider.setValue(crossoverSliderDefault);
 		mutationSlider.setValue(mutationSliderDefault);
 		elitismCheck.setSelected(elitismCheckDefault);

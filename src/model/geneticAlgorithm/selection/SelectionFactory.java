@@ -27,6 +27,10 @@ public class SelectionFactory {
 			throw new IllegalArgumentException("Unknown selection method");
 	}
 	
+	public double getParameter() {
+		return this.parameter;
+	}
+	
 	public void setParameter(double param) {
 		this.parameter = param;
 	}

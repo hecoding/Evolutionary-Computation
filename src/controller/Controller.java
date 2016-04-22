@@ -52,6 +52,10 @@ public class Controller {
 		this.ga.setMaxGenerations(generations);
 	}
 	
+	public int getTournamentSelectionGroups() {
+		return (int) SelectionFactory.getInstance().getParameter();
+	}
+	
 	public int getCrossoverPercentage() {
 		return (int) (this.ga.getCrossProb() * 100);
 	}
