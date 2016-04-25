@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import model.chromosome.TSPChromosome;
 import model.gene.IntegerGene;
 
-public class OrdinalFactory {
+public class OrdinalCoder {
 	
 	public static TSPChromosome deOrdinalize(TSPChromosome ordinal) {
 		ArrayList<IntegerGene> genes = ordinal.getGenotype();

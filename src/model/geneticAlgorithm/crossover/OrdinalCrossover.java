@@ -6,7 +6,7 @@ import java.util.Random;
 import model.chromosome.AbstractChromosome;
 import model.chromosome.TSPChromosome;
 import model.gene.AbstractGene;
-import util.OrdinalFactory;
+import util.OrdinalCoder;
 import util.RandGenerator;
 
 public class OrdinalCrossover implements CrossoverInterface {
@@ -34,6 +34,7 @@ public class OrdinalCrossover implements CrossoverInterface {
 			T parent2 = population.get(selectedCandidatesIdx.get(i + 1));
 			child1 = (T) parent1.clone(); child1.setGenotype(new ArrayList<AbstractGene<?>>());
 			child2 = (T) parent1.clone(); child2.setGenotype(new ArrayList<AbstractGene<?>>());
+			
 			cross(population, random, parent1, parent2, child1, child2);
 			
 			population.set(selectedCandidatesIdx.get(i), child1);
@@ -44,9 +45,12 @@ public class OrdinalCrossover implements CrossoverInterface {
 	@SuppressWarnings("unchecked")
 	private <T extends AbstractChromosome<?>> void cross(ArrayList<T> population, Random random,
 			T parent1, T parent2, T child1, T child2) {
+		// It will indeed transform the chromosomes to ordinal codification and
+		//   then do the common one-point crossover
+		
 		// transform normal chromosome to ordinal chromosome
-		parent1 = (T) OrdinalFactory.ordinalize((TSPChromosome) parent1);
-		parent2 = (T) OrdinalFactory.ordinalize((TSPChromosome) parent2);
+		parent1 = (T) OrdinalCoder.ordinalize((TSPChromosome) parent1);
+		parent2 = (T) OrdinalCoder.ordinalize((TSPChromosome) parent2);
 		
 		int currentGeneLength = population.get(0).getLength();
 			
@@ -74,8 +78,13 @@ public class OrdinalCrossover implements CrossoverInterface {
 		child2.setGenotype(child2Gene);
 		
 		// transform ordinal chromosome to normal chromosome
-		child1 = (T) OrdinalFactory.deOrdinalize((TSPChromosome) child1);
-		child2 = (T) OrdinalFactory.deOrdinalize((TSPChromosome) child2);
+		T temp1 = (T) OrdinalCoder.deOrdinalize((TSPChromosome) child1);
+		T temp2 = (T) OrdinalCoder.deOrdinalize((TSPChromosome) child2);
+		ArrayList<AbstractGene<?>> tempgene1 = (ArrayList<AbstractGene<?>>) temp1.getGenotype();
+		ArrayList<AbstractGene<?>> tempgene2 = (ArrayList<AbstractGene<?>>) temp2.getGenotype();
+		
+		child1.setGenotype(tempgene1);
+		child2.setGenotype(tempgene2);
 		
 		child1.setAptitude(child1.evaluate());
 		child2.setAptitude(child2.evaluate());
