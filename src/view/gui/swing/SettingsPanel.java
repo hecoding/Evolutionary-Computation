@@ -437,16 +437,19 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		for (String item : this.ctrl.getSelectionStrategyList()) {
 			this.selectionBox.addItem(item);			
 		}
+		this.selectionBox.setSelectedItem(this.ctrl.getSelectionStrategy());
 		selection.setMaximumSize(selection.getPreferredSize());
 		selection.setMinimumSize(selection.getPreferredSize());
 		for (String item : this.ctrl.getCrossoverStrategyList()) {
 			this.crossoverBox.addItem(item);			
 		}
+		this.crossoverBox.setSelectedItem(this.ctrl.getCrossoverStrategy());
 		crossoverMethodPanel.setMaximumSize(crossoverMethodPanel.getPreferredSize());
 		crossoverMethodPanel.setMinimumSize(crossoverMethodPanel.getPreferredSize());
 		for (String item : this.ctrl.getMutationStrategyList()) {
 			this.mutationBox.addItem(item);			
 		}
+		this.mutationBox.setSelectedItem(this.ctrl.getMutationStrategy());
 		mutationMethodPanel.setMaximumSize(mutationMethodPanel.getPreferredSize());
 		mutationMethodPanel.setMinimumSize(mutationMethodPanel.getPreferredSize());
 		this.variableMutationCheck.setSelected(this.ctrl.getVariableMutation());

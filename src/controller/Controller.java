@@ -110,12 +110,24 @@ public class Controller {
 		this.ga.setMutationStrategy(MutationFactory.getInstance().create(strategy));
 	}
 	
+	public String getSelectionStrategy() {
+		return this.ga.getSelectionStrategy().getName();
+	}
+	
 	public String[] getSelectionStrategyList() {
 		return SelectionFactory.selectionList();
 	}
 	
+	public String getCrossoverStrategy() {
+		return this.ga.getCrossoverStrategy().getName();
+	}
+	
 	public String[] getCrossoverStrategyList() {
 		return CrossoverFactory.selectionList();
+	}
+	
+	public String getMutationStrategy() {
+		return this.ga.getMutationStrategy().getName();
 	}
 	
 	public String[] getMutationStrategyList() {
