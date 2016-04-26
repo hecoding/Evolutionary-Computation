@@ -11,6 +11,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.InputVerifier;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -19,6 +20,8 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JSlider;
 import javax.swing.JTextField;
@@ -87,7 +90,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		this.setLayout(new BorderLayout());
 		this.setBorder(new TitledBorder("Ajustes"));
 		
-		initSettings();		
+		initSettings();
 		this.add(settings, BorderLayout.CENTER);
 		
 		buttonPanel = new JPanel(new BorderLayout());
@@ -423,7 +426,318 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				"Sólo incrementa la generación cuando hay un incremento global de la aptitud.");
 		settings.add(contentBasedTermination);
 		
-		// misma población inicial
+		//---------------------------------------------
+			JSeparator e = new JSeparator();
+			e.setMaximumSize(new Dimension(420, 1));
+			settings.add(e);
+		//---------------------------------------------
+		
+		JPanel optionalPanel = new JPanel();
+		optionalPanel.setLayout(new BoxLayout(optionalPanel, BoxLayout.Y_AXIS));
+		JPanel optionalCheck = new JPanel();
+		JPanel optionalSettings = new JPanel();
+		JScrollPane scroll = new JScrollPane(optionalSettings);
+		scroll.setBorder(null);
+		scroll.setMinimumSize(new Dimension(0,0));
+		scroll.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		scroll.setVisible(false);
+		optionalPanel.add(optionalCheck);
+		optionalPanel.add(scroll);
+		
+		JRadioButton rangePopulationRadioButton = new JRadioButton();
+		JRadioButton rangeGenerationRadioButton = new JRadioButton();
+		JRadioButton rangeCrossRadioButton = new JRadioButton();
+		JRadioButton rangeMutationRadioButton = new JRadioButton();
+		JRadioButton rangeElitismRadioButton = new JRadioButton();
+		ButtonGroup bg = new ButtonGroup();
+		bg.add(rangePopulationRadioButton);
+		bg.add(rangeGenerationRadioButton);
+		bg.add(rangeCrossRadioButton);
+		bg.add(rangeMutationRadioButton);
+		bg.add(rangeElitismRadioButton);
+		
+		optionalCheck.add(new JLabel("Variación de parámetros"));
+		JCheckBox optionalChecke = new JCheckBox();
+		optionalChecke.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if(e.getStateChange() == ItemEvent.SELECTED) {
+					scroll.setVisible(true);
+					optionalPanel.setBorder(BorderFactory.createLineBorder(Color.lightGray));
+					optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
+					optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
+				}
+				else if(e.getStateChange() == ItemEvent.DESELECTED) {
+					scroll.setVisible(false);
+					optionalPanel.setBorder(null);
+					optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
+					optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
+					
+					rangePopulationRadioButton.setSelected(false);
+					rangeGenerationRadioButton.setSelected(false);
+					rangeCrossRadioButton.setSelected(false);
+					rangeMutationRadioButton.setSelected(false);
+					rangeElitismRadioButton.setSelected(false);
+					
+					populationText.setEnabled(true);
+					generationText.setEnabled(true);
+					contentBasedTerminationCheck.setEnabled(true);
+					crossoverSlider.setEnabled(true);
+					mutationSlider.setEnabled(true);
+					variableMutationCheck.setEnabled(true);
+					elitismSlider.setEnabled(true);
+				}
+			}
+		});
+		optionalCheck.add(optionalChecke);
+		optionalCheck.setMaximumSize(optionalCheck.getPreferredSize());
+		optionalCheck.setMinimumSize(optionalCheck.getPreferredSize());
+		optionalCheck.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		
+		JPanel popTextOpt = new JPanel();
+		popTextOpt.setVisible(false);
+		optionalSettings.setLayout(new BoxLayout(optionalSettings, BoxLayout.Y_AXIS));
+			JPanel popOpt = new JPanel();
+			popOpt.setLayout(new BoxLayout(popOpt, BoxLayout.Y_AXIS));
+				JPanel go1 = new JPanel();
+					JLabel go11 = new JLabel("Población");
+					go1.add(go11);
+					rangePopulationRadioButton.addItemListener(new ItemListener() {
+						public void itemStateChanged(ItemEvent e) {
+						    if (e.getStateChange() == ItemEvent.SELECTED) {
+						        popTextOpt.setVisible(true);
+						        popOpt.setMaximumSize(popOpt.getPreferredSize());
+								popOpt.setMinimumSize(popOpt.getPreferredSize());
+								optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
+								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
+								
+								populationText.setEnabled(false);
+						    }
+						    else if (e.getStateChange() == ItemEvent.DESELECTED) {
+						    	popTextOpt.setVisible(false);
+						    	popOpt.setMaximumSize(popOpt.getPreferredSize());
+								popOpt.setMinimumSize(popOpt.getPreferredSize());
+								optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
+								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
+								
+								populationText.setEnabled(true);
+						    }
+						}
+					});
+					go1.add(rangePopulationRadioButton);
+				popOpt.add(go1);
+				
+				JTextField pomin = new JTextField(4);
+				pomin.setToolTipText("rango mínimo");
+				JTextField pomax = new JTextField(4);
+				pomin.setToolTipText("rango máximo");
+				JTextField postep = new JTextField(4);
+				pomin.setToolTipText("paso");
+				popTextOpt.add(pomin);
+				popTextOpt.add(pomax);
+				popTextOpt.add(postep);
+			popOpt.add(popTextOpt);
+			popOpt.setMaximumSize(popOpt.getPreferredSize());
+			popOpt.setMinimumSize(popOpt.getPreferredSize());
+			popOpt.setAlignmentX(Component.RIGHT_ALIGNMENT);
+			optionalSettings.add(popOpt);
+		
+			JPanel generOpt = new JPanel();
+			JPanel generTextOpt = new JPanel();
+			generTextOpt.setVisible(false);
+			generOpt.setLayout(new BoxLayout(generOpt, BoxLayout.Y_AXIS));
+				JPanel go2 = new JPanel();
+					JLabel go21 = new JLabel("Generaciones");
+					go2.add(go21);
+					rangeGenerationRadioButton.addItemListener(new ItemListener() {
+						public void itemStateChanged(ItemEvent e) {
+						    if (e.getStateChange() == ItemEvent.SELECTED) {
+						    	generTextOpt.setVisible(true);
+						    	generOpt.setMaximumSize(generOpt.getPreferredSize());
+						    	generOpt.setMinimumSize(generOpt.getPreferredSize());
+						    	optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
+								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
+								
+								generationText.setEnabled(false);
+								contentBasedTerminationCheck.setEnabled(false);
+						    }
+						    else if (e.getStateChange() == ItemEvent.DESELECTED) {
+						    	generTextOpt.setVisible(false);
+						    	generOpt.setMaximumSize(generOpt.getPreferredSize());
+						    	generOpt.setMinimumSize(generOpt.getPreferredSize());
+						    	optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
+								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
+								
+								generationText.setEnabled(true);
+								contentBasedTerminationCheck.setEnabled(true);
+						    }
+						}
+					});
+					go2.add(rangeGenerationRadioButton);
+				generOpt.add(go2);
+				
+				JTextField gomin = new JTextField(4);
+				gomin.setToolTipText("rango mínimo");
+				JTextField gomax = new JTextField(4);
+				gomax.setToolTipText("rango máximo");
+				JTextField gostep = new JTextField(4);
+				gostep.setToolTipText("paso");
+				generTextOpt.add(gomin);
+				generTextOpt.add(gomax);
+				generTextOpt.add(gostep);
+			generOpt.add(generTextOpt);
+			generOpt.setMaximumSize(generOpt.getPreferredSize());
+			generOpt.setMinimumSize(generOpt.getPreferredSize());
+			generOpt.setAlignmentX(Component.RIGHT_ALIGNMENT);
+			optionalSettings.add(generOpt);
+			
+			JPanel crossOpt = new JPanel();
+			JPanel crossTextOpt = new JPanel();
+			crossTextOpt.setVisible(false);
+			crossOpt.setLayout(new BoxLayout(crossOpt, BoxLayout.Y_AXIS));
+				JPanel co2 = new JPanel();
+					JLabel co21 = new JLabel("Cruce");
+					co2.add(co21);
+					rangeCrossRadioButton.addItemListener(new ItemListener() {
+						public void itemStateChanged(ItemEvent e) {
+						    if (e.getStateChange() == ItemEvent.SELECTED) {
+						    	crossTextOpt.setVisible(true);
+						    	crossOpt.setMaximumSize(crossOpt.getPreferredSize());
+						    	crossOpt.setMinimumSize(crossOpt.getPreferredSize());
+						    	optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
+								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
+								
+								crossoverSlider.setEnabled(false);
+						    }
+						    else if (e.getStateChange() == ItemEvent.DESELECTED) {
+						    	crossTextOpt.setVisible(false);
+						    	crossOpt.setMaximumSize(crossOpt.getPreferredSize());
+						    	crossOpt.setMinimumSize(crossOpt.getPreferredSize());
+						    	optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
+								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
+								
+								crossoverSlider.setEnabled(true);
+						    }
+						}
+					});
+					co2.add(rangeCrossRadioButton);
+				crossOpt.add(co2);
+				
+				JTextField comin = new JTextField(4);
+				comin.setToolTipText("rango mínimo");
+				JTextField comax = new JTextField(4);
+				comax.setToolTipText("rango máximo");
+				JTextField costep = new JTextField(4);
+				costep.setToolTipText("paso");
+				crossTextOpt.add(comin);
+				crossTextOpt.add(comax);
+				crossTextOpt.add(costep);
+			crossOpt.add(crossTextOpt);
+			crossOpt.setMaximumSize(crossOpt.getPreferredSize());
+			crossOpt.setMinimumSize(crossOpt.getPreferredSize());
+			crossOpt.setAlignmentX(Component.RIGHT_ALIGNMENT);
+			optionalSettings.add(crossOpt);
+			
+			JPanel mutOpt = new JPanel();
+			JPanel mutTextOpt = new JPanel();
+			mutTextOpt.setVisible(false);
+			mutOpt.setLayout(new BoxLayout(mutOpt, BoxLayout.Y_AXIS));
+				JPanel mo2 = new JPanel();
+					JLabel mo21 = new JLabel("Mutación");
+					mo2.add(mo21);
+					rangeMutationRadioButton.addItemListener(new ItemListener() {
+						public void itemStateChanged(ItemEvent e) {
+						    if (e.getStateChange() == ItemEvent.SELECTED) {
+						    	mutTextOpt.setVisible(true);
+						    	mutOpt.setMaximumSize(mutOpt.getPreferredSize());
+						    	mutOpt.setMinimumSize(mutOpt.getPreferredSize());
+						    	optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
+								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
+								
+								mutationSlider.setEnabled(false);
+								variableMutationCheck.setEnabled(false);
+						    }
+						    else if (e.getStateChange() == ItemEvent.DESELECTED) {
+						    	mutTextOpt.setVisible(false);
+						    	mutOpt.setMaximumSize(mutOpt.getPreferredSize());
+						    	mutOpt.setMinimumSize(mutOpt.getPreferredSize());
+						    	optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
+								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
+								
+								mutationSlider.setEnabled(true);
+								variableMutationCheck.setEnabled(true);
+						    }
+						}
+					});
+					mo2.add(rangeMutationRadioButton);
+				mutOpt.add(mo2);
+				
+				JTextField momin = new JTextField(4);
+				momin.setToolTipText("rango mínimo");
+				JTextField momax = new JTextField(4);
+				momax.setToolTipText("rango máximo");
+				JTextField mostep = new JTextField(4);
+				mostep.setToolTipText("paso");
+				mutTextOpt.add(momin);
+				mutTextOpt.add(momax);
+				mutTextOpt.add(mostep);
+			mutOpt.add(mutTextOpt);
+			mutOpt.setMaximumSize(mutOpt.getPreferredSize());
+			mutOpt.setMinimumSize(mutOpt.getPreferredSize());
+			mutOpt.setAlignmentX(Component.RIGHT_ALIGNMENT);
+			optionalSettings.add(mutOpt);
+			
+			JPanel elitOpt = new JPanel();
+			JPanel elitTextOpt = new JPanel();
+			elitTextOpt.setVisible(false);
+			elitOpt.setLayout(new BoxLayout(elitOpt, BoxLayout.Y_AXIS));
+				JPanel eo2 = new JPanel();
+					JLabel eo21 = new JLabel("Elitismo");
+					eo2.add(eo21);
+					rangeElitismRadioButton.addItemListener(new ItemListener() {
+						public void itemStateChanged(ItemEvent e) {
+						    if (e.getStateChange() == ItemEvent.SELECTED) {
+						    	elitTextOpt.setVisible(true);
+						    	elitOpt.setMaximumSize(elitOpt.getPreferredSize());
+						    	elitOpt.setMinimumSize(elitOpt.getPreferredSize());
+						    	optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
+								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
+								
+								elitismSlider.setEnabled(false);
+						    }
+						    else if (e.getStateChange() == ItemEvent.DESELECTED) {
+						    	elitTextOpt.setVisible(false);
+						    	elitOpt.setMaximumSize(elitOpt.getPreferredSize());
+						    	elitOpt.setMinimumSize(elitOpt.getPreferredSize());
+						    	optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
+								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
+								
+								elitismSlider.setEnabled(true);
+						    }
+						}
+					});
+					eo2.add(rangeElitismRadioButton);
+				elitOpt.add(eo2);
+				
+				JTextField eomin = new JTextField(4);
+				eomin.setToolTipText("rango mínimo");
+				JTextField eomax = new JTextField(4);
+				eomax.setToolTipText("rango máximo");
+				JTextField eostep = new JTextField(4);
+				eostep.setToolTipText("paso");
+				elitTextOpt.add(eomin);
+				elitTextOpt.add(eomax);
+				elitTextOpt.add(eostep);
+			elitOpt.add(elitTextOpt);
+			elitOpt.setMaximumSize(elitOpt.getPreferredSize());
+			elitOpt.setMinimumSize(elitOpt.getPreferredSize());
+			elitOpt.setAlignmentX(Component.RIGHT_ALIGNMENT);
+			optionalSettings.add(elitOpt);
+			
+		optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
+		optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
+		optionalSettings.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(optionalPanel);
+		
 	}
 	
 	private void fillFields() {
