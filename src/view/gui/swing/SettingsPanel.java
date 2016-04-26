@@ -109,6 +109,8 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					ctrl.setSelectionStrategy((String) selectionBox.getSelectedItem());
 					ctrl.setCrossoverStrategy((String) crossoverBox.getSelectedItem());
 					ctrl.setMutationStrategy((String) mutationBox.getSelectedItem());
+					ctrl.setVariableMutation(variableMutationCheck.isSelected());
+					ctrl.setContentBasedTermination(contentBasedTerminationCheck.isSelected());
 					ctrl.run();
 				} catch(IllegalChromosomeException ex) {
 					JOptionPane.showMessageDialog(null,
@@ -380,11 +382,9 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		variableMutationCheck.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
-					ctrl.setVariableMutation(true);
 					mutationSlider.setEnabled(false);
 				}
 				else if(e.getStateChange() == ItemEvent.DESELECTED) {
-					ctrl.setVariableMutation(false);
 					mutationSlider.setEnabled(true);
 				}
 			}
@@ -405,13 +405,11 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		contentBasedTerminationCheck.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
-					ctrl.setContentBasedTermination(true);
 					generationsLabel.setText("Generaciones relat.");
 					generations.setMaximumSize(generations.getPreferredSize());
 					generations.setMinimumSize(generations.getPreferredSize());
 				}
 				else if(e.getStateChange() == ItemEvent.DESELECTED) {
-					ctrl.setContentBasedTermination(false);
 					generationsLabel.setText("Generaciones");
 					generations.setMaximumSize(generations.getPreferredSize());
 					generations.setMinimumSize(generations.getPreferredSize());
