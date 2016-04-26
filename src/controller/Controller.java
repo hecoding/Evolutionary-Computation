@@ -15,6 +15,10 @@ import model.observer.GeneticAlgorithmObserver;
 
 public class Controller {
 	private AbstractGeneticAlgorithm<?> ga;
+	private boolean rangeParameters;
+	private double minRange, maxRange, step;
+	private String param;
+	private ArrayList<Double> results;
 	
 	public Controller() {
 		// default genetic algorithm
@@ -29,11 +33,61 @@ public class Controller {
 									100,
 									0.6,
 									0.05);
+		this.rangeParameters = false;
+		this.results = new ArrayList<Double>();
 	}
 	
 	public void run() {
 		this.ga.restart();
-		this.ga.run();
+		if (!this.rangeParameters)
+			this.ga.run();
+		else {
+			this.results.clear();
+			ArrayList<Double> range = createRange(this.minRange, this.maxRange, this.step);
+			for (Double num : range) {
+				this.ga.restart();
+				this.setCurrentParam(num);
+				this.ga.run();
+				this.results.add( this.getFunctionResult() );
+			}
+		}
+	}
+	
+	private ArrayList<Double> createRange(double min, double max, double step) {
+		boolean end = false;
+		double current = min;
+		ArrayList<Double> range = new ArrayList<Double>();
+		range.add(current);
+		
+		while(!end) {
+			current += step;
+			if(current > max)
+				end = true;
+			else
+				range.add(current);
+		}
+		
+		return range;
+	}
+	
+	private void setCurrentParam(double num) {
+		switch(this.param) {
+		case "population":
+			this.ga.setPopulation((int) Math.round(num));
+			break;
+		case "generations":
+			this.ga.setMaxGenerations((int) Math.round(num));
+			break;
+		case "crossover":
+			this.ga.setCrossProb(num);
+			break;
+		case "mutation":
+			this.ga.setMutationProb(num);
+			break;
+		case "elitism":
+			this.ga.setElitePercentage((int) Math.round(num * 100));
+			break;
+		}
 	}
 	
 	public int getPopulation() {
@@ -134,8 +188,30 @@ public class Controller {
 		return MutationFactory.selectionList();
 	}
 	
+	public void setRangeParameters(boolean b) {
+		this.rangeParameters = b;
+	}
+	
+	public boolean isRangeParameters() {
+		return this.rangeParameters;
+	}
+	
+	public void setRanges(double min, double max, double step) {
+		this.minRange = min;
+		this.maxRange = max;
+		this.step = step;
+	}
+	
+	public void setParamRange(String s) {
+		this.param = s;
+	}
+	
 	public double getFunctionResult() {
 		return this.ga.getBestChromosome().getAptitude();
+	}
+	
+	public ArrayList<Double> getRangeResults() {
+		return this.results;
 	}
 	
 	public ArrayList<Double> getResult() {
@@ -168,6 +244,14 @@ public class Controller {
 	
 	public double[] getAverageAptitudeList() {
 		return toPrimitiveArray(this.ga.getAverageAptitudeList());
+	}
+	
+	public double[] getRangeList() {
+		return toPrimitiveArray(createRange(this.minRange, this.maxRange, this.step));
+	}
+	
+	public double[] getResultsList() {
+		return toPrimitiveArray(this.results);
 	}
 	
 	private static double[] toPrimitiveArray(ArrayList<Double> a) {

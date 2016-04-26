@@ -60,6 +60,8 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	JComboBox<String> mutationBox;
  	JCheckBox variableMutationCheck;
  	JCheckBox contentBasedTerminationCheck;
+ 	JCheckBox rangeParametersCheck;
+ 	ButtonGroup bg;
  	
  	String populationTextDefault;
 	String generationTextDefault;
@@ -73,6 +75,10 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	Object mutationBoxDefault;
 	boolean variableMutationCheckDefault;
 	boolean contentBasedTerminationCheckDefault;
+	
+	JTextField pomin, pomax, postep, gomin, gomax, gostep, comin, comax, costep, momin, momax, mostep, eomin, eomax, eostep;
+	JRadioButton rangePopulationRadioButton, rangeGenerationRadioButton, rangeCrossRadioButton, rangeMutationRadioButton, rangeElitismRadioButton;
+	Border defaultborder;
 
 	public SettingsPanel(Controller ctrl, StatusBarPanel status) {
 		this.ctrl = ctrl;
@@ -111,6 +117,9 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					ctrl.setMutationStrategy((String) mutationBox.getSelectedItem());
 					ctrl.setVariableMutation(variableMutationCheck.isSelected());
 					ctrl.setContentBasedTermination(contentBasedTerminationCheck.isSelected());
+					ctrl.setRangeParameters(rangeParametersCheck.isSelected());
+					if(rangeParametersCheck.isSelected())
+						setRanges();
 					ctrl.run();
 				} catch(IllegalChromosomeException ex) {
 					JOptionPane.showMessageDialog(null,
@@ -156,28 +165,8 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		JLabel populationLabel = new JLabel("Población");
 		population.add(populationLabel);
 		populationText = new JTextField(4);
-		final Border defaultborder = populationText.getBorder();
-		populationText.setInputVerifier(new InputVerifier() {
-			public boolean verify(JComponent input) {
-				try {
-					int a = Integer.parseInt(((JTextField) input).getText());
-					if (a >= 1) {
-						populationText.setBorder(defaultborder);
-						status.setErrors(false);
-						return true;
-					}
-					else {
-						populationText.setBorder(BorderFactory.createLineBorder(Color.red));
-						status.setErrors(true);
-						return false;
-					}
-				} catch (NumberFormatException e) {
-					populationText.setBorder(BorderFactory.createLineBorder(Color.red));
-					status.setErrors(true);
-					return false;
-				}
-			}
-		});
+		defaultborder = populationText.getBorder();
+		populationText.setInputVerifier(new IntegerNonZeroVerifier());
 		population.add(populationText);
 		population.setMaximumSize(population.getPreferredSize());
 		population.setMinimumSize(population.getPreferredSize());
@@ -442,12 +431,12 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		optionalPanel.add(optionalCheck);
 		optionalPanel.add(scroll);
 		
-		JRadioButton rangePopulationRadioButton = new JRadioButton();
-		JRadioButton rangeGenerationRadioButton = new JRadioButton();
-		JRadioButton rangeCrossRadioButton = new JRadioButton();
-		JRadioButton rangeMutationRadioButton = new JRadioButton();
-		JRadioButton rangeElitismRadioButton = new JRadioButton();
-		ButtonGroup bg = new ButtonGroup();
+		rangePopulationRadioButton = new JRadioButton();
+		rangeGenerationRadioButton = new JRadioButton();
+		rangeCrossRadioButton = new JRadioButton();
+		rangeMutationRadioButton = new JRadioButton();
+		rangeElitismRadioButton = new JRadioButton();
+		bg = new ButtonGroup();
 		bg.add(rangePopulationRadioButton);
 		bg.add(rangeGenerationRadioButton);
 		bg.add(rangeCrossRadioButton);
@@ -455,8 +444,8 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		bg.add(rangeElitismRadioButton);
 		
 		optionalCheck.add(new JLabel("Variación de parámetros"));
-		JCheckBox optionalChecke = new JCheckBox();
-		optionalChecke.addItemListener(new ItemListener() {
+		rangeParametersCheck = new JCheckBox();
+		rangeParametersCheck.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
 					scroll.setVisible(true);
@@ -470,11 +459,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
 					optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
 					
-					rangePopulationRadioButton.setSelected(false);
-					rangeGenerationRadioButton.setSelected(false);
-					rangeCrossRadioButton.setSelected(false);
-					rangeMutationRadioButton.setSelected(false);
-					rangeElitismRadioButton.setSelected(false);
+					bg.clearSelection();
 					
 					populationText.setEnabled(true);
 					generationText.setEnabled(true);
@@ -482,11 +467,12 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					crossoverSlider.setEnabled(true);
 					mutationSlider.setEnabled(true);
 					variableMutationCheck.setEnabled(true);
+					elitismCheck.setEnabled(true);
 					elitismSlider.setEnabled(true);
 				}
 			}
 		});
-		optionalCheck.add(optionalChecke);
+		optionalCheck.add(rangeParametersCheck);
 		optionalCheck.setMaximumSize(optionalCheck.getPreferredSize());
 		optionalCheck.setMinimumSize(optionalCheck.getPreferredSize());
 		optionalCheck.setAlignmentX(Component.RIGHT_ALIGNMENT);
@@ -524,11 +510,14 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					go1.add(rangePopulationRadioButton);
 				popOpt.add(go1);
 				
-				JTextField pomin = new JTextField(4);
+				pomin = new JTextField(4);
+				pomin.setInputVerifier(new IntegerNonZeroVerifier());
 				pomin.setToolTipText("rango mínimo");
-				JTextField pomax = new JTextField(4);
+				pomax = new JTextField(4);
+				pomax.setInputVerifier(new IntegerNonZeroVerifier());
 				pomin.setToolTipText("rango máximo");
-				JTextField postep = new JTextField(4);
+				postep = new JTextField(4);
+				postep.setInputVerifier(new IntegerNonZeroVerifier());
 				pomin.setToolTipText("paso");
 				popTextOpt.add(pomin);
 				popTextOpt.add(pomax);
@@ -573,11 +562,14 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					go2.add(rangeGenerationRadioButton);
 				generOpt.add(go2);
 				
-				JTextField gomin = new JTextField(4);
+				gomin = new JTextField(4);
+				gomin.setInputVerifier(new IntegerNonZeroVerifier());
 				gomin.setToolTipText("rango mínimo");
-				JTextField gomax = new JTextField(4);
+				gomax = new JTextField(4);
+				gomax.setInputVerifier(new IntegerNonZeroVerifier());
 				gomax.setToolTipText("rango máximo");
-				JTextField gostep = new JTextField(4);
+				gostep = new JTextField(4);
+				gostep.setInputVerifier(new IntegerNonZeroVerifier());
 				gostep.setToolTipText("paso");
 				generTextOpt.add(gomin);
 				generTextOpt.add(gomax);
@@ -620,11 +612,14 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					co2.add(rangeCrossRadioButton);
 				crossOpt.add(co2);
 				
-				JTextField comin = new JTextField(4);
+				comin = new JTextField(4);
+				comin.setInputVerifier(new DoubleLessThanZeroVerifier());
 				comin.setToolTipText("rango mínimo");
-				JTextField comax = new JTextField(4);
+				comax = new JTextField(4);
+				comax.setInputVerifier(new DoubleLessThanZeroVerifier());
 				comax.setToolTipText("rango máximo");
-				JTextField costep = new JTextField(4);
+				costep = new JTextField(4);
+				costep.setInputVerifier(new DoubleLessThanZeroVerifier());
 				costep.setToolTipText("paso");
 				crossTextOpt.add(comin);
 				crossTextOpt.add(comax);
@@ -669,11 +664,14 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					mo2.add(rangeMutationRadioButton);
 				mutOpt.add(mo2);
 				
-				JTextField momin = new JTextField(4);
+				momin = new JTextField(4);
+				momin.setInputVerifier(new DoubleLessThanZeroVerifier());
 				momin.setToolTipText("rango mínimo");
-				JTextField momax = new JTextField(4);
+				momax = new JTextField(4);
+				momax.setInputVerifier(new DoubleLessThanZeroVerifier());
 				momax.setToolTipText("rango máximo");
-				JTextField mostep = new JTextField(4);
+				mostep = new JTextField(4);
+				mostep.setInputVerifier(new DoubleLessThanZeroVerifier());
 				mostep.setToolTipText("paso");
 				mutTextOpt.add(momin);
 				mutTextOpt.add(momax);
@@ -700,6 +698,9 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 						    	optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
 								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
 								
+								elitismCheck.setSelected(true);
+								elitismCheck.setEnabled(false);
+								ctrl.setElitism(true);
 								elitismSlider.setEnabled(false);
 						    }
 						    else if (e.getStateChange() == ItemEvent.DESELECTED) {
@@ -709,6 +710,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 						    	optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
 								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
 								
+								elitismCheck.setEnabled(true);
 								elitismSlider.setEnabled(true);
 						    }
 						}
@@ -716,11 +718,14 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					eo2.add(rangeElitismRadioButton);
 				elitOpt.add(eo2);
 				
-				JTextField eomin = new JTextField(4);
+				eomin = new JTextField(4);
+				eomin.setInputVerifier(new DoubleLessThanZeroVerifier());
 				eomin.setToolTipText("rango mínimo");
-				JTextField eomax = new JTextField(4);
+				eomax = new JTextField(4);
+				eomax.setInputVerifier(new DoubleLessThanZeroVerifier());
 				eomax.setToolTipText("rango máximo");
-				JTextField eostep = new JTextField(4);
+				eostep = new JTextField(4);
+				eostep.setInputVerifier(new DoubleLessThanZeroVerifier());
 				eostep.setToolTipText("paso");
 				elitTextOpt.add(eomin);
 				elitTextOpt.add(eomax);
@@ -799,6 +804,29 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		variableMutationCheck.setSelected(variableMutationCheckDefault);
 		contentBasedTerminationCheck.setSelected(contentBasedTerminationCheckDefault);
 	}
+	
+	private void setRanges() {
+		if(rangePopulationRadioButton.isSelected()) {
+			this.ctrl.setRanges(Double.parseDouble(pomin.getText()), Double.parseDouble(pomax.getText()), Double.parseDouble(postep.getText()));
+			this.ctrl.setParamRange("population");
+		}
+		else if(rangeGenerationRadioButton.isSelected()) {
+			this.ctrl.setRanges(Double.parseDouble(gomin.getText()), Double.parseDouble(gomax.getText()), Double.parseDouble(gostep.getText()));
+			this.ctrl.setParamRange("generations");
+		}
+		else if(rangeCrossRadioButton.isSelected()) {
+			this.ctrl.setRanges(Double.parseDouble(comin.getText()), Double.parseDouble(comax.getText()), Double.parseDouble(costep.getText()));
+			this.ctrl.setParamRange("crossover");
+		}
+		else if(rangeMutationRadioButton.isSelected()) {
+			this.ctrl.setRanges(Double.parseDouble(momin.getText()), Double.parseDouble(momax.getText()), Double.parseDouble(mostep.getText()));
+			this.ctrl.setParamRange("mutation");
+		}
+		else if(rangeElitismRadioButton.isSelected()) {
+			this.ctrl.setRanges(Double.parseDouble(eomin.getText()), Double.parseDouble(eomax.getText()), Double.parseDouble(eostep.getText()));
+			this.ctrl.setParamRange("elitism");
+		}
+	}
 
 	@Override
 	public void onStartRun() {
@@ -831,6 +859,58 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	            source.setToolTipText(String.valueOf(num) + " %");
 	        }
 		}
+	}
+	
+	class IntegerNonZeroVerifier extends InputVerifier {
+
+		@Override
+		public boolean verify(JComponent input) {
+			JTextField field = (JTextField) input;
+			try {
+				int a = Integer.parseInt(((JTextField) input).getText());
+				if (a >= 1) {
+					field.setBorder(defaultborder);
+					status.setErrors(false);
+					return true;
+				}
+				else {
+					field.setBorder(BorderFactory.createLineBorder(Color.red));
+					status.setErrors(true);
+					return false;
+				}
+			} catch (NumberFormatException e) {
+				field.setBorder(BorderFactory.createLineBorder(Color.red));
+				status.setErrors(true);
+				return false;
+			}
+		}
+		
+	}
+	
+	class DoubleLessThanZeroVerifier extends InputVerifier {
+
+		@Override
+		public boolean verify(JComponent input) {
+			JTextField field = (JTextField) input;
+			try {
+				double a = Double.parseDouble(((JTextField) input).getText());
+				if (a >= 0 && a <= 1) {
+					field.setBorder(defaultborder);
+					status.setErrors(false);
+					return true;
+				}
+				else {
+					field.setBorder(BorderFactory.createLineBorder(Color.red));
+					status.setErrors(true);
+					return false;
+				}
+			} catch (NumberFormatException e) {
+				field.setBorder(BorderFactory.createLineBorder(Color.red));
+				status.setErrors(true);
+				return false;
+			}
+		}
+		
 	}
 
 }

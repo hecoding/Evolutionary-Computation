@@ -2,6 +2,9 @@ package view.gui.swing;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -62,17 +65,26 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				String s = new String();
-				for (Double res : ctrl.getResult()) {
-					//s = s + res.intValue() + ", ";
-					s = s + TSPGeneticAlgorithm.cityNames.values()[res.intValue()] + ", ";
+				if(!ctrl.isRangeParameters()) {
+					for (Double res : ctrl.getResult()) {
+						s = s + TSPGeneticAlgorithm.cityNames.values()[res.intValue()] + ", ";
+					}
+					s = s.substring(0, s.length() - 2);
+					if(ctrl.getResult().size() > 1)
+						s = "Mejor: " + "[" + s + "]";
+					else
+						s = "Mejor: " + s;
+					
+					s = s + " Resultado: " + new Double(ctrl.getFunctionResult()).intValue();
 				}
-				s = s.substring(0, s.length() - 2);
-				if(ctrl.getResult().size() > 1)
-					s = "Mejor: " + "[" + s + "]";
-				else
-					s = "Mejor: " + s;
-				
-				s = s + " Resultado: " + new Double(ctrl.getFunctionResult()).intValue();
+				else {
+					double[] x = ctrl.getRangeList();
+					ArrayList<Double> y = ctrl.getRangeResults();
+					Double best = Collections.min(y);
+					int idx = y.indexOf(best);
+					
+					s += "El mejor resultado es " + best.intValue() + ", con el parámetro " + String.format("%.2f", x[idx]);
+				}
 				setStatus(s);
 			}
 		});

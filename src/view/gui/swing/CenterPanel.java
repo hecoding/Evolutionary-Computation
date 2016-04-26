@@ -1,6 +1,8 @@
 package view.gui.swing;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
+
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -55,11 +57,18 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 			public void run() {
 				plot.removeAllPlots();
 				
-				double[] avgApt = ctrl.getAverageAptitudeList();
-				plot.addLinePlot("Mejor absoluto", ctrl.getBestChromosomeList());
-				plot.addLinePlot("Mejor de la generación", ctrl.getBestAptitudeList());
-				plot.addLinePlot("Media de la generación", avgApt);
-				plot.setFixedBounds(0, 0, avgApt.length);
+				if(!ctrl.isRangeParameters()) {
+					double[] avgApt = ctrl.getAverageAptitudeList();
+					plot.addLinePlot("Mejor absoluto", ctrl.getBestChromosomeList());
+					plot.addLinePlot("Mejor de la generación", ctrl.getBestAptitudeList());
+					plot.addLinePlot("Media de la generación", avgApt);
+					plot.setFixedBounds(0, 0, avgApt.length);
+				}
+				else {
+					double[] range = ctrl.getRangeList();
+					plot.addLinePlot("Distancia", Color.red, range, ctrl.getResultsList());
+					plot.setFixedBounds(0, range[0], range[range.length - 1]);
+				}
 				
 				plot.setVisible(true);
 			}
