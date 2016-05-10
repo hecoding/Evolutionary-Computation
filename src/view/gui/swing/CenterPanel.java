@@ -5,12 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.io.IOException;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -19,6 +15,8 @@ import org.math.plot.Plot2DPanel;
 
 import controller.Controller;
 import model.observer.GeneticAlgorithmObserver;
+import util.MapParser;
+import util.MapParser.Map;
 
 public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 	private static final long serialVersionUID = 1L;
@@ -49,7 +47,7 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		tabs = new JTabbedPane();
 		this.setLayout(new BorderLayout());
 		
-		mapPanel.add(new TestPane(), BorderLayout.CENTER);
+		mapPanel.add(new AntTrailPane(), BorderLayout.CENTER);
 		tabs.add("Mapa", mapPanel);
 		
 		plot = new Plot2DPanel();
@@ -98,27 +96,32 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		});
 	}
 	
-	public class TestPane extends JPanel {
+	public class AntTrailPane extends JPanel {
 		private static final long serialVersionUID = 1L;
-		private int columnCount = 32;
-		private int rowCount = 32;
-		private List<Rectangle> cells;
-		private Point selectedCell;
+		private int columnCount;
+		private int rowCount;
+		private Map map;
+		private Color white = new Color(250,250,250);
+		private Color black = new Color(33,33,33);
+		private Color green = new Color(0,230,118);
+		private Color yellow = new Color(251,192,45);
+		private Color orange = new Color(251,140,0);
+		private Color gray = new Color(158,158,158);
 
-		public TestPane() {
-			cells = new ArrayList<>(columnCount * rowCount);
+		public AntTrailPane() {
+			try {
+				this.map = MapParser.parse("src/Santa_Fe.txt");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			this.rowCount = this.map.getRows();
+			this.columnCount = this.map.getColumns();
 		}
 
 		@Override
 		public Dimension getPreferredSize() {
 			return new Dimension(200, 200);
-		}
-
-		@Override
-		public void invalidate() {
-			cells.clear();
-			selectedCell = null;
-			super.invalidate();
 		}
 
 		@Override
@@ -135,31 +138,42 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 			int xOffset = (width - (columnCount * cellWidth)) / 2;
 			int yOffset = (height - (rowCount * cellHeight)) / 2;
 
-			if (cells.isEmpty()) {
-				for (int row = 0; row < rowCount; row++) {
-					for (int col = 0; col < columnCount; col++) {
-						Rectangle cell = new Rectangle(
-								xOffset + (col * cellWidth),
-								yOffset + (row * cellHeight),
-								cellWidth,
-								cellHeight);
-						cells.add(cell);
+			for (int row = 0; row < rowCount; row++) {
+				for (int col = 0; col < columnCount; col++) {
+					
+					switch(this.map.get(row, col)) {
+					case nothing:
+						g.setColor(white);
+						break;
+					case food:
+						g.setColor(black);
+						break;
+					case trail:
+						g.setColor(yellow);
+						break;
+					case eatenfood:
+						g.setColor(orange);
+						break;
+					case beginning:
+						g.setColor(green);
+						break;
+					default:
+						break;
 					}
+					
+					g.fillRect(
+							xOffset + (col * cellWidth),
+							yOffset + (row * cellHeight),
+							cellWidth,
+							cellHeight);
+					
+					g.setColor(gray);
+					g.drawRect(
+							xOffset + (col * cellWidth),
+							yOffset + (row * cellHeight),
+							cellWidth,
+							cellHeight);
 				}
-			}
-
-			if (selectedCell != null) {
-
-				int index = selectedCell.x + (selectedCell.y * columnCount);
-				Rectangle cell = cells.get(index);
-				g2d.setColor(Color.BLUE);
-				g2d.fill(cell);
-
-			}
-
-			g2d.setColor(Color.GRAY);
-			for (Rectangle cell : cells) {
-				g2d.draw(cell);
 			}
 
 			g2d.dispose();

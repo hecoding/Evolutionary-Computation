@@ -40,6 +40,10 @@ public class MapParser {
 		public int getColumns() {
 			return this.get(0).size();
 		}
+		
+		public MapEnum get(int row, int column) {
+			return this.get(row).get(column);
+		}
 	}
 	
 }
