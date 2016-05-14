@@ -1,10 +1,10 @@
-package model.geneticAlgorithm;
+package model.genProgAlgorithm;
 
 import model.chromosome.TSPChromosome;
-import model.geneticAlgorithm.crossover.CrossoverInterface;
-import model.geneticAlgorithm.fitnessFunction.FitnessFunctionInterface;
-import model.geneticAlgorithm.mutation.MutationInterface;
-import model.geneticAlgorithm.selection.SelectionInterface;
+import model.genProgAlgorithm.crossover.CrossoverInterface;
+import model.genProgAlgorithm.fitnessFunction.FitnessFunctionInterface;
+import model.genProgAlgorithm.mutation.MutationInterface;
+import model.genProgAlgorithm.selection.SelectionInterface;
 
 public class TSPGeneticAlgorithm extends AbstractGeneticAlgorithm<TSPChromosome> {
 

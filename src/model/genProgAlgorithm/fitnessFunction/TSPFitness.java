@@ -1,8 +1,8 @@
-package model.geneticAlgorithm.fitnessFunction;
+package model.genProgAlgorithm.fitnessFunction;
 
 import java.util.ArrayList;
 
-import model.geneticAlgorithm.TSPGeneticAlgorithm;
+import model.genProgAlgorithm.TSPGeneticAlgorithm;
 
 public class TSPFitness implements FitnessFunctionInterface {
 

@@ -3,7 +3,7 @@ package model.chromosome;
 import java.util.ArrayList;
 
 import model.gene.AbstractGene;
-import model.geneticAlgorithm.fitnessFunction.FitnessFunctionInterface;
+import model.genProgAlgorithm.fitnessFunction.FitnessFunctionInterface;
 
 public abstract class AbstractChromosome<T extends AbstractGene<?>> implements Cloneable {
 	protected static FitnessFunctionInterface fitnessFunc;

@@ -10,7 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import controller.Controller;
-import model.geneticAlgorithm.TSPGeneticAlgorithm;
+import model.genProgAlgorithm.TSPGeneticAlgorithm;
 import model.observer.GeneticAlgorithmObserver;
 
 public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {

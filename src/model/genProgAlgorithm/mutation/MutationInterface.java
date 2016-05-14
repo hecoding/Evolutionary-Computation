@@ -1,4 +1,4 @@
-package model.geneticAlgorithm.mutation;
+package model.genProgAlgorithm.mutation;
 
 import java.util.ArrayList;
 import model.chromosome.AbstractChromosome;

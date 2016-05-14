@@ -3,8 +3,8 @@ package model.chromosome;
 import java.util.ArrayList;
 
 import model.gene.IntegerGene;
-import model.geneticAlgorithm.TSPGeneticAlgorithm;
-import model.geneticAlgorithm.fitnessFunction.FitnessFunctionInterface;
+import model.genProgAlgorithm.TSPGeneticAlgorithm;
+import model.genProgAlgorithm.fitnessFunction.FitnessFunctionInterface;
 import util.RandGenerator;
 
 public class TSPChromosome extends AbstractChromosome<IntegerGene> {

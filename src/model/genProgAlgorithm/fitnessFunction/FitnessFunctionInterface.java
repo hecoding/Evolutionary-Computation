@@ -1,4 +1,4 @@
-package model.geneticAlgorithm.fitnessFunction;
+package model.genProgAlgorithm.fitnessFunction;
 
 import java.util.ArrayList;
 

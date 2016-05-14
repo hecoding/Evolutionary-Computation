@@ -7,6 +7,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -110,10 +112,11 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 
 		public AntTrailPane() {
 			try {
-				this.map = MapParser.parse("src/map.txt");
+				this.map = Map.getMasterMap();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null,
+						e.getMessage(),
+						"Error", JOptionPane.ERROR_MESSAGE);
 			}
 			this.rowCount = this.map.getRows();
 			this.columnCount = this.map.getColumns();

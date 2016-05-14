@@ -1,4 +1,4 @@
-package model.geneticAlgorithm.crossover;
+package model.genProgAlgorithm.crossover;
 
 import java.util.ArrayList;
 import model.chromosome.AbstractChromosome;

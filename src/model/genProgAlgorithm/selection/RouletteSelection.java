@@ -1,4 +1,4 @@
-package model.geneticAlgorithm.selection;
+package model.genProgAlgorithm.selection;
 
 import java.util.ArrayList;
 import model.chromosome.AbstractChromosome;

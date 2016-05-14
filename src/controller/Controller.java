@@ -2,15 +2,16 @@ package controller;
 
 import java.util.ArrayList;
 
-import model.geneticAlgorithm.AbstractGeneticAlgorithm;
-import model.geneticAlgorithm.TSPGeneticAlgorithm;
-import model.geneticAlgorithm.crossover.CrossoverFactory;
-import model.geneticAlgorithm.crossover.PMXCrossover;
-import model.geneticAlgorithm.fitnessFunction.TSPFitness;
-import model.geneticAlgorithm.mutation.InversionMutation;
-import model.geneticAlgorithm.mutation.MutationFactory;
-import model.geneticAlgorithm.selection.RouletteSelection;
-import model.geneticAlgorithm.selection.SelectionFactory;
+import model.genProgAlgorithm.AbstractGeneticAlgorithm;
+import model.genProgAlgorithm.TSPGeneticAlgorithm;
+import model.genProgAlgorithm.crossover.CrossoverFactory;
+import model.genProgAlgorithm.crossover.CrossoverInterface;
+import model.genProgAlgorithm.fitnessFunction.TSPFitness;
+import model.genProgAlgorithm.mutation.MutationFactory;
+import model.genProgAlgorithm.mutation.MutationInterface;
+import model.genProgAlgorithm.selection.RouletteSelection;
+import model.genProgAlgorithm.selection.SelectionFactory;
+import model.genProgAlgorithm.selection.SelectionInterface;
 import model.observer.GeneticAlgorithmObserver;
 
 public class Controller {
@@ -25,8 +26,8 @@ public class Controller {
 		this.ga = new TSPGeneticAlgorithm(
 									new TSPFitness(),
 									new RouletteSelection(),
-									new PMXCrossover(),
-									new InversionMutation(),
+									null,
+									null,
 									100,
 									false,
 									0.1,
@@ -165,7 +166,10 @@ public class Controller {
 	}
 	
 	public String getSelectionStrategy() {
-		return this.ga.getSelectionStrategy().getName();
+		SelectionInterface strat = this.ga.getSelectionStrategy();
+		
+		if(strat == null) return "";
+		else return strat.getName();
 	}
 	
 	public String[] getSelectionStrategyList() {
@@ -173,7 +177,10 @@ public class Controller {
 	}
 	
 	public String getCrossoverStrategy() {
-		return this.ga.getCrossoverStrategy().getName();
+		CrossoverInterface strat = this.ga.getCrossoverStrategy();
+		
+		if(strat == null) return "";
+		else return strat.getName();
 	}
 	
 	public String[] getCrossoverStrategyList() {
@@ -181,7 +188,10 @@ public class Controller {
 	}
 	
 	public String getMutationStrategy() {
-		return this.ga.getMutationStrategy().getName();
+		MutationInterface strat = this.ga.getMutationStrategy();
+		
+		if(strat == null) return "";
+		else return strat.getName();
 	}
 	
 	public String[] getMutationStrategyList() {

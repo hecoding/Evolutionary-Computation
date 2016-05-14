@@ -1,8 +1,8 @@
-package model.geneticAlgorithm.mutation;
+package model.genProgAlgorithm.mutation;
 
 public class MutationFactory {
 	private static MutationFactory instance;
-	private static String[] strategies = {"Inversión", "Intercambio", "Inserción", "Heurística", "Propio"};
+	private static String[] strategies = {};
 	
 	private MutationFactory() {}
 	
@@ -15,15 +15,7 @@ public class MutationFactory {
 	
 	public MutationInterface create(String id) {
 		if (id == "Inversión")
-			return new InversionMutation();
-		else if (id == "Intercambio")
-			return new ExchangeMutation();
-		else if (id == "Inserción")
-			return new InsertionMutation();
-		else if (id == "Heurística")
-			return new HeuristicMutation();
-		else if (id == "Propio")
-			return new OwnMutation();
+			return null;
 		else
 			throw new IllegalArgumentException("Unknown selection method");
 	}

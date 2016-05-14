@@ -1,4 +1,4 @@
-package model.geneticAlgorithm;
+package model.genProgAlgorithm;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -6,10 +6,10 @@ import java.util.Random;
 
 import model.chromosome.AbstractChromosome;
 import model.chromosome.comparator.AptitudeComparator;
-import model.geneticAlgorithm.crossover.CrossoverInterface;
-import model.geneticAlgorithm.fitnessFunction.FitnessFunctionInterface;
-import model.geneticAlgorithm.mutation.MutationInterface;
-import model.geneticAlgorithm.selection.SelectionInterface;
+import model.genProgAlgorithm.crossover.CrossoverInterface;
+import model.genProgAlgorithm.fitnessFunction.FitnessFunctionInterface;
+import model.genProgAlgorithm.mutation.MutationInterface;
+import model.genProgAlgorithm.selection.SelectionInterface;
 import model.observer.GeneticAlgorithmObserver;
 import model.observer.Observable;
 import util.RandGenerator;
