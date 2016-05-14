@@ -158,43 +158,43 @@ public class Tree<E> implements Cloneable {
 		return this.horizontalPreOrder();
 	}
 	
-	public boolean esHijoDer(Tree<TipoNodo> a) {
-		Stack<Tree<TipoNodo>> pilaArboles;
-		pilaArboles = new Stack<Tree<TipoNodo>>();
-		Tree<TipoNodo> actual = (Tree<TipoNodo>) this;
-		pilaArboles.push(actual);
-		while (!pilaArboles.isEmpty()) {
-			actual = pilaArboles.pop();
-			if (actual.getRightChild() == a)
+	public boolean isRightChild(Tree<E> a) {
+		Stack<Tree<E>> stack = new Stack<Tree<E>>();
+		Tree<E> current = this;
+		
+		stack.push(current);
+		while (!stack.isEmpty()) {
+			current = stack.pop();
+			if (current.getRightChild() == a)
 				return true;
-			else if (actual.getLeftChild() == a)
+			else if (current.getLeftChild() == a)
 				return false;
-			if (actual.getRightChild()!= null) {
-				pilaArboles.push(actual.getRightChild());
+			if (current.getRightChild()!= null) {
+				stack.push(current.getRightChild());
 			}
-			if (actual.getLeftChild()!= null) {
-				pilaArboles.push(actual.getLeftChild());
+			if (current.getLeftChild()!= null) {
+				stack.push(current.getLeftChild());
 			}
 		}
 		return false;
 	}
 
-	public boolean esHijoIzq(Tree<TipoNodo> a) {
-		Stack<Tree<TipoNodo>> pilaArboles;
-		pilaArboles = new Stack<Tree<TipoNodo>>();
-		Tree<TipoNodo> actual = (Tree<TipoNodo>) this;
-		pilaArboles.push(actual);
-		while (!pilaArboles.isEmpty()) {
-			actual = pilaArboles.pop();
-			if (actual.getRightChild() == a)
+	public boolean isLeftChild(Tree<E> a) {
+		Stack<Tree<E>> stack = new Stack<Tree<E>>();
+		Tree<E> current = this;
+		
+		stack.push(current);
+		while (!stack.isEmpty()) {
+			current = stack.pop();
+			if (current.getRightChild() == a)
 				return false;
-			else if (actual.getLeftChild() == a)
+			else if (current.getLeftChild() == a)
 				return true;
-			if (actual.getRightChild()!= null) {
-				pilaArboles.push(actual.getRightChild());
+			if (current.getRightChild()!= null) {
+				stack.push(current.getRightChild());
 			}
-			if (actual.getLeftChild()!= null) {
-				pilaArboles.push(actual.getLeftChild());
+			if (current.getLeftChild()!= null) {
+				stack.push(current.getLeftChild());
 			}
 		}
 		return false;
@@ -204,8 +204,8 @@ public class Tree<E> implements Cloneable {
 		return this.depth == 1;
 	}
 	
-	public int maximoNivel(){
-	    /*int iz=0;
+	/*public int maximoNivel(){*/
+	    /*int iz=0; iterativo
 	    int de=0;
 	    if(esHoja()){
 	        return 1;
@@ -221,15 +221,15 @@ public class Tree<E> implements Cloneable {
 	                return 0;
 	        }
 	    }*/
-		Stack<Tree<TipoNodo>> pilaArboles;
-		pilaArboles = new Stack<Tree<TipoNodo>>();
-		Tree<TipoNodo> actual = (Tree<TipoNodo>) this;
+		/*Stack<Tree<E>> pilaArboles;
+		pilaArboles = new Stack<Tree<E>>();
+		Tree<E> actual = (Tree<E>) this;
 		pilaArboles.push(actual);
 		int maxNivel = 0;
 		while (!pilaArboles.isEmpty()) {
 			actual = pilaArboles.pop();
-			if (actual.getValue().getNivel() > maxNivel)
-				maxNivel = actual.getValue().getNivel();
+			if (actual.getDepth() > maxNivel)
+				maxNivel = actual.getDepth();
 			if (actual.getRightChild()!= null) {
 				pilaArboles.push(actual.getRightChild());
 			}
@@ -241,14 +241,14 @@ public class Tree<E> implements Cloneable {
 	}
 	
 	public int minimoNivel() {  
-		Tree<TipoNodo> actual = (Tree<TipoNodo>) this;
-		int minNivel = actual.getValue().getNivel();
+		Tree<E> actual = (Tree<E>) this;
+		int minNivel = actual.getDepth();
 	    return minNivel;  
-	}
+	}*/
 	
-	public Tree<TipoNodo> clone() {
-		Tree<TipoNodo> retorno = new Tree<TipoNodo>(null);
-		retorno.value = ((TipoNodo)value).clone();
+	/*public Tree<E> clone() {
+		Tree<E> retorno = new Tree<E>(null);
+		retorno.value = ((E)value).clone();
 		if(this.parent == null){
 			retorno.parent = null;
 		}
@@ -264,17 +264,17 @@ public class Tree<E> implements Cloneable {
 	}
 
 	public void cambiaNiveles(int nivel) {
-		((TipoNodo)value).setNivel(nivel);
+		((E)value).setNivel(nivel);
 		if (hijoIzq != null)
 			hijoIzq.cambiaNiveles(nivel+1);
 		if (hijoDer != null)
 			hijoDer.cambiaNiveles(nivel+1);
 	}
 
-	public ArrayList<Integer> dameNumTipoNodo() {
-		Stack<Tree<TipoNodo>> pilaArboles;
-		pilaArboles = new Stack<Tree<TipoNodo>>();
-		Tree<TipoNodo> actual = (Tree<TipoNodo>) this;
+	public ArrayList<Integer> dameNumE() {
+		Stack<Tree<E>> pilaArboles;
+		pilaArboles = new Stack<Tree<E>>();
+		Tree<E> actual = (Tree<E>) this;
 		pilaArboles.push(actual);
 		ArrayList<Integer> retorno;
 		int numFunciones = 0;
@@ -304,8 +304,8 @@ public class Tree<E> implements Cloneable {
 	}
 	
 	public void recalculaNiveles(int nivel){
-		if(value instanceof TipoNodo){
-			((TipoNodo)this.value).setNivel(nivel);
+		if(value instanceof E){
+			((E)this.value).setNivel(nivel);
 			if(this.hijoIzq != null){
 				this.hijoIzq.recalculaNiveles(nivel+1);
 			}
@@ -315,10 +315,10 @@ public class Tree<E> implements Cloneable {
 		}		
 	}
 	
-	public static Tree<TipoNodo> buscarPtoCruce(int puntoCruce,Tree<TipoNodo> origen){
-		Stack<Tree<TipoNodo>> pilaArboles;
-		pilaArboles = new Stack<Tree<TipoNodo>>();
-		Tree<TipoNodo> actual = origen;
+	public static Tree<E> buscarPtoCruce(int puntoCruce,Tree<E> origen){
+		Stack<Tree<E>> pilaArboles;
+		pilaArboles = new Stack<Tree<E>>();
+		Tree<E> actual = origen;
 		pilaArboles.push(actual);
 		int indice = 0;
 		while (!pilaArboles.isEmpty()) {
@@ -335,5 +335,5 @@ public class Tree<E> implements Cloneable {
 			}
 		}
 		return null;
-	}
+	}*/
 }
