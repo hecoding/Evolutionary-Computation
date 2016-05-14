@@ -14,9 +14,9 @@ import javax.swing.SwingUtilities;
 import org.math.plot.Plot2DPanel;
 
 import controller.Controller;
+import model.map.Map;
 import model.observer.GeneticAlgorithmObserver;
 import util.MapParser;
-import util.MapParser.Map;
 
 public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 	private static final long serialVersionUID = 1L;
@@ -110,7 +110,7 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 
 		public AntTrailPane() {
 			try {
-				this.map = MapParser.parse("src/Santa_Fe.txt");
+				this.map = MapParser.parse("src/map.txt");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
