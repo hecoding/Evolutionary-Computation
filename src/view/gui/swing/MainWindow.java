@@ -19,7 +19,7 @@ public class MainWindow extends JFrame {
 	public MainWindow(Controller controller) {
 		ctrl = controller;
 		
-		this.setTitle("Genetic Programming");
+		this.setTitle("Evolutionary computation");
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				initGUI();
