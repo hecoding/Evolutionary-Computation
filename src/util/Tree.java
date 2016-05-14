@@ -4,102 +4,204 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class Tree<E> implements Cloneable {
-	private E valor;
-	private Tree<E> hijoIzq;
-	private Tree<E> hijoDer;
-	private Tree<E> padre;
+	private E value;
+	private Tree<E> parent;
+	private ArrayList<Tree<E>> children;
+	private int depth;
+	private static final int defaultChildren = 2;
 	
-	public Tree(Tree<E> padre){
-		this.padre = padre;
+	/**
+	 * Tree with no childs.
+	 * @param parent
+	 */
+	public Tree(Tree<E> parent){
+		this.parent = parent;
+		this.children = new ArrayList<Tree<E>>(defaultChildren);
+		this.depth = 1;
 	}
 	
-	public Tree(Tree<E> hijoIzq, E valor, Tree<E> hijoDer,Tree<E> padre){
-		this.hijoIzq = hijoIzq;
-		this.valor=valor;
-		this.hijoDer=hijoDer;
-		this.padre = padre;
+	/**
+	 * Binary tree.
+	 * @param leftChild
+	 * @param value
+	 * @param rightChild
+	 * @param parent
+	 */
+	public Tree(Tree<E> leftChild, E value, Tree<E> rightChild,Tree<E> parent){
+		this.parent = parent;
+		this.children = new ArrayList<Tree<E>>(defaultChildren);
+		
+		this.children.add(leftChild);
+		this.value=value;
+		this.children.add(rightChild);
+		
+		if(leftChild == null && rightChild == null)
+			this.depth = 1;
+		else if(leftChild == null && rightChild != null)
+			this.depth = rightChild.getDepth() + 1;
+		else if(rightChild == null && leftChild != null)
+			this.depth = leftChild.getDepth() + 1;
+		else { // none null
+			if(leftChild.getDepth() > rightChild.getDepth())
+				this.depth = leftChild.getDepth() + 1;
+			else
+				this.depth = rightChild.getDepth() + 1;
+		}
 	}
 	
-	public E getValor(){return this.valor;}
-	
-	public Tree<E> getPadre() { return padre; }
-	
-	public void setPadre(Tree<E> p) {
-		padre = p;
+	/**
+	 * Ternary tree.
+	 * @param leftChild
+	 * @param middleChild
+	 * @param value
+	 * @param rightChild
+	 * @param parent
+	 */
+	public Tree(Tree<E> leftChild, Tree<E> middleChild, E value, Tree<E> rightChild,Tree<E> parent){
+		this.parent = parent;
+		this.children = new ArrayList<Tree<E>>(3);
+		
+		this.children.add(leftChild);
+		this.children.add(middleChild);
+		this.value=value;
+		this.children.add(rightChild);
+		
+		// no null checking done here
+		if(leftChild.getDepth()>=middleChild.getDepth() && leftChild.getDepth()>=rightChild.getDepth())
+			this.depth = leftChild.getDepth() + 1;
+		else if(middleChild.getDepth()>=leftChild.getDepth() && middleChild.getDepth()>=rightChild.getDepth())
+			this.depth = middleChild.getDepth() + 1;
+		else if(rightChild.getDepth()>=leftChild.getDepth() && rightChild.getDepth()>=middleChild.getDepth())
+			this.depth = rightChild.getDepth() + 1;
 	}
 	
-	public void setValor(E valor){this.valor = valor;}
+	/**
+	 * N-ary tree.
+	 * @param children
+	 * @param value
+	 * @param parent
+	 */
+	public Tree(ArrayList<Tree<E>> children, E value, Tree<E> parent){
+		this.children = new ArrayList<Tree<E>>(children.size());
+		
+		this.children = children;
+		this.value = value;
+		this.parent = parent;
+		
+		int currentDepth = 0;
+		for (Tree<E> child : children) {
+			if(child.getDepth() > currentDepth)
+				currentDepth = child.getDepth();
+		}
+		this.depth = currentDepth + 1;
+	}
 	
-	public Tree<E> gethijoIzq(){return this.hijoIzq;}
+	public E getValue(){return this.value;}
+	public void setValue(E value){this.value = value;}
 	
-	public Tree<E> gethijoDer(){return this.hijoDer;}
+	public Tree<E> getParent(){return parent;}
+	public void setParent(Tree<E> p){parent = p;}
 	
-	public void sethijoIzq(Tree<E> hijoIzq){this.hijoIzq = hijoIzq;}
+	public Tree<E> getLeftChild(){return this.children.get(0);}
+	public void setLeftChild(Tree<E> left){this.children.set(0, left);}
 	
-	public void sethijoDer(Tree<E> hijoDer){this.hijoDer = hijoDer;}
+	public Tree<E> getRightChild(){return this.children.get(this.children.size() - 1);}
+	public void setRightChild(Tree<E> right){this.children.set(this.children.size() - 1, right);}
 	
-	public String muestraPreOrden(){
-		if(valor instanceof TipoNodo){
-			char c = ((TipoNodo)valor).obtener();
-			if(valor instanceof Funcion){
-				if(c == 's'){
-					return "( "+c+" "+hijoIzq.muestraPreOrden()+" )";
-				}else{
-					return "( "+c+" "+hijoIzq.muestraPreOrden()+" "+hijoDer.muestraPreOrden()+" )";
-				}
-			}else{
-				return String.valueOf(c);
+	public Tree<E> getNChild(int n){return this.children.get(n);}
+	public void setNChild(int n, Tree<E> child){this.children.set(n, child);}
+	
+	public int getDepth(){return this.depth;}
+	
+	/**
+	 * Sets the next right-most child of the node.
+	 * @param child The child to set to the parent.
+	 */
+	public void setNextChild(Tree<E> child){this.children.add(child);}
+	
+	public String preOrder() {
+		return this.preOrder("");
+	}
+	
+	private  String preOrder(String tabs){
+		
+		String content = tabs + "(" + this.value.toString();
+		if (this.children.size() == 0)
+			return content + ")";
+		else {
+			for (Tree<E> child : this.children) {
+				if(child != null)
+					content += System.lineSeparator() + child.preOrder("    ");
 			}
 		}
-		return "";
+		
+		return content + System.lineSeparator() + tabs + ")";
+	}
+	
+	public String horizontalPreOrder(){
+		
+		String val = this.value.toString();
+		
+		if(this.isLeaf())
+			return val;
+		else {
+			String nextChildren = "( " + val;
+			for (Tree<E> child : children) {
+				if(child != null)
+					nextChildren += " " + child.horizontalPreOrder();
+			}
+			return nextChildren + " )";
+		}
+	}
+	
+	public String toString() {
+		return this.horizontalPreOrder();
 	}
 	
 	public boolean esHijoDer(Tree<TipoNodo> a) {
-		Stack<Tree<TipoNodo>> pilaTreees;
-		pilaTreees = new Stack<Tree<TipoNodo>>();
+		Stack<Tree<TipoNodo>> pilaArboles;
+		pilaArboles = new Stack<Tree<TipoNodo>>();
 		Tree<TipoNodo> actual = (Tree<TipoNodo>) this;
-		pilaTreees.push(actual);
-		while (!pilaTreees.isEmpty()) {
-			actual = pilaTreees.pop();
-			if (actual.gethijoDer() == a)
+		pilaArboles.push(actual);
+		while (!pilaArboles.isEmpty()) {
+			actual = pilaArboles.pop();
+			if (actual.getRightChild() == a)
 				return true;
-			else if (actual.gethijoIzq() == a)
+			else if (actual.getLeftChild() == a)
 				return false;
-			if (actual.gethijoDer()!= null) {
-				pilaTreees.push(actual.gethijoDer());
+			if (actual.getRightChild()!= null) {
+				pilaArboles.push(actual.getRightChild());
 			}
-			if (actual.gethijoIzq()!= null) {
-				pilaTreees.push(actual.gethijoIzq());
+			if (actual.getLeftChild()!= null) {
+				pilaArboles.push(actual.getLeftChild());
 			}
 		}
 		return false;
 	}
 
 	public boolean esHijoIzq(Tree<TipoNodo> a) {
-		Stack<Tree<TipoNodo>> pilaTreees;
-		pilaTreees = new Stack<Tree<TipoNodo>>();
+		Stack<Tree<TipoNodo>> pilaArboles;
+		pilaArboles = new Stack<Tree<TipoNodo>>();
 		Tree<TipoNodo> actual = (Tree<TipoNodo>) this;
-		pilaTreees.push(actual);
-		while (!pilaTreees.isEmpty()) {
-			actual = pilaTreees.pop();
-			if (actual.gethijoDer() == a)
+		pilaArboles.push(actual);
+		while (!pilaArboles.isEmpty()) {
+			actual = pilaArboles.pop();
+			if (actual.getRightChild() == a)
 				return false;
-			else if (actual.gethijoIzq() == a)
+			else if (actual.getLeftChild() == a)
 				return true;
-			if (actual.gethijoDer()!= null) {
-				pilaTreees.push(actual.gethijoDer());
+			if (actual.getRightChild()!= null) {
+				pilaArboles.push(actual.getRightChild());
 			}
-			if (actual.gethijoIzq()!= null) {
-				pilaTreees.push(actual.gethijoIzq());
+			if (actual.getLeftChild()!= null) {
+				pilaArboles.push(actual.getLeftChild());
 			}
 		}
 		return false;
 	}
 
-	public boolean esHoja() {
-		if (hijoDer == null && hijoIzq == null) 
-			return true;
-		return false;
+	public boolean isLeaf() {
+		return this.depth == 1;
 	}
 	
 	public int maximoNivel(){
@@ -119,20 +221,20 @@ public class Tree<E> implements Cloneable {
 	                return 0;
 	        }
 	    }*/
-		Stack<Tree<TipoNodo>> pilaTreees;
-		pilaTreees = new Stack<Tree<TipoNodo>>();
+		Stack<Tree<TipoNodo>> pilaArboles;
+		pilaArboles = new Stack<Tree<TipoNodo>>();
 		Tree<TipoNodo> actual = (Tree<TipoNodo>) this;
-		pilaTreees.push(actual);
+		pilaArboles.push(actual);
 		int maxNivel = 0;
-		while (!pilaTreees.isEmpty()) {
-			actual = pilaTreees.pop();
-			if (actual.getValor().getNivel() > maxNivel)
-				maxNivel = actual.getValor().getNivel();
-			if (actual.gethijoDer()!= null) {
-				pilaTreees.push(actual.gethijoDer());
+		while (!pilaArboles.isEmpty()) {
+			actual = pilaArboles.pop();
+			if (actual.getValue().getNivel() > maxNivel)
+				maxNivel = actual.getValue().getNivel();
+			if (actual.getRightChild()!= null) {
+				pilaArboles.push(actual.getRightChild());
 			}
-			if (actual.gethijoIzq()!= null) {
-				pilaTreees.push(actual.gethijoIzq());
+			if (actual.getLeftChild()!= null) {
+				pilaArboles.push(actual.getLeftChild());
 			}
 		}
 		return maxNivel;          
@@ -140,29 +242,29 @@ public class Tree<E> implements Cloneable {
 	
 	public int minimoNivel() {  
 		Tree<TipoNodo> actual = (Tree<TipoNodo>) this;
-		int minNivel = actual.getValor().getNivel();
+		int minNivel = actual.getValue().getNivel();
 	    return minNivel;  
 	}
 	
 	public Tree<TipoNodo> clone() {
 		Tree<TipoNodo> retorno = new Tree<TipoNodo>(null);
-		retorno.valor = ((TipoNodo)valor).clone();
-		if(this.padre == null){
-			retorno.padre = null;
+		retorno.value = ((TipoNodo)value).clone();
+		if(this.parent == null){
+			retorno.parent = null;
 		}
 		retorno.hijoDer = null;
 		retorno.hijoIzq = null;
 		if (hijoDer != null){
 			retorno.hijoDer = hijoDer.clone();
-			retorno.hijoDer.padre = retorno;}
+			retorno.hijoDer.parent = retorno;}
 		if (hijoIzq != null){
 			retorno.hijoIzq = hijoIzq.clone();
-			retorno.hijoIzq.padre = retorno;}
+			retorno.hijoIzq.parent = retorno;}
 		return retorno;
 	}
 
 	public void cambiaNiveles(int nivel) {
-		((TipoNodo)valor).setNivel(nivel);
+		((TipoNodo)value).setNivel(nivel);
 		if (hijoIzq != null)
 			hijoIzq.cambiaNiveles(nivel+1);
 		if (hijoDer != null)
@@ -170,28 +272,28 @@ public class Tree<E> implements Cloneable {
 	}
 
 	public ArrayList<Integer> dameNumTipoNodo() {
-		Stack<Tree<TipoNodo>> pilaTreees;
-		pilaTreees = new Stack<Tree<TipoNodo>>();
+		Stack<Tree<TipoNodo>> pilaArboles;
+		pilaArboles = new Stack<Tree<TipoNodo>>();
 		Tree<TipoNodo> actual = (Tree<TipoNodo>) this;
-		pilaTreees.push(actual);
+		pilaArboles.push(actual);
 		ArrayList<Integer> retorno;
 		int numFunciones = 0;
 		int numFuncionesBinarias = 0;
 		int numTerminales = 0;
-		while (!pilaTreees.isEmpty()) {
-			actual = pilaTreees.pop();
-			if (actual.valor instanceof Funcion) {
-				if (actual.valor.obtener() != 's') {
+		while (!pilaArboles.isEmpty()) {
+			actual = pilaArboles.pop();
+			if (actual.value instanceof Funcion) {
+				if (actual.value.obtener() != 's') {
 					numFuncionesBinarias++;
 				}
 				numFunciones++;
 			}
 			else numTerminales++;
-			if (actual.gethijoDer()!= null) {
-				pilaTreees.push(actual.gethijoDer());
+			if (actual.getRightChild()!= null) {
+				pilaArboles.push(actual.getRightChild());
 			}
-			if (actual.gethijoIzq()!= null) {
-				pilaTreees.push(actual.gethijoIzq());
+			if (actual.getLeftChild()!= null) {
+				pilaArboles.push(actual.getLeftChild());
 			}
 		}
 		retorno = new ArrayList<Integer>();
@@ -202,8 +304,8 @@ public class Tree<E> implements Cloneable {
 	}
 	
 	public void recalculaNiveles(int nivel){
-		if(valor instanceof TipoNodo){
-			((TipoNodo)this.valor).setNivel(nivel);
+		if(value instanceof TipoNodo){
+			((TipoNodo)this.value).setNivel(nivel);
 			if(this.hijoIzq != null){
 				this.hijoIzq.recalculaNiveles(nivel+1);
 			}
@@ -214,22 +316,22 @@ public class Tree<E> implements Cloneable {
 	}
 	
 	public static Tree<TipoNodo> buscarPtoCruce(int puntoCruce,Tree<TipoNodo> origen){
-		Stack<Tree<TipoNodo>> pilaTreees;
-		pilaTreees = new Stack<Tree<TipoNodo>>();
+		Stack<Tree<TipoNodo>> pilaArboles;
+		pilaArboles = new Stack<Tree<TipoNodo>>();
 		Tree<TipoNodo> actual = origen;
-		pilaTreees.push(actual);
+		pilaArboles.push(actual);
 		int indice = 0;
-		while (!pilaTreees.isEmpty()) {
-			actual = pilaTreees.pop();
+		while (!pilaArboles.isEmpty()) {
+			actual = pilaArboles.pop();
 			indice++;
 			if (indice == puntoCruce) {
 				return actual;
 			}
-			if (actual.gethijoDer()!= null) {
-				pilaTreees.push(actual.gethijoDer());
+			if (actual.getRightChild()!= null) {
+				pilaArboles.push(actual.getRightChild());
 			}
-			if (actual.gethijoIzq()!= null) {
-				pilaTreees.push(actual.gethijoIzq());
+			if (actual.getLeftChild()!= null) {
+				pilaArboles.push(actual.getLeftChild());
 			}
 		}
 		return null;
