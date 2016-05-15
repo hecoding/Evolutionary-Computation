@@ -7,7 +7,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
 import org.math.plot.Plot2DPanel;
@@ -23,9 +25,13 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
  	private JTabbedPane tabs;
  	private JPanel graphPanel;
  	private JPanel mapPanel;
+ 	private JPanel programPanel;
  	private StatusBarPanel status;
  	JPanel centerPanel;
+ 	
+ 	AntTrailPane map;
  	Plot2DPanel plot;
+ 	JTextArea programText;
  	JPanel runButtonPanel;
  	
 	public CenterPanel(Controller ctrl, StatusBarPanel status) {
@@ -41,25 +47,35 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 	}
 
 	private void initGUI() {
-		graphPanel = new JPanel(new BorderLayout());
 		mapPanel = new JPanel(new BorderLayout());
+		graphPanel = new JPanel(new BorderLayout());
+		programPanel = new JPanel(new BorderLayout());
 		tabs = new JTabbedPane();
 		this.setLayout(new BorderLayout());
 		
-		mapPanel.add(new AntTrailPane(), BorderLayout.CENTER);
+		map = new AntTrailPane();
+		mapPanel.add(map, BorderLayout.CENTER);
 		tabs.add("Mapa", mapPanel);
 		
 		plot = new Plot2DPanel();
 		plot.addLegend("SOUTH");
-		plot.setVisible(false);
 		graphPanel.add(plot, BorderLayout.CENTER);
-		graphPanel.add(this.status, BorderLayout.PAGE_END);
-		
 		tabs.add("Aptitud", graphPanel);
+		
+		programText = new JTextArea();
+		programText.setEditable(false);
+		programText.setLineWrap(true);
+		programText.setWrapStyleWord(true);
+		programPanel.setLayout(new BorderLayout());
+		programPanel.add(new JScrollPane(programText), BorderLayout.CENTER);
+		tabs.add("Programa", programPanel);
+		
 		tabs.setMnemonicAt(0, KeyEvent.VK_1);
 		tabs.setMnemonicAt(1, KeyEvent.VK_2);
+		tabs.setMnemonicAt(2, KeyEvent.VK_3);
 		
 		this.add(tabs, BorderLayout.CENTER);
+		this.add(this.status, BorderLayout.PAGE_END);
 	}
 
 	@Override
@@ -75,24 +91,43 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 	public void onEndRun() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				plot.removeAllPlots();
-				
-				if(!ctrl.isRangeParameters()) {
-					double[] avgApt = ctrl.getAverageAptitudeList();
-					plot.addLinePlot("Mejor absoluto", ctrl.getBestChromosomeList());
-					plot.addLinePlot("Mejor de la generación", ctrl.getBestAptitudeList());
-					plot.addLinePlot("Media de la generación", avgApt);
-					plot.setFixedBounds(0, 0, avgApt.length);
-				}
-				else {
-					double[] range = ctrl.getRangeList();
-					plot.addLinePlot("Distancia", Color.red, range, ctrl.getResultsList());
-					plot.setFixedBounds(0, range[0], range[range.length - 1]);
-				}
-				
-				plot.setVisible(true);
+				updateMapPanel();
+				updateGraphPanel();
+				updateProgramPanel();
 			}
 		});
+	}
+	
+	private void updateMapPanel() {
+		map = new AntTrailPane(ctrl.getResultMap());
+	}
+	
+	private void updateGraphPanel() {
+		plot.removeAllPlots();
+		
+		if(!ctrl.isRangeParameters()) {
+			double[] avgApt = ctrl.getAverageAptitudeList();
+			plot.addLinePlot("Mejor absoluto", ctrl.getBestChromosomeList());
+			plot.addLinePlot("Mejor de la generación", ctrl.getBestAptitudeList());
+			plot.addLinePlot("Media de la generación", avgApt);
+			plot.setFixedBounds(0, 0, avgApt.length);
+		}
+		else {
+			double[] range = ctrl.getRangeList();
+			plot.addLinePlot("Distancia", Color.red, range, ctrl.getResultsList());
+			plot.setFixedBounds(0, range[0], range[range.length - 1]);
+		}
+		
+		plot.setVisible(true);
+	}
+	
+	private void updateProgramPanel() {
+		String s = new String("");
+		s += " Resultado: " + new Double(ctrl.getFunctionResult()).intValue() + System.lineSeparator();
+		s += "Mejor:" + System.lineSeparator();
+		s += ctrl.getResult();
+		
+		programText.setText(s);
 	}
 	
 	public class AntTrailPane extends JPanel {
@@ -109,6 +144,12 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 
 		public AntTrailPane() {
 			this.map = AntTrailGeneticAlgorithm.getMap();
+			this.rowCount = this.map.getRows();
+			this.columnCount = this.map.getColumns();
+		}
+		
+		public AntTrailPane(Map map) {
+			this.map = map;
 			this.rowCount = this.map.getRows();
 			this.columnCount = this.map.getColumns();
 		}

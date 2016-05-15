@@ -377,10 +377,12 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		settings.add(d);
 		//---------------------------------------------
 		
-		JPanel elitism = new JPanel(new BorderLayout());
+		JPanel elitism = new JPanel();
+		elitism.setLayout(new BoxLayout(elitism, BoxLayout.Y_AXIS));
 		
 		JLabel elitismLabel = new JLabel("Elitismo");
-		elitism.add(elitismLabel, BorderLayout.PAGE_START);
+		elitismLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+		elitism.add(elitismLabel);
 		
 		elitismSlider = new JSlider(0,100);
 		elitismSlider.setMajorTickSpacing(30);
@@ -389,7 +391,8 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		elitismSlider.setPaintLabels(true);
 		elitismSlider.setToolTipText(elitismSlider.getValue() + " %");
 		elitismSlider.addChangeListener(new SliderListener());
-		elitism.add(elitismSlider, BorderLayout.CENTER);
+		elitismSlider.setAlignmentX(Component.CENTER_ALIGNMENT);
+		elitism.add(elitismSlider);
 		
 		elitism.setMaximumSize(elitism.getPreferredSize());
 		elitism.setMinimumSize(elitism.getPreferredSize());

@@ -42,6 +42,10 @@ public class AntTrailChromosome extends AbstractChromosome {
 		// TODO Auto-generated method stub
 		return fitnessFunc.f(null/*cosas*/);
 	}
+	
+	public void runProgram(Map map, Ant ant) {
+		// TODO
+	}
 
 	@Override
 	public String getPhenotype() {

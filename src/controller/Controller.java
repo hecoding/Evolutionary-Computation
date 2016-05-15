@@ -3,7 +3,9 @@ package controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import model.Ant;
 import model.Map;
+import model.chromosome.AntTrailChromosome;
 import model.genProgAlgorithm.AbstractGeneticAlgorithm;
 import model.genProgAlgorithm.AntTrailGeneticAlgorithm;
 import model.genProgAlgorithm.crossover.CrossoverFactory;
@@ -155,6 +157,8 @@ public class Controller {
 	public void setElitismPercentage(int perc) {
 		if(perc == 0)
 			this.ga.useElitism(false);
+		else
+			this.ga.useElitism(true);
 		this.ga.setElitePercentage(perc);
 	}
 	
@@ -258,6 +262,14 @@ public class Controller {
 	
 	public String getResult() {
 		return this.ga.getBestChromosome().getPhenotype();
+	}
+	
+	public Map getResultMap() {
+		Map m = AntTrailGeneticAlgorithm.getMap();
+		Ant a = new Ant();
+		((AntTrailChromosome) this.ga.getBestChromosome()).runProgram(m, a);
+		
+		return m;
 	}
 	
 	public boolean isContentBasedTermination() {

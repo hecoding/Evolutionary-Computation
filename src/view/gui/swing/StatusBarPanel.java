@@ -37,22 +37,29 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 		outputTextArea.setWrapStyleWord(true);
 		this.setLayout(new BorderLayout());
 		this.add(new JScrollPane(outputTextArea), BorderLayout.CENTER);
+		this.setVisible(false);
 	}
 	
 	public void setErrors(Boolean b) {
 		if(b) {
 			this.outputTextArea.setForeground(Color.red);
 			this.outputTextArea.setText("Hay errores");
+			this.setVisible(true);
 		}
 		else {
 			this.outputTextArea.setForeground(defaultColor);
 			this.outputTextArea.setText("");
+			this.setVisible(false);
 		}
 	}
 	
 	public void setStatus(String s) {
 		this.outputTextArea.setForeground(Color.black);
 		this.outputTextArea.setText(s);
+		if(s == "")
+			this.setVisible(false);
+		else
+			this.setVisible(true);
 	}
 
 	@Override
@@ -64,12 +71,7 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				String s = new String("");
-				if(!ctrl.isRangeParameters()) {
-					s += " Resultado: " + new Double(ctrl.getFunctionResult()).intValue();
-					s += "Mejor: " + System.lineSeparator();
-					s += ctrl.getResult();
-				}
-				else {
+				if(ctrl.isRangeParameters()) {
 					double[] x = ctrl.getRangeList();
 					ArrayList<Double> y = ctrl.getRangeResults();
 					Double best = Collections.min(y);
