@@ -10,7 +10,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 import controller.Controller;
-import model.genProgAlgorithm.TSPGeneticAlgorithm;
 import model.observer.GeneticAlgorithmObserver;
 
 public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
@@ -64,18 +63,11 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 	public void onEndRun() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				String s = new String();
+				String s = new String("");
 				if(!ctrl.isRangeParameters()) {
-					for (Double res : ctrl.getResult()) {
-						s = s + TSPGeneticAlgorithm.cityNames.values()[res.intValue()] + ", ";
-					}
-					s = s.substring(0, s.length() - 2);
-					if(ctrl.getResult().size() > 1)
-						s = "Mejor: " + "[" + s + "]";
-					else
-						s = "Mejor: " + s;
-					
-					s = s + " Resultado: " + new Double(ctrl.getFunctionResult()).intValue();
+					s += " Resultado: " + new Double(ctrl.getFunctionResult()).intValue();
+					s += "Mejor: " + System.lineSeparator();
+					s += ctrl.getResult();
 				}
 				else {
 					double[] x = ctrl.getRangeList();

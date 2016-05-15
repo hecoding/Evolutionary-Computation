@@ -5,32 +5,34 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import model.map.Map;
-import model.map.MapEnum;
+import model.Map;
+import model.Map.CellType;
 
 public class MapParser {
 	
 	public static Map parse(String fname) throws IOException {
-		Map ret = new Map();
-		BufferedReader br=new BufferedReader(new FileReader(fname));
+		ArrayList<ArrayList<CellType>> cells = new ArrayList<ArrayList<CellType>>();
+		BufferedReader br = new BufferedReader(new FileReader(fname));
 		String thisLine;
 		
         while ((thisLine = br.readLine()) != null) {
-        	ArrayList<MapEnum> row = new ArrayList<>();
+        	String[] columns = thisLine.split(" ");
+        	ArrayList<CellType> row = new ArrayList<>(columns.length);
         	
-           for (String cell : thisLine.split(" ")) {
+           for (String cell : columns) {
         	   if(cell.equals("@"))
-        		   row.add(MapEnum.beginning);
+        		   row.add(CellType.beginning);
         	   else if (cell.equals("#"))
-        		   row.add(MapEnum.food);
+        		   row.add(CellType.food);
         	   else
-        		   row.add(MapEnum.nothing);
+        		   row.add(CellType.nothing);
            }
-           ret.add(row);
+           cells.add(row);
         }
 		
 		br.close();
-		return ret;
+		
+		return new Map(cells);
 	}
 	
 }

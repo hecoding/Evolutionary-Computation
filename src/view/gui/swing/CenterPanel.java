@@ -6,9 +6,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
-
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -16,9 +13,9 @@ import javax.swing.SwingUtilities;
 import org.math.plot.Plot2DPanel;
 
 import controller.Controller;
-import model.map.Map;
+import model.Map;
+import model.genProgAlgorithm.AntTrailGeneticAlgorithm;
 import model.observer.GeneticAlgorithmObserver;
-import util.MapParser;
 
 public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 	private static final long serialVersionUID = 1L;
@@ -111,13 +108,7 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		private Color gray = new Color(158,158,158);
 
 		public AntTrailPane() {
-			try {
-				this.map = Map.getMasterMap();
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null,
-						e.getMessage(),
-						"Error", JOptionPane.ERROR_MESSAGE);
-			}
+			this.map = AntTrailGeneticAlgorithm.getMap();
 			this.rowCount = this.map.getRows();
 			this.columnCount = this.map.getColumns();
 		}

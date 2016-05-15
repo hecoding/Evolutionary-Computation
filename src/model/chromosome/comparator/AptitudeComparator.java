@@ -3,12 +3,11 @@ package model.chromosome.comparator;
 import java.util.Comparator;
 
 import model.chromosome.AbstractChromosome;
-import model.gene.AbstractGene;
 
-public class AptitudeComparator implements Comparator<AbstractChromosome<? extends AbstractGene<?>>> {
+public class AptitudeComparator implements Comparator<AbstractChromosome> {
 
 	@Override
-	public int compare(AbstractChromosome<?> o1, AbstractChromosome<?> o2) {
+	public int compare(AbstractChromosome o1, AbstractChromosome o2) {
 		double aptitude = (o1.getAptitude() - o2.getAptitude());
 		
 		if (aptitude > 0)

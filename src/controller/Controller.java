@@ -1,18 +1,21 @@
 package controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import model.Map;
 import model.genProgAlgorithm.AbstractGeneticAlgorithm;
-import model.genProgAlgorithm.TSPGeneticAlgorithm;
+import model.genProgAlgorithm.AntTrailGeneticAlgorithm;
 import model.genProgAlgorithm.crossover.CrossoverFactory;
 import model.genProgAlgorithm.crossover.CrossoverInterface;
-import model.genProgAlgorithm.fitnessFunction.TSPFitness;
+import model.genProgAlgorithm.fitnessFunction.AntTrailFitness;
 import model.genProgAlgorithm.mutation.MutationFactory;
 import model.genProgAlgorithm.mutation.MutationInterface;
 import model.genProgAlgorithm.selection.RouletteSelection;
 import model.genProgAlgorithm.selection.SelectionFactory;
 import model.genProgAlgorithm.selection.SelectionInterface;
 import model.observer.GeneticAlgorithmObserver;
+import util.MapParser;
 
 public class Controller {
 	private AbstractGeneticAlgorithm<?> ga;
@@ -22,9 +25,18 @@ public class Controller {
 	private ArrayList<Double> results;
 	
 	public Controller() {
+		Map map;
+		try {
+			map = MapParser.parse("src/map.txt");
+		} catch (IOException e) {
+			System.err.println("Map not found");
+			map = null;
+		}
+		
 		// default genetic algorithm
-		this.ga = new TSPGeneticAlgorithm(
-									new TSPFitness(),
+		this.ga = new AntTrailGeneticAlgorithm(
+									map,
+									new AntTrailFitness(),
 									new RouletteSelection(),
 									null,
 									null,
@@ -224,7 +236,7 @@ public class Controller {
 		return this.results;
 	}
 	
-	public ArrayList<Double> getResult() {
+	public String getResult() {
 		return this.ga.getBestChromosome().getPhenotype();
 	}
 	

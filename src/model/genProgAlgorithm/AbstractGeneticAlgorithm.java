@@ -14,7 +14,7 @@ import model.observer.GeneticAlgorithmObserver;
 import model.observer.Observable;
 import util.RandGenerator;
 
-public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> implements Observable<GeneticAlgorithmObserver> {
+public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> implements Observable<GeneticAlgorithmObserver> {
 	protected ArrayList<T> population;
 	protected FitnessFunctionInterface fitnessFunc;
 	protected int populationNum;
@@ -35,7 +35,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 	protected double bestAptitude;
 	protected double averageAptitude;
 	protected double averageScore;
-	protected static Comparator<AbstractChromosome<?>> aptitudeComparator;
+	protected static Comparator<AbstractChromosome> aptitudeComparator;
 	protected ArrayList<Double> bestChromosomeList;
 	protected ArrayList<Double> averageAptitudeList;
 	protected ArrayList<Double> bestAptitudeList;
@@ -88,16 +88,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome<?>> 
 		this.crossoverStrategy.crossover(this.population, this.crossProb);
 	}
 	public void mutation() {
-		if(this.variableMutation) {
-			int n = this.population.get(0).getLength();
-			int T = this.maxGenerationNum;
-			int t = this.currentGeneration;
-			double variableMutationRate = Math.pow((2 + (( (n - 2)/(T - 1.0) ) * t)), -1);
-			
-			this.mutationStrategy.mutate(this.population, variableMutationRate);
-		}
-		else
-			this.mutationStrategy.mutate(this.population, this.mutationProb);
+		this.mutationStrategy.mutate(this.population, this.mutationProb);
 	}
 	
 	public void restart() {

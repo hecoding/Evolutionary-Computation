@@ -9,7 +9,7 @@ public class TruncationSelection implements SelectionInterface {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractChromosome<?>> void select(ArrayList<T> population) {
+	public <T extends AbstractChromosome> void select(ArrayList<T> population) {
 		ArrayList<T> selectedPopulation = new ArrayList<T>(population.size());
 		double truncProb = 0.1;
 		int numSelectedElements = (int) (truncProb * 100);

@@ -8,7 +8,7 @@ public class RouletteSelection implements SelectionInterface {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractChromosome<?>> void select(ArrayList<T> population) {
+	public <T extends AbstractChromosome> void select(ArrayList<T> population) {
 		ArrayList<T> selectedPopulation = new ArrayList<T>(population.size());
 		double prob = 0;
 		int positionSelected = 0;

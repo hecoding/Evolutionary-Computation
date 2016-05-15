@@ -13,7 +13,7 @@ public class TournamentSelection implements SelectionInterface {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends AbstractChromosome<?>> void select(ArrayList<T> population) {
+	public <T extends AbstractChromosome> void select(ArrayList<T> population) {
 		ArrayList<T> selectedPopulation = new ArrayList<T>(population.size());
 		ArrayList<T> group = new ArrayList<T>(this.tournamentGroups);
 		
