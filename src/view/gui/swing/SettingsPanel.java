@@ -46,10 +46,12 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	
  	JTextField populationText;
  	JTextField generationText;
+ 	JTextField depthText;
  	JSlider crossoverSlider;
  	JSlider mutationSlider;
- 	JCheckBox elitismCheck;
  	JSlider elitismSlider;
+ 	JPanel initialization;
+ 	JComboBox<String> initializationBox;
  	JPanel selection;
  	JComboBox<String> selectionBox;
  	JPanel crossoverMethodPanel;
@@ -58,22 +60,21 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	JTextField tournamentGroupsText;
  	JPanel mutationMethodPanel;
  	JComboBox<String> mutationBox;
- 	JCheckBox variableMutationCheck;
  	JCheckBox contentBasedTerminationCheck;
  	JCheckBox rangeParametersCheck;
  	ButtonGroup bg;
  	
  	String populationTextDefault;
 	String generationTextDefault;
+	String depthTextDefault;
 	String tournamentGroupsTextDefault;
 	int crossoverSliderDefault;
 	int mutationSliderDefault;
-	boolean elitismCheckDefault;
 	int elitismSliderDefault;
+	Object initializationBoxDefault;
 	Object selectionBoxDefault;
 	Object crossoverBoxDefault;
 	Object mutationBoxDefault;
-	boolean variableMutationCheckDefault;
 	boolean contentBasedTerminationCheckDefault;
 	
 	JTextField pomin, pomax, postep, gomin, gomax, gostep, comin, comax, costep, momin, momax, mostep, eomin, eomax, eostep;
@@ -107,15 +108,15 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				try {
 					ctrl.setPopulation(Integer.parseInt(populationText.getText()));
 					ctrl.setGenerations(Integer.parseInt(generationText.getText()));
+					ctrl.setDepth(Integer.parseInt(depthText.getText()));
 					ctrl.setCrossoverPercentage(crossoverSlider.getValue());
 					ctrl.setMutationPercentage(mutationSlider.getValue());
-					ctrl.setElitism(elitismCheck.isSelected());
 					ctrl.setElitismPercentage(elitismSlider.getValue());
+					ctrl.setInitializationStrategy((String) initializationBox.getSelectedItem());
 					ctrl.setSelectionParameter(tournamentGroupsText.getText());
 					ctrl.setSelectionStrategy((String) selectionBox.getSelectedItem());
 					ctrl.setCrossoverStrategy((String) crossoverBox.getSelectedItem());
 					ctrl.setMutationStrategy((String) mutationBox.getSelectedItem());
-					ctrl.setVariableMutation(variableMutationCheck.isSelected());
 					ctrl.setContentBasedTermination(contentBasedTerminationCheck.isSelected());
 					ctrl.setRangeParameters(rangeParametersCheck.isSelected());
 					if(rangeParametersCheck.isSelected())
@@ -205,6 +206,58 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		generations.setMinimumSize(generations.getPreferredSize());
 		generations.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		settings.add(generations);
+		
+		//---------------------------------------------
+		
+		JPanel depth = new JPanel();
+		JLabel depthLabel = new JLabel("Profundidad máx.");
+		depth.add(depthLabel);
+		depthText = new JTextField(4);
+		depthText.setInputVerifier(new InputVerifier() {
+			public boolean verify(JComponent input) {
+				try {
+					int a = Integer.parseInt(((JTextField) input).getText());
+					if (a >= 1) {
+						depthText.setBorder(defaultborder);
+						status.setErrors(false);
+						return true;
+					}
+					else {
+						depthText.setBorder(BorderFactory.createLineBorder(Color.red));
+						status.setErrors(true);
+						return false;
+					}
+				} catch (NumberFormatException e) {
+					depthText.setBorder(BorderFactory.createLineBorder(Color.red));
+					status.setErrors(true);
+					return false;
+				}
+			}
+		});
+		depth.add(depthText);
+		depth.setMaximumSize(depth.getPreferredSize());
+		depth.setMinimumSize(depth.getPreferredSize());
+		depth.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(depth);
+		
+		//---------------------------------------------
+		JSeparator sep1 = new JSeparator();
+		sep1.setMaximumSize(new Dimension(420, 1));
+		settings.add(sep1);
+		//---------------------------------------------
+		
+		initialization = new JPanel();
+		initialization.setLayout(new BoxLayout(initialization, BoxLayout.Y_AXIS));
+		JPanel initializationSel = new JPanel();
+		JLabel initializationLabel = new JLabel("Inicialización");
+		initializationSel.add(initializationLabel);
+		initializationBox = new JComboBox<String>();
+		initializationSel.add(initializationBox);
+		initialization.add(initializationSel);
+		initialization.setMaximumSize(initialization.getPreferredSize());
+		initialization.setMinimumSize(initialization.getPreferredSize());
+		initialization.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(initialization);
 
 		//---------------------------------------------
 		JSeparator a = new JSeparator();
@@ -326,64 +379,22 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		
 		JPanel elitism = new JPanel(new BorderLayout());
 		
-		JPanel elitismMain = new JPanel();
 		JLabel elitismLabel = new JLabel("Elitismo");
-		elitismMain.add(elitismLabel);
-		elitismSlider = new JSlider(0,100);
-		elitismCheck = new JCheckBox();
-		elitismCheck.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED) {
-					elitismSlider.setVisible(true);
-					elitism.setMaximumSize(elitism.getPreferredSize());
-					elitism.setBorder(BorderFactory.createLineBorder(Color.lightGray));
-				}
-				else if(e.getStateChange() == ItemEvent.DESELECTED) {
-					elitismSlider.setVisible(false);
-					elitism.setMaximumSize(elitism.getPreferredSize());
-					elitism.setBorder(null);
-				}
-			}
-		});
-		elitismMain.add(elitismCheck);
-		elitism.add(elitismMain, BorderLayout.CENTER);
+		elitism.add(elitismLabel, BorderLayout.PAGE_START);
 		
+		elitismSlider = new JSlider(0,100);
 		elitismSlider.setMajorTickSpacing(30);
 		elitismSlider.setMinorTickSpacing(5);
 		elitismSlider.setPaintTicks(true);
 		elitismSlider.setPaintLabels(true);
 		elitismSlider.setToolTipText(elitismSlider.getValue() + " %");
 		elitismSlider.addChangeListener(new SliderListener());
-		elitismSlider.setVisible(false);
-		elitism.add(elitismSlider, BorderLayout.PAGE_END);
+		elitism.add(elitismSlider, BorderLayout.CENTER);
 		
 		elitism.setMaximumSize(elitism.getPreferredSize());
 		elitism.setMinimumSize(elitism.getPreferredSize());
 		elitism.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		settings.add(elitism);
-		
-		//---------------------------------------------
-		
-		JPanel variableMutation = new JPanel();
-		JLabel varMutLabel = new JLabel("Mutación variable");
-		variableMutation.add(varMutLabel);
-		variableMutationCheck = new JCheckBox();
-		variableMutationCheck.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if(e.getStateChange() == ItemEvent.SELECTED) {
-					mutationSlider.setEnabled(false);
-				}
-				else if(e.getStateChange() == ItemEvent.DESELECTED) {
-					mutationSlider.setEnabled(true);
-				}
-			}
-		});
-		variableMutation.add(variableMutationCheck);
-		variableMutation.setMaximumSize(variableMutation.getPreferredSize());
-		variableMutation.setMinimumSize(variableMutation.getPreferredSize());
-		variableMutation.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		variableMutation.setToolTipText("El ratio de mutación va disminuyendo conforme avanzan las generaciones");
-		settings.add(variableMutation);
 		
 		//---------------------------------------------
 		
@@ -466,8 +477,6 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					contentBasedTerminationCheck.setEnabled(true);
 					crossoverSlider.setEnabled(true);
 					mutationSlider.setEnabled(true);
-					variableMutationCheck.setEnabled(true);
-					elitismCheck.setEnabled(true);
 					elitismSlider.setEnabled(true);
 				}
 			}
@@ -647,7 +656,6 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
 								
 								mutationSlider.setEnabled(false);
-								variableMutationCheck.setEnabled(false);
 						    }
 						    else if (e.getStateChange() == ItemEvent.DESELECTED) {
 						    	mutTextOpt.setVisible(false);
@@ -657,7 +665,6 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
 								
 								mutationSlider.setEnabled(true);
-								variableMutationCheck.setEnabled(true);
 						    }
 						}
 					});
@@ -698,9 +705,6 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 						    	optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
 								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
 								
-								elitismCheck.setSelected(true);
-								elitismCheck.setEnabled(false);
-								ctrl.setElitism(true);
 								elitismSlider.setEnabled(false);
 						    }
 						    else if (e.getStateChange() == ItemEvent.DESELECTED) {
@@ -710,7 +714,6 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 						    	optionalSettings.setMaximumSize(optionalSettings.getPreferredSize());
 								optionalSettings.setMinimumSize(optionalSettings.getPreferredSize());
 								
-								elitismCheck.setEnabled(true);
 								elitismSlider.setEnabled(true);
 						    }
 						}
@@ -746,11 +749,17 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private void fillFields() {
 		this.populationText.setText(String.valueOf(this.ctrl.getPopulation()));
 		this.generationText.setText(String.valueOf(this.ctrl.getGenerations()));
+		this.depthText.setText(String.valueOf(this.ctrl.getDepth()));
 		this.tournamentGroupsText.setText(Integer.toString( this.ctrl.getTournamentSelectionGroups() ));
 		this.crossoverSlider.setValue(this.ctrl.getCrossoverPercentage());
 		this.mutationSlider.setValue(this.ctrl.getMutationPercentage());
-		this.elitismCheck.setSelected(this.ctrl.getElitism());
 		this.elitismSlider.setValue((int) (this.ctrl.getElitismPercentage()));
+		for (String item : this.ctrl.getInitializationStrategyList()) {
+			this.initializationBox.addItem(item);			
+		}
+		this.initializationBox.setSelectedItem(this.ctrl.getinitializationStrategy());
+		initialization.setMaximumSize(initialization.getPreferredSize());
+		initialization.setMinimumSize(initialization.getPreferredSize());
 		for (String item : this.ctrl.getSelectionStrategyList()) {
 			this.selectionBox.addItem(item);			
 		}
@@ -769,7 +778,6 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		this.mutationBox.setSelectedItem(this.ctrl.getMutationStrategy());
 		mutationMethodPanel.setMaximumSize(mutationMethodPanel.getPreferredSize());
 		mutationMethodPanel.setMinimumSize(mutationMethodPanel.getPreferredSize());
-		this.variableMutationCheck.setSelected(this.ctrl.getVariableMutation());
 		this.contentBasedTerminationCheck.setSelected(this.ctrl.isContentBasedTermination());
 		
 		saveDefaults();
@@ -778,30 +786,30 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private void saveDefaults() {
 		populationTextDefault = populationText.getText();
 		generationTextDefault = generationText.getText();
+		depthTextDefault = depthText.getText();
 		tournamentGroupsTextDefault = tournamentGroupsText.getText();
 		crossoverSliderDefault = crossoverSlider.getValue();
 		mutationSliderDefault = mutationSlider.getValue();
-		elitismCheckDefault = elitismCheck.isSelected();
 		elitismSliderDefault = elitismSlider.getValue();
+		initializationBoxDefault = initializationBox.getSelectedItem();
 		selectionBoxDefault = selectionBox.getSelectedItem();
 		crossoverBoxDefault = crossoverBox.getSelectedItem();
 		mutationBoxDefault = mutationBox.getSelectedItem();
-		variableMutationCheckDefault = variableMutationCheck.isSelected();
 		contentBasedTerminationCheckDefault = contentBasedTerminationCheck.isSelected();
 	}
 	
 	private void restoreDefaults() {
 		populationText.setText(populationTextDefault);
 		generationText.setText(generationTextDefault);
+		depthText.setText(depthTextDefault);
 		tournamentGroupsText.setText(tournamentGroupsTextDefault);
 		crossoverSlider.setValue(crossoverSliderDefault);
 		mutationSlider.setValue(mutationSliderDefault);
-		elitismCheck.setSelected(elitismCheckDefault);
 		elitismSlider.setValue(elitismSliderDefault);
+		initializationBox.setSelectedItem(initializationBoxDefault);
 		selectionBox.setSelectedItem(selectionBoxDefault);
 		crossoverBox.setSelectedItem(crossoverBoxDefault);
 		mutationBox.setSelectedItem(mutationBoxDefault);
-		variableMutationCheck.setSelected(variableMutationCheckDefault);
 		contentBasedTerminationCheck.setSelected(contentBasedTerminationCheckDefault);
 	}
 	

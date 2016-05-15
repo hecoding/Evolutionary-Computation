@@ -27,7 +27,6 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	protected ArrayList<T> elite;
 	protected ArrayList<Double> inspectedAptitude;
 	protected static Random random;
-	protected boolean variableMutation;
 	protected boolean contentBasedTermination;
 	protected ArrayList<GeneticAlgorithmObserver> observers;
 	
@@ -72,7 +71,6 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.inspectedAptitude = new ArrayList<Double>(populationNum);
-		this.variableMutation = false;
 		this.contentBasedTermination = false;
 		this.observers = new ArrayList<GeneticAlgorithmObserver>();
 		
@@ -349,14 +347,6 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	
 	public void setElitePercentage(int percentage) {
 		this.elitePercentage = (double) percentage / 100;
-	}
-
-	public boolean isVariableMutation() {
-		return variableMutation;
-	}
-
-	public void setVariableMutation(boolean variableMutation) {
-		this.variableMutation = variableMutation;
 	}
 
 	public boolean isContentBasedTermination() {

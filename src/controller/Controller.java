@@ -42,7 +42,7 @@ public class Controller {
 									null,
 									100,
 									false,
-									0.1,
+									0,
 									100,
 									0.6,
 									0.05);
@@ -119,6 +119,15 @@ public class Controller {
 		this.ga.setMaxGenerations(generations);
 	}
 	
+	public int getDepth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	
+	public void setDepth(int depth) {
+		// TODO Auto-generated method stub
+	}
+	
 	public int getTournamentSelectionGroups() {
 		return (int) SelectionFactory.getInstance().getParameter();
 	}
@@ -144,15 +153,13 @@ public class Controller {
 	}
 	
 	public void setElitismPercentage(int perc) {
+		if(perc == 0)
+			this.ga.useElitism(false);
 		this.ga.setElitePercentage(perc);
 	}
 	
-	public boolean getElitism() {
-		return this.ga.isUseElitism();
-	}
-	
-	public void setElitism(boolean elitism) {
-		this.ga.useElitism(elitism);
+	public void setInitializationStrategy(String strategy) {
+		//this.ga.setInitializationStrategy(InitializationFactory.getInstance().create(strategy));
 	}
 	
 	public void setSelectionStrategy(String strategy) {
@@ -175,6 +182,19 @@ public class Controller {
 	
 	public void setMutationStrategy(String strategy) {
 		this.ga.setMutationStrategy(MutationFactory.getInstance().create(strategy));
+	}
+	
+	public String getinitializationStrategy() {
+		/*InitializationInterface strat = this.ga.getInitializationStrategy();
+		
+		if(strat == null) return "";
+		else return strat.getName();*/
+		return "";
+	}
+
+	public String[] getInitializationStrategyList() {
+		//return InitializationFactory.selectionList();
+		return new String[0];
 	}
 	
 	public String getSelectionStrategy() {
@@ -240,14 +260,6 @@ public class Controller {
 		return this.ga.getBestChromosome().getPhenotype();
 	}
 	
-	public boolean getVariableMutation() {
-		return this.ga.isVariableMutation();
-	}
-	
-	public void setVariableMutation(boolean b) {
-		this.ga.setVariableMutation(b);
-	}
-	
 	public boolean isContentBasedTermination() {
 		return this.ga.isContentBasedTermination();
 	}
@@ -283,4 +295,5 @@ public class Controller {
 	public void addModelObserver(GeneticAlgorithmObserver o) {
 		this.ga.addObserver(o);
 	}
+	
 }
