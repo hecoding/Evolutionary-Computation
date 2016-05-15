@@ -11,6 +11,8 @@ import model.genProgAlgorithm.AntTrailGeneticAlgorithm;
 import model.genProgAlgorithm.crossover.CrossoverFactory;
 import model.genProgAlgorithm.crossover.CrossoverInterface;
 import model.genProgAlgorithm.fitnessFunction.AntTrailFitness;
+import model.genProgAlgorithm.initialization.InitializationFactory;
+import model.genProgAlgorithm.initialization.InitializationInterface;
 import model.genProgAlgorithm.mutation.MutationFactory;
 import model.genProgAlgorithm.mutation.MutationInterface;
 import model.genProgAlgorithm.selection.RouletteSelection;
@@ -38,6 +40,7 @@ public class Controller {
 		// default genetic algorithm
 		this.ga = new AntTrailGeneticAlgorithm(
 									map,
+									null,
 									new AntTrailFitness(),
 									new RouletteSelection(),
 									null,
@@ -122,12 +125,11 @@ public class Controller {
 	}
 	
 	public int getDepth() {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.ga.getProgramDepth();
 	}
 	
 	public void setDepth(int depth) {
-		// TODO Auto-generated method stub
+		this.ga.setProgramDepth(depth);
 	}
 	
 	public int getTournamentSelectionGroups() {
@@ -163,7 +165,7 @@ public class Controller {
 	}
 	
 	public void setInitializationStrategy(String strategy) {
-		//this.ga.setInitializationStrategy(InitializationFactory.getInstance().create(strategy));
+		this.ga.setInitializationStrategy(InitializationFactory.getInstance().create(strategy));
 	}
 	
 	public void setSelectionStrategy(String strategy) {
@@ -189,16 +191,14 @@ public class Controller {
 	}
 	
 	public String getinitializationStrategy() {
-		/*InitializationInterface strat = this.ga.getInitializationStrategy();
+		InitializationInterface strat = this.ga.getInitializationStrategy();
 		
 		if(strat == null) return "";
-		else return strat.getName();*/
-		return "";
+		else return strat.getName();
 	}
 
 	public String[] getInitializationStrategyList() {
-		//return InitializationFactory.selectionList();
-		return new String[0];
+		return InitializationFactory.selectionList();
 	}
 	
 	public String getSelectionStrategy() {

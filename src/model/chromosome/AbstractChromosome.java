@@ -14,8 +14,6 @@ public abstract class AbstractChromosome implements Cloneable {
 		this.aggregateScore = 0;
 	}
 	
-	public abstract void initialize();
-	
 	public abstract double evaluate();
 	
 	public FitnessFunctionInterface getFunction() {

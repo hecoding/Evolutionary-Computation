@@ -8,6 +8,7 @@ import model.chromosome.AbstractChromosome;
 import model.chromosome.comparator.AptitudeComparator;
 import model.genProgAlgorithm.crossover.CrossoverInterface;
 import model.genProgAlgorithm.fitnessFunction.FitnessFunctionInterface;
+import model.genProgAlgorithm.initialization.InitializationInterface;
 import model.genProgAlgorithm.mutation.MutationInterface;
 import model.genProgAlgorithm.selection.SelectionInterface;
 import model.observer.GeneticAlgorithmObserver;
@@ -20,6 +21,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	protected int populationNum;
 	protected int currentGeneration;
 	protected int maxGenerationNum;
+	protected int programDepth;
 	protected double crossProb;
 	protected double mutationProb;
 	protected boolean useElitism;
@@ -39,6 +41,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	protected ArrayList<Double> averageAptitudeList;
 	protected ArrayList<Double> bestAptitudeList;
 	
+	protected InitializationInterface initializationStrategy;
 	protected SelectionInterface selectionStrategy;
 	protected CrossoverInterface crossoverStrategy;
 	protected MutationInterface mutationStrategy;
@@ -47,10 +50,11 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 		this.observers = new ArrayList<GeneticAlgorithmObserver>();
 	}
 	
-	public AbstractGeneticAlgorithm(FitnessFunctionInterface func, SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy,
-			MutationInterface mutationStrategy, int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum,
-			double crossProb, double mutationProb) {
+	public AbstractGeneticAlgorithm(FitnessFunctionInterface func, InitializationInterface initializationStrategy,
+			SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy, MutationInterface mutationStrategy,
+			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum, double crossProb, double mutationProb) {
 		this.fitnessFunc = func;
+		this.initializationStrategy = initializationStrategy;
 		this.selectionStrategy = selectionStrategy;
 		this.crossoverStrategy = crossoverStrategy;
 		this.mutationStrategy = mutationStrategy;
@@ -79,6 +83,10 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 			aptitudeComparator = new AptitudeComparator();
 	}
 	
+	public void initialize() {
+		this.initializationStrategy.initialize(this.population, this.programDepth);
+	}
+	
 	public void selection() {
 		this.selectionStrategy.select(this.population);
 	}
@@ -104,8 +112,6 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 		
 		this.initialize();
 	}
-
-	public abstract void initialize();
 
 	/** If you have modified parameters between launches of the algorithm, you must call reset() method (the one with no parameters) */
 	public void run() {
@@ -277,6 +283,14 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 		this.fitnessFunc = func;
 	}
 	
+	public InitializationInterface getInitializationStrategy() {
+		return this.initializationStrategy;
+	}
+	
+	public void setInitializationStrategy(InitializationInterface strategy) {
+		this.initializationStrategy = strategy;
+	}
+	
 	public SelectionInterface getSelectionStrategy() {
 		return this.selectionStrategy;
 	}
@@ -315,6 +329,14 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	
 	public void setMaxGenerations(int maxGenerations) {
 		this.maxGenerationNum = maxGenerations;
+	}
+	
+	public int getProgramDepth() {
+		return this.programDepth;
+	}
+	
+	public void setProgramDepth(int depth) {
+		this.programDepth = depth;
 	}
 
 	public double getCrossProb() {

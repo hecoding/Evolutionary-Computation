@@ -18,22 +18,6 @@ public class AntTrailChromosome extends AbstractChromosome {
 		fitnessFunc = function;
 		this.program = new Tree<>(null);
 	}
-
-	@Override
-	public void initialize() {
-		/*if (!this.genes.isEmpty())
-			this.genes.clear();
-		
-		RandGenerator random = RandGenerator.getInstance();
-		int i = 0;
-		while (i < TSPGeneticAlgorithm.Cities.number) {
-			IntegerGene newGene = new IntegerGene( random.nextInt(TSPGeneticAlgorithm.Cities.number) );
-			if(!this.genes.contains(newGene)) { // Overrode .equals()
-				this.genes.add( newGene );
-				i++;
-			}
-		}*/
-	}
 	
 	@Override
 	public double evaluate() {
