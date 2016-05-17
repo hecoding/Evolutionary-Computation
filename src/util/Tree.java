@@ -17,7 +17,10 @@ public class Tree<E> implements Cloneable {
 	public Tree(Tree<E> parent){
 		this.parent = parent;
 		this.children = new ArrayList<Tree<E>>(defaultChildren);
-		this.depth = 1;
+		if(parent == null)
+			this.depth = 0;
+		else
+			this.depth = parent.getDepth() + 1;
 	}
 	
 	/**
@@ -38,14 +41,14 @@ public class Tree<E> implements Cloneable {
 		if(leftChild == null && rightChild == null)
 			this.depth = 1;
 		else if(leftChild == null && rightChild != null)
-			this.depth = rightChild.getDepth() + 1;
+			this.depth = rightChild.getDepth() - 1;
 		else if(rightChild == null && leftChild != null)
-			this.depth = leftChild.getDepth() + 1;
+			this.depth = leftChild.getDepth() - 1;
 		else { // none null
 			if(leftChild.getDepth() > rightChild.getDepth())
-				this.depth = leftChild.getDepth() + 1;
+				this.depth = leftChild.getDepth() - 1;
 			else
-				this.depth = rightChild.getDepth() + 1;
+				this.depth = rightChild.getDepth() - 1;
 		}
 	}
 	
@@ -66,13 +69,13 @@ public class Tree<E> implements Cloneable {
 		this.value=value;
 		this.children.add(rightChild);
 		
-		// no null checking done here
+		// no null-checking done here
 		if(leftChild.getDepth()>=middleChild.getDepth() && leftChild.getDepth()>=rightChild.getDepth())
-			this.depth = leftChild.getDepth() + 1;
+			this.depth = leftChild.getDepth() - 1;
 		else if(middleChild.getDepth()>=leftChild.getDepth() && middleChild.getDepth()>=rightChild.getDepth())
-			this.depth = middleChild.getDepth() + 1;
+			this.depth = middleChild.getDepth() - 1;
 		else if(rightChild.getDepth()>=leftChild.getDepth() && rightChild.getDepth()>=middleChild.getDepth())
-			this.depth = rightChild.getDepth() + 1;
+			this.depth = rightChild.getDepth() - 1;
 	}
 	
 	/**
@@ -93,7 +96,7 @@ public class Tree<E> implements Cloneable {
 			if(child.getDepth() > currentDepth)
 				currentDepth = child.getDepth();
 		}
-		this.depth = currentDepth + 1;
+		this.depth = currentDepth - 1;
 	}
 	
 	public E getValue(){return this.value;}
@@ -107,6 +110,8 @@ public class Tree<E> implements Cloneable {
 	
 	public Tree<E> getRightChild(){return this.children.get(this.children.size() - 1);}
 	public void setRightChild(Tree<E> right){this.children.set(this.children.size() - 1, right);}
+	
+	public void addChild(Tree<E> child){this.children.add(child);}
 	
 	public Tree<E> getNChild(int n){return this.children.get(n);}
 	public void setNChild(int n, Tree<E> child){this.children.set(n, child);}
@@ -139,15 +144,20 @@ public class Tree<E> implements Cloneable {
 	}
 	
 	public String horizontalPreOrder(){
+		String val = "";
+		if(this.value == null)
+			return val;
 		
-		String val = this.value.toString();
+		val = this.value.toString();
 		
 		if(this.isLeaf())
 			return val;
 		else {
 			String nextChildren = "( " + val;
 			for (Tree<E> child : children) {
-				if(child != null)
+				if(child == null)
+					nextChildren += " null";
+				else
 					nextChildren += " " + child.horizontalPreOrder();
 			}
 			return nextChildren + " )";
@@ -201,7 +211,13 @@ public class Tree<E> implements Cloneable {
 	}
 
 	public boolean isLeaf() {
-		return this.depth == 1;
+		boolean leaf = true;
+		
+		for (int i = 0; leaf && i < this.children.size(); i++) {
+			leaf = leaf && (this.children.get(i) == null);
+		}
+		
+		return leaf;
 	}
 	
 	/*public int maximoNivel(){*/
