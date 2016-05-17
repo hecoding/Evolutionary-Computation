@@ -48,7 +48,8 @@ public class Controller {
 									100,
 									false,
 									0,
-									100,
+									400,
+									4,
 									0.6,
 									0.05);
 		this.rangeParameters = false;
@@ -56,14 +57,14 @@ public class Controller {
 	}
 	
 	public void run() {
-		this.ga.restart();
+		this.ga.reset();
 		if (!this.rangeParameters)
 			this.ga.run();
 		else {
 			this.results.clear();
 			ArrayList<Double> range = createRange(this.minRange, this.maxRange, this.step);
 			for (Double num : range) {
-				this.ga.restart();
+				this.ga.reset();
 				this.setCurrentParam(num);
 				this.ga.run();
 				this.results.add( this.getFunctionResult() );

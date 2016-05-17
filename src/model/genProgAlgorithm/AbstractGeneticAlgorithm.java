@@ -21,7 +21,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	protected int populationNum;
 	protected int currentGeneration;
 	protected int maxGenerationNum;
-	protected int programDepth;
+	protected int maxProgramDepth;
 	protected double crossProb;
 	protected double mutationProb;
 	protected boolean useElitism;
@@ -52,7 +52,8 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	
 	public AbstractGeneticAlgorithm(FitnessFunctionInterface func, InitializationInterface initializationStrategy,
 			SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy, MutationInterface mutationStrategy,
-			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum, double crossProb, double mutationProb) {
+			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum, int maxProgramDepth,
+			double crossProb, double mutationProb) {
 		this.fitnessFunc = func;
 		this.initializationStrategy = initializationStrategy;
 		this.selectionStrategy = selectionStrategy;
@@ -61,10 +62,11 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 		this.populationNum = populationNum;
 		this.useElitism = useElitism;
 		this.elitePercentage = elitePercentage;
-		this.population = new ArrayList<T>(populationNum);
+		this.population = null;
 		this.elite = null;
 		this.currentGeneration = 0;
 		this.maxGenerationNum = maxGenerationNum;
+		this.maxProgramDepth = maxProgramDepth;
 		this.bestChromosome = null;
 		this.bestAptitude = 0;
 		this.averageAptitude = 0;
@@ -84,7 +86,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	}
 	
 	public void initialize() {
-		this.initializationStrategy.initialize(this.population, this.programDepth);
+		this.population = this.initializationStrategy.initialize(this.populationNum, this.fitnessFunc, this.maxProgramDepth);
 	}
 	
 	public void selection() {
@@ -97,8 +99,8 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 		this.mutationStrategy.mutate(this.population, this.mutationProb);
 	}
 	
-	public void restart() {
-		this.population = new ArrayList<T>(populationNum);
+	public void reset() {
+		this.population = null;
 		this.elite = null;
 		this.currentGeneration = 0;
 		this.bestChromosome = null;
@@ -109,8 +111,6 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 		this.averageAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.bestAptitudeList = new ArrayList<Double>(this.maxGenerationNum);
 		this.inspectedAptitude = new ArrayList<Double>(populationNum);
-		
-		this.initialize();
 	}
 
 	/** If you have modified parameters between launches of the algorithm, you must call reset() method (the one with no parameters) */
@@ -332,11 +332,11 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	}
 	
 	public int getProgramDepth() {
-		return this.programDepth;
+		return this.maxProgramDepth;
 	}
 	
 	public void setProgramDepth(int depth) {
-		this.programDepth = depth;
+		this.maxProgramDepth = depth;
 	}
 
 	public double getCrossProb() {

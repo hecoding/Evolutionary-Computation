@@ -53,6 +53,10 @@ public class AntTrailChromosome extends AbstractChromosome {
 		return chr;*/
 		return null;
 	}
+	
+	public void setProgram(Tree<Node> program) {
+		this.program = program;
+	}
 
 	@Override
 	public String toString() {

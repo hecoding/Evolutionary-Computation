@@ -16,8 +16,9 @@ public class MutationFactory {
 	public MutationInterface create(String id) {
 		if (id == "Inversión")
 			return null;
-		else
-			throw new IllegalArgumentException("Unknown selection method");
+		//else
+			//throw new IllegalArgumentException("Unknown mutation method");
+		return null;
 	}
 	
 	public static String[] selectionList() {

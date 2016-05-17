@@ -16,8 +16,9 @@ public class CrossoverFactory {
 	public CrossoverInterface create(String id) {
 		if (id == "PMX")
 			return null;
-		else
-			throw new IllegalArgumentException("Unknown selection method");
+		//else
+			//throw new IllegalArgumentException("Unknown crossover method");
+		return null;
 	}
 	
 	public static String[] selectionList() {
