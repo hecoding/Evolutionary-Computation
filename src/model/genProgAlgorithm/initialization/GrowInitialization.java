@@ -23,6 +23,7 @@ public class GrowInitialization implements InitializationInterface {
 			initialize(program, programDepth);
 			
 			chromosome.setProgram(program);
+			//chromosome.setAptitude(chromosome.evaluate());
 			population.add(chromosome);
 		}
 		
