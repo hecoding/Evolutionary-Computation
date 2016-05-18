@@ -267,7 +267,7 @@ public class Controller {
 	
 	public Map getResultMap() {
 		Map m = AntTrailGeneticAlgorithm.getMap();
-		Ant a = new Ant();
+		Ant a = new Ant(m.getColumns(), m.getRows());
 		AntTrailChromosome.runProgram(((AntTrailChromosome) this.ga.getBestChromosome()).getProgram(), m, a);
 		
 		return m;

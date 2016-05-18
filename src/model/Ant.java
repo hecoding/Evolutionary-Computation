@@ -5,12 +5,15 @@ public class Ant {
 	public Position pos;
 	public int steps;
 	public int bitsEaten;
+	public int maxX, maxY;
 	
-	public Ant() {
+	public Ant(int columns, int rows) {
 		this.direction = Direction.right;
 		this.pos = new Position(0,0);
 		this.steps = 0;
 		this.bitsEaten = 0;
+		this.maxX = columns - 1;
+		this.maxY = rows - 1;
 	}
 	
 	public void turnLeft() {
@@ -67,6 +70,8 @@ public class Ant {
 			break;
 		}
 		
+		checkFrame(this.pos);
+		
 		this.steps++;
 	}
 	
@@ -101,7 +106,21 @@ public class Ant {
 			break;
 		}
 		
+		checkFrame(ret);
+		
 		return ret;
+	}
+	
+	private void checkFrame(Position pos) {
+		if(pos.x < 0)
+			pos.x = maxX;
+		else if(pos.x > maxX)
+			pos.x = 0;
+		
+		if(pos.y < 0)
+			pos.y = maxY;
+		else if(pos.y > maxY)
+			pos.y = 0;
 	}
 	
 	public int getNumberOfSteps() {
@@ -124,5 +143,16 @@ public class Ant {
 			this.x = x;
 			this.y = y;
 		}
+	}
+	
+	public String toString() {
+		String s = "";
+		
+		s += "(" + this.pos.x + ", " + this.pos.y + ") ";
+		s += this.direction + " ";
+		s += "steps: " + this.steps + " ";
+		s += "eaten: " + this.bitsEaten;
+		
+		return s;
 	}
 }

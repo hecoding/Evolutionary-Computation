@@ -23,7 +23,7 @@ public class FullInitialization implements InitializationInterface {
 			initialize(program, programDepth);
 			
 			chromosome.setProgram(program);
-			//chromosome.setAptitude(chromosome.evaluate());
+			chromosome.setAptitude(chromosome.evaluate());
 			population.add(chromosome);
 		}
 		

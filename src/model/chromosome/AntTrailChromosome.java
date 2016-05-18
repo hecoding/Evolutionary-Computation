@@ -29,7 +29,7 @@ public class AntTrailChromosome extends AbstractChromosome {
 	@Override
 	public double evaluate() {
 		Map map = AntTrailGeneticAlgorithm.getMap();
-		Ant ant = new Ant();
+		Ant ant = new Ant(map.getColumns(), map.getRows());
 		ArrayList<Double> steps = new ArrayList<>(3);
 
 		runProgram(this.program, map, ant);
@@ -42,8 +42,10 @@ public class AntTrailChromosome extends AbstractChromosome {
 	
 	public static void runProgram(Tree<Node> program, Map map, Ant ant) {
 		// nomnom
-		if(map.get(ant.getPosition()) == CellType.food)
+		if(map.get(ant.getPosition()) == CellType.food) {
+			ant.eat();
 			map.set(CellType.eatenfood, ant.getPosition());
+		}
 
 		if(ant.steps < maxSteps && ant.bitsEaten < map.getFoodHere()) {
 		
