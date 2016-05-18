@@ -220,6 +220,18 @@ public class Tree<E> implements Cloneable {
 		return leaf;
 	}
 	
+	public Tree<E> clone() {
+		ArrayList<Tree<E>> retChildren = new ArrayList<Tree<E>>(this.children.size());
+		
+		for (int i = 0; i < this.children.size(); i++) {
+			if(this.children.get(i) != null)
+				retChildren.add(this.children.get(i).clone());
+		}
+		Tree<E> ret = new Tree<E>(retChildren, this.value, this.parent);
+		
+		return ret;
+	}
+	
 	/*public int maximoNivel(){*/
 	    /*int iz=0; iterativo
 	    int de=0;
@@ -262,24 +274,7 @@ public class Tree<E> implements Cloneable {
 	    return minNivel;  
 	}*/
 	
-	/*public Tree<E> clone() {
-		Tree<E> retorno = new Tree<E>(null);
-		retorno.value = ((E)value).clone();
-		if(this.parent == null){
-			retorno.parent = null;
-		}
-		retorno.hijoDer = null;
-		retorno.hijoIzq = null;
-		if (hijoDer != null){
-			retorno.hijoDer = hijoDer.clone();
-			retorno.hijoDer.parent = retorno;}
-		if (hijoIzq != null){
-			retorno.hijoIzq = hijoIzq.clone();
-			retorno.hijoIzq.parent = retorno;}
-		return retorno;
-	}
-
-	public void cambiaNiveles(int nivel) {
+	/*public void cambiaNiveles(int nivel) {
 		((E)value).setNivel(nivel);
 		if (hijoIzq != null)
 			hijoIzq.cambiaNiveles(nivel+1);

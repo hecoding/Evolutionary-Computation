@@ -86,20 +86,14 @@ public class AntTrailChromosome extends AbstractChromosome {
 
 	@Override
 	public AntTrailChromosome clone() {
-		/*// deep copy indeed
+		// deep copy indeed
 		AntTrailChromosome chr = new AntTrailChromosome();
-		ArrayList<IntegerGene> clonedList = new ArrayList<IntegerGene>(genes.size());
-		for (IntegerGene gene : genes) {
-			clonedList.add(gene.clone());
-		}
-		
-		chr.setGenotype(clonedList);
+		chr.setProgram(this.program.clone());
 		chr.aggregateScore = this.aggregateScore;
 		chr.aptitude = this.aptitude;
 		chr.score = this.score;
 		
-		return chr;*/
-		return null;
+		return chr;
 	}
 	
 	public void setProgram(Tree<Node> program) {
