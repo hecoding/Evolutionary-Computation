@@ -121,7 +121,13 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					ctrl.setRangeParameters(rangeParametersCheck.isSelected());
 					if(rangeParametersCheck.isSelected())
 						setRanges();
-					ctrl.run();
+					
+					Thread t1 = new Thread(new Runnable() {
+					     public void run() {
+					    	 ctrl.run();
+					     }
+					});  
+					t1.start();
 				} catch(IllegalChromosomeException ex) {
 					JOptionPane.showMessageDialog(null,
 							ex.getMessage(),
