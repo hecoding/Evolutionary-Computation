@@ -10,7 +10,16 @@ import model.Map.CellType;
 
 public class MapParser {
 	
-	public static Map parse(String fname) throws IOException {
+	/** Parse a file get from "fname" and builds the map.
+	 * The beginning must be indicated with an "@" character,
+	 * every food bit with "#" and the empty cell with "0".
+	 * 
+	 * @param fname Path of the text file
+	 * @param maxFood Number of bits of food
+	 * @return Built map object
+	 * @throws IOException If the file hasn't been found
+	 */
+	public static Map parse(String fname, int maxFood) throws IOException {
 		ArrayList<ArrayList<CellType>> cells = new ArrayList<ArrayList<CellType>>();
 		BufferedReader br = new BufferedReader(new FileReader(fname));
 		String thisLine;
@@ -32,7 +41,7 @@ public class MapParser {
 		
 		br.close();
 		
-		return new Map(cells);
+		return new Map(cells, maxFood);
 	}
 	
 }

@@ -31,7 +31,7 @@ public class Controller {
 	public Controller() {
 		Map map;
 		try {
-			map = MapParser.parse("src/map.txt");
+			map = MapParser.parse("src/map.txt", 89);
 		} catch (IOException e) {
 			System.err.println("Map not found");
 			map = null;
@@ -268,7 +268,7 @@ public class Controller {
 	public Map getResultMap() {
 		Map m = AntTrailGeneticAlgorithm.getMap();
 		Ant a = new Ant();
-		((AntTrailChromosome) this.ga.getBestChromosome()).runProgram(m, a);
+		AntTrailChromosome.runProgram(((AntTrailChromosome) this.ga.getBestChromosome()).getProgram(), m, a);
 		
 		return m;
 	}

@@ -3,10 +3,14 @@ package model;
 public class Ant {
 	public Direction direction;
 	public Position pos;
+	public int steps;
+	public int bitsEaten;
 	
 	public Ant() {
 		this.direction = Direction.right;
 		this.pos = new Position(0,0);
+		this.steps = 0;
+		this.bitsEaten = 0;
 	}
 	
 	public void turnLeft() {
@@ -24,6 +28,8 @@ public class Ant {
 			this.direction = Direction.left;
 			break;
 		}
+		
+		this.steps++;
 	}
 	
 	public void turnRight() {
@@ -41,6 +47,8 @@ public class Ant {
 			this.direction = Direction.right;
 			break;
 		}
+		
+		this.steps++;
 	}
 	
 	public void moveForward() {
@@ -58,6 +66,12 @@ public class Ant {
 			this.pos.y--;
 			break;
 		}
+		
+		this.steps++;
+	}
+	
+	public void eat() {
+		this.bitsEaten++;
 	}
 	
 	public Position getPosition() {
@@ -67,6 +81,35 @@ public class Ant {
 	public void setPosition(int x, int y) {
 		this.pos.x = x;
 		this.pos.y = y;
+	}
+	
+	public Position getForwardPosition() {
+		Position ret = new Position(this.pos.x, this.pos.y);
+		
+		switch(this.direction) {
+		case down:
+			ret.y++;
+			break;
+		case left:
+			ret.x--;
+			break;
+		case right:
+			ret.x++;
+			break;
+		case up:
+			ret.y--;
+			break;
+		}
+		
+		return ret;
+	}
+	
+	public int getNumberOfSteps() {
+		return this.steps;
+	}
+	
+	public int getNumberOfBitsEaten() {
+		return this.bitsEaten;
 	}
 	
 	public enum Direction {
