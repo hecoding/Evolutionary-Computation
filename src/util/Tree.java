@@ -125,22 +125,23 @@ public class Tree<E> implements Cloneable {
 	public void setNextChild(Tree<E> child){this.children.add(child);}
 	
 	public String preOrder() {
-		return this.preOrder("");
+		return this.preOrder("    ");
 	}
 	
 	private  String preOrder(String tabs){
 		
-		String content = tabs + "(" + this.value.toString();
+		String content = tabs + this.value.toString();
 		if (this.children.size() == 0)
-			return content + ")";
+			return content;
 		else {
+			tabs += "        ";
 			for (Tree<E> child : this.children) {
 				if(child != null)
-					content += System.lineSeparator() + child.preOrder("    ");
+					content += System.lineSeparator() + child.preOrder(tabs);
 			}
 		}
 		
-		return content + System.lineSeparator() + tabs + ")";
+		return content;
 	}
 	
 	public String horizontalPreOrder(){
