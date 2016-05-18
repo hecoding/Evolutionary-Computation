@@ -66,12 +66,15 @@ public class AntTrailChromosome extends AbstractChromosome {
 				runProgram(program.getRightChild(), map, ant);
 			}
 			// terminals
-			else if(program.getValue() == Terminal.forward)
-				ant.moveForward();
 			else if(program.getValue() == Terminal.left)
 				ant.turnLeft();
 			else if(program.getValue() == Terminal.right)
 				ant.turnRight();
+			else if(program.getValue() == Terminal.forward) {
+				if(map.get(ant.getPosition()) == CellType.nothing)
+					map.set(CellType.trail, ant.getPosition());
+				ant.moveForward();
+			}
 		}
 	}
 

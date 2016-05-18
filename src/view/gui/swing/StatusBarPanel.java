@@ -56,7 +56,7 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 	public void setStatus(String s) {
 		this.outputTextArea.setForeground(Color.black);
 		this.outputTextArea.setText(s);
-		if(s == "")
+		if(s.equals(""))
 			this.setVisible(false);
 		else
 			this.setVisible(true);

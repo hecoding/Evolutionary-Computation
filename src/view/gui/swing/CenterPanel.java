@@ -99,7 +99,8 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 	}
 	
 	private void updateMapPanel() {
-		map = new AntTrailPane(ctrl.getResultMap());
+		mapPanel.removeAll();
+		mapPanel.add(new AntTrailPane(ctrl.getResultMap()), BorderLayout.CENTER);
 	}
 	
 	private void updateGraphPanel() {
