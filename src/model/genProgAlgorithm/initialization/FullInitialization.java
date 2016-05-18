@@ -19,7 +19,7 @@ public class FullInitialization implements InitializationInterface {
 		ArrayList<AntTrailChromosome> population = new ArrayList<AntTrailChromosome>(populationSize);
 		for (int i = 0; i < populationSize; i++)  {
 			AntTrailChromosome chromosome = new AntTrailChromosome(function, maxSteps);
-			Tree<Node> program = new Tree<>(null);
+			Tree<Node> program = new Tree<>();
 			initialize(program, programDepth);
 			
 			chromosome.setProgram(program);
@@ -38,7 +38,8 @@ public class FullInitialization implements InitializationInterface {
 			program.setValue(Function.values()[RandGenerator.getInstance().nextInt(Function.values().length)]);
 			
 			for (int i = 0; i < Function.numberOfChildren(program.getValue()); i++) {
-				Tree<Node> child = new Tree<>(program);
+				Tree<Node> child = new Tree<>();
+				child.setParent(program);
 				initialize(child, programDepth - 1);
 				program.addChild(child);
 			}

@@ -11,16 +11,49 @@ public class Tree<E> implements Cloneable {
 	private static final int defaultChildren = 2;
 	
 	/**
-	 * Tree with no childs.
+	 * Empty tree with no children.
 	 * @param parent
 	 */
-	public Tree(Tree<E> parent){
-		this.parent = parent;
+	public Tree(){
+		this.parent = null;
 		this.children = new ArrayList<Tree<E>>(defaultChildren);
-		if(parent == null)
-			this.depth = 0;
-		else
-			this.depth = parent.getDepth() + 1;
+		this.depth = 0;
+	}
+	
+	/**
+	 * Copy constructor
+	 * @param copy Tree to copy from
+	 */
+	public Tree(Tree<E> copy) {
+		this.value = copy.value;
+		this.parent = null;
+		this.depth = copy.depth;
+		this.children = new ArrayList<Tree<E>>(copy.children.size());
+		
+		Stack<Tree<E>> s = new Stack<>();
+		for (Tree<E> originalChild : copy.children) {
+			s.push(originalChild);
+			Tree<E> thisChild = new Tree<E>();
+			this.children.add(thisChild);
+			s.push(thisChild);
+		}
+		
+		while(!s.empty()) {
+			Tree<E> thisOne = s.pop();
+			Tree<E> original = s.pop();
+			
+			thisOne.value = original.value;
+			thisOne.depth = original.depth;
+			thisOne.children = new ArrayList<Tree<E>>(original.children.size());
+			
+			for (Tree<E> originalChild : original.children) {
+				s.push(originalChild);
+				Tree<E> thisOneChild = new Tree<E>();
+				thisOneChild.setParent(thisOne);
+				thisOne.children.add(thisOneChild);
+				s.push(thisOneChild);
+			}
+		}
 	}
 	
 	/**
@@ -103,7 +136,7 @@ public class Tree<E> implements Cloneable {
 	public void setValue(E value){this.value = value;}
 	
 	public Tree<E> getParent(){return parent;}
-	public void setParent(Tree<E> p){parent = p;}
+	public void setParent(Tree<E> p){parent = p; depth = parent.getDepth() + 1;}
 	
 	public Tree<E> getLeftChild(){return this.children.get(0);}
 	public void setLeftChild(Tree<E> left){this.children.set(0, left);}
@@ -246,6 +279,11 @@ public class Tree<E> implements Cloneable {
 	}
 	
 	public Tree<E> clone() {
+		return new Tree<E>(this);
+	}
+	
+	/* recursive clone
+	public Tree<E> clone() {
 		ArrayList<Tree<E>> retChildren = new ArrayList<Tree<E>>(this.children.size());
 		
 		for (int i = 0; i < this.children.size(); i++) {
@@ -256,6 +294,7 @@ public class Tree<E> implements Cloneable {
 		
 		return ret;
 	}
+	*/
 	
 	/*public int maximoNivel(){*/
 	    /*int iz=0; iterativo

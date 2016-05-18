@@ -17,13 +17,13 @@ public class AntTrailChromosome extends AbstractChromosome {
 	private static int maxSteps;
 	
 	public AntTrailChromosome() {
-		this.program = new Tree<>(null);
+		this.program = new Tree<>();
 	}
 	
 	public AntTrailChromosome(FitnessFunctionInterface function, int maxNumOfSteps) {
 		fitnessFunc = function;
 		maxSteps = maxNumOfSteps;
-		this.program = new Tree<>(null);
+		this.program = new Tree<>();
 	}
 	
 	@Override
