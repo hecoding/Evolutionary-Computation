@@ -144,6 +144,30 @@ public class Tree<E> implements Cloneable {
 		return content;
 	}
 	
+	public String preOrderIterative() {
+		String content = new String("");
+		Stack<Object> s = new Stack<>();
+		int indent = 8;
+		s.push(this);
+		s.push(indent);
+		
+		while(!s.isEmpty()) {
+			int n = (int) s.pop();
+			@SuppressWarnings("unchecked")
+			Tree<E> a = (Tree<E>) s.pop();
+			content += new String(new char[n]).replace('\0', ' ') + a.value + System.lineSeparator();
+			
+			for (Tree<E> child : a.children) {
+				if(child != null) {
+					s.push(child);
+					s.push(n + indent);
+				}
+			}
+		}
+		
+		return content;
+	}
+	
 	public String horizontalPreOrder(){
 		String val = "";
 		if(this.value == null)
