@@ -6,12 +6,16 @@ public class AntTrailFitness implements FitnessFunctionInterface {
 
 	@Override
 	public double f(ArrayList<Double> params) {
-		return 0;
+		int foodEaten = params.get(0).intValue();
+		int steps = params.get(1).intValue();
+		int maxSteps = params.get(2).intValue();
+		
+		return foodEaten + (1 - (steps / maxSteps));
 	}
 
 	@Override
 	public boolean isMinimization() {
-		return true;
+		return false;
 	}
 
 	@Override
