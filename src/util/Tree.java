@@ -226,6 +226,34 @@ public class Tree<E> implements Cloneable {
 		return new Tree<E>(this);
 	}
 	
+	public Tree<E> getRandomLeaf() {
+		Stack<Tree<E>> s = new Stack<>();
+		Tree<E> leaf = null;
+		boolean finish = false;
+		s.push(this);
+		
+		while(!finish && !s.isEmpty()) {
+			Tree<E> a = s.pop();
+			if(a.isLeaf()) {
+				leaf = a;
+				finish = true;
+			}
+			
+			for (int i = 0; !finish && i < a.children.size(); i++) {
+				Tree<E> child = a.children.get(i);
+				if(child != null) {
+					s.push(child);
+					if(child.isLeaf()) {
+						leaf = child;
+						finish = true;
+					}
+				}
+			}
+		}
+		
+		return leaf;
+	}
+	
 	/*public void cutBelow(int n) {
 		Stack<Tree<E>> s = new Stack<>();
 		s.push(this);
