@@ -129,6 +129,7 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		s += ctrl.getResult();
 		
 		programText.setText(s);
+		programText.setCaretPosition(0);
 	}
 	
 	public class AntTrailPane extends JPanel {
@@ -139,8 +140,8 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		private Color white = new Color(250,250,250);
 		private Color black = new Color(33,33,33);
 		private Color green = new Color(0,230,118);
-		private Color yellow = new Color(251,192,45);
-		private Color orange = new Color(251,140,0);
+		private Color yellow = new Color(253,216,53);
+		private Color orange = new Color(249,168,37);
 		private Color gray = new Color(158,158,158);
 
 		public AntTrailPane() {
