@@ -10,7 +10,7 @@ public class AntTrailFitness implements FitnessFunctionInterface {
 		int steps = params.get(1).intValue();
 		int maxSteps = params.get(2).intValue();
 		
-		return foodEaten + (1 - (steps / maxSteps));
+		return foodEaten + (1 - (steps / maxSteps)) * 20;
 	}
 
 	@Override
