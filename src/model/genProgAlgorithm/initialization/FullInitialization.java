@@ -18,7 +18,7 @@ public class FullInitialization implements InitializationInterface {
 	public <T extends AbstractChromosome> ArrayList<T> initialize(int populationSize, FitnessFunctionInterface function, int programDepth, int maxSteps) {
 		ArrayList<AntTrailChromosome> population = new ArrayList<AntTrailChromosome>(populationSize);
 		for (int i = 0; i < populationSize; i++)  {
-			AntTrailChromosome chromosome = new AntTrailChromosome(function, maxSteps);
+			AntTrailChromosome chromosome = new AntTrailChromosome(function, maxSteps, programDepth);
 			Tree<Node> program = new Tree<>();
 			initialize(program, programDepth);
 			

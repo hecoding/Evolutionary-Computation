@@ -15,14 +15,16 @@ import util.Tree;
 public class AntTrailChromosome extends AbstractChromosome {
 	private Tree<Node> program;
 	private static int maxSteps;
+	public static int maxDepth;
 	
 	public AntTrailChromosome() {
 		this.program = new Tree<>();
 	}
 	
-	public AntTrailChromosome(FitnessFunctionInterface function, int maxNumOfSteps) {
+	public AntTrailChromosome(FitnessFunctionInterface function, int maxNumOfSteps, int maxProgramDepth) {
 		fitnessFunc = function;
 		maxSteps = maxNumOfSteps;
+		maxDepth = maxProgramDepth;
 		this.program = new Tree<>();
 	}
 	
