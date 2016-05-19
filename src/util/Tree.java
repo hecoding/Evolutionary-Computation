@@ -34,6 +34,7 @@ public class Tree<E> implements Cloneable {
 		for (Tree<E> originalChild : copy.children) {
 			s.push(originalChild);
 			Tree<E> thisChild = new Tree<E>();
+			thisChild.setParent(this);
 			this.children.add(thisChild);
 			s.push(thisChild);
 		}
@@ -56,87 +57,11 @@ public class Tree<E> implements Cloneable {
 		}
 	}
 	
-	/**
-	 * Binary tree.
-	 * @param leftChild
-	 * @param value
-	 * @param rightChild
-	 * @param parent
-	 */
-	public Tree(Tree<E> leftChild, E value, Tree<E> rightChild,Tree<E> parent){
-		this.parent = parent;
-		this.children = new ArrayList<Tree<E>>(defaultChildren);
-		
-		this.children.add(leftChild);
-		this.value=value;
-		this.children.add(rightChild);
-		
-		if(leftChild == null && rightChild == null)
-			this.depth = 1;
-		else if(leftChild == null && rightChild != null)
-			this.depth = rightChild.getDepth() - 1;
-		else if(rightChild == null && leftChild != null)
-			this.depth = leftChild.getDepth() - 1;
-		else { // none null
-			if(leftChild.getDepth() > rightChild.getDepth())
-				this.depth = leftChild.getDepth() - 1;
-			else
-				this.depth = rightChild.getDepth() - 1;
-		}
-	}
-	
-	/**
-	 * Ternary tree.
-	 * @param leftChild
-	 * @param middleChild
-	 * @param value
-	 * @param rightChild
-	 * @param parent
-	 */
-	public Tree(Tree<E> leftChild, Tree<E> middleChild, E value, Tree<E> rightChild,Tree<E> parent){
-		this.parent = parent;
-		this.children = new ArrayList<Tree<E>>(3);
-		
-		this.children.add(leftChild);
-		this.children.add(middleChild);
-		this.value=value;
-		this.children.add(rightChild);
-		
-		// no null-checking done here
-		if(leftChild.getDepth()>=middleChild.getDepth() && leftChild.getDepth()>=rightChild.getDepth())
-			this.depth = leftChild.getDepth() - 1;
-		else if(middleChild.getDepth()>=leftChild.getDepth() && middleChild.getDepth()>=rightChild.getDepth())
-			this.depth = middleChild.getDepth() - 1;
-		else if(rightChild.getDepth()>=leftChild.getDepth() && rightChild.getDepth()>=middleChild.getDepth())
-			this.depth = rightChild.getDepth() - 1;
-	}
-	
-	/**
-	 * N-ary tree.
-	 * @param children
-	 * @param value
-	 * @param parent
-	 */
-	public Tree(ArrayList<Tree<E>> children, E value, Tree<E> parent){
-		this.children = new ArrayList<Tree<E>>(children.size());
-		
-		this.children = children;
-		this.value = value;
-		this.parent = parent;
-		
-		int currentDepth = 0;
-		for (Tree<E> child : children) {
-			if(child.getDepth() > currentDepth)
-				currentDepth = child.getDepth();
-		}
-		this.depth = currentDepth - 1;
-	}
-	
 	public E getValue(){return this.value;}
 	public void setValue(E value){this.value = value;}
 	
 	public Tree<E> getParent(){return parent;}
-	public void setParent(Tree<E> p){parent = p; depth = parent.getDepth() + 1;}
+	public void setParent(Tree<E> p){parent = p; if(p == null) depth = 0; else depth = parent.getDepth() + 1;}
 	
 	public Tree<E> getLeftChild(){return this.children.get(0);}
 	public void setLeftChild(Tree<E> left){this.children.set(0, left);}
@@ -151,11 +76,24 @@ public class Tree<E> implements Cloneable {
 	
 	public int getDepth(){return this.depth;}
 	
-	/**
-	 * Sets the next right-most child of the node.
-	 * @param child The child to set to the parent.
-	 */
-	public void setNextChild(Tree<E> child){this.children.add(child);}
+	public int getNodes() {
+		Stack<Tree<E>> s = new Stack<>();
+		int nodes = 1;
+		s.push(this);
+		
+		while(!s.isEmpty()) {
+			Tree<E> a = s.pop();
+			
+			for (Tree<E> child : a.children) {
+				if(child != null) {
+					s.push(child);
+					nodes++;
+				}
+			}
+		}
+		
+		return nodes;
+	}
 	
 	public String preOrder() {
 		return this.preOrder("    ");
@@ -224,6 +162,54 @@ public class Tree<E> implements Cloneable {
 	
 	public String toString() {
 		return this.horizontalPreOrder();
+	}
+	
+	public Tree<E> getNode(int n) {
+		Stack<Tree<E>> s = new Stack<>();
+		Tree<E> node = null;
+		int counter = 0;
+		boolean finish = false;
+		s.push(this);
+		
+		while(!finish && !s.isEmpty()) {
+			Tree<E> a = s.pop();
+			if(counter == n) {
+				node = a;
+				finish = true;
+			}
+			
+			for (int i = 0; !finish && i < a.children.size(); i++) {
+				Tree<E> child = a.children.get(i);
+				if(child != null) {
+					s.push(child);
+					counter++;
+					if(counter == n) {
+						node = child;
+						finish = true;
+					}
+				}
+			}
+		}
+		
+		return node;
+	}
+	
+	/**
+	 * Adopt a child but does not change its parent old reference.
+	 * @param current
+	 * @param adopted
+	 */
+	public void exchangeChild(Tree<E> current, Tree<E> adopted) {
+		boolean finished = false;
+		
+		for (int i = 0; !finished && i < this.children.size(); i++) {
+			Tree<E> a = this.children.get(i);
+			if(a == current) {
+				this.children.set(i, adopted);
+				
+				finished = true;
+			}
+		}
 	}
 	
 	public boolean isRightChild(Tree<E> a) {

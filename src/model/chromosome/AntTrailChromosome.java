@@ -86,6 +86,10 @@ public class AntTrailChromosome extends AbstractChromosome {
 	public Tree<Node> getProgram() {
 		return this.program;
 	}
+	
+	public void setProgram(Tree<Node> program) {
+		this.program = program;
+	}
 
 	@Override
 	public AntTrailChromosome clone() {
@@ -99,8 +103,15 @@ public class AntTrailChromosome extends AbstractChromosome {
 		return chr;
 	}
 	
-	public void setProgram(Tree<Node> program) {
-		this.program = program;
+	public AntTrailChromosome copyAllButProgram() {
+		// deep copy indeed
+		AntTrailChromosome chr = new AntTrailChromosome();
+		chr.setProgram(null);
+		chr.aggregateScore = this.aggregateScore;
+		chr.aptitude = this.aptitude;
+		chr.score = this.score;
+		
+		return chr;
 	}
 
 	@Override

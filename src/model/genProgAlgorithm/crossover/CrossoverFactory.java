@@ -2,7 +2,7 @@ package model.genProgAlgorithm.crossover;
 
 public class CrossoverFactory {
 	private static CrossoverFactory instance;
-	private static String[] strategies = {};
+	private static String[] strategies = {"Un punto"};
 	
 	private CrossoverFactory() {}
  	
@@ -14,11 +14,10 @@ public class CrossoverFactory {
 	}
 	
 	public CrossoverInterface create(String id) {
-		if (id == "PMX")
-			return null;
-		//else
-			//throw new IllegalArgumentException("Unknown crossover method");
-		return null;
+		if (id == "Un punto")
+			return new OnePointCrossover();
+		else
+			throw new IllegalArgumentException("Unknown crossover method");
 	}
 	
 	public static String[] selectionList() {
