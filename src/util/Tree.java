@@ -275,6 +275,34 @@ public class Tree<E> implements Cloneable {
 		return node;
 	}
 	
+	/**
+	 * Returns random node, it can be both inner or leaf
+	 * @return node of the tree
+	 */
+	public Tree<E> getRandomNode() {
+		Tree<E> node = this;
+		boolean end = false;
+		RandGenerator random = RandGenerator.getInstance();
+		
+		while(!end) {
+			if(node.isLeaf()) {
+				end = true;
+			}
+			else {
+				if(random.nextDouble() < 0.4) {
+					node = node.children.get(random.nextInt(node.children.size()));
+				} else
+					end = true;
+			}
+		}
+		
+		return node;
+	}
+	
+	public void dropChilds() {
+		this.children = new ArrayList<>(defaultChildren);
+	}
+	
 	private void checkHeights(Tree<E> newNode) {
 		if(newNode.height + 1 > this.height) {
 			this.height = newNode.height + 1;
