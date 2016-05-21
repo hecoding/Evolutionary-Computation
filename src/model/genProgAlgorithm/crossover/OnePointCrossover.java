@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import model.chromosome.AbstractChromosome;
 import model.chromosome.AntTrailChromosome;
 import model.program.Node;
-import model.program.Terminal;
 import util.RandGenerator;
 import util.Tree;
 
@@ -42,27 +41,32 @@ public class OnePointCrossover implements CrossoverInterface {
 		Tree<Node> parent2Gene = ((AntTrailChromosome) parent2).getProgram();
 		
 		int nodesNum = 0;
-		if(parent1Gene.getNodes() < parent2Gene.getNodes())
-			nodesNum = parent1Gene.getNodes();
-		else
-			nodesNum = parent2Gene.getNodes();
-		int crossNode = random.nextInt(nodesNum - 1) + 1; // all but the root
+		int nodes1 = parent1Gene.getNodes();
+		int nodes2 = parent2Gene.getNodes();
 		
-		Tree<Node> cross1 = parent1Gene.getNode(crossNode);
-		Tree<Node> cross2 = parent2Gene.getNode(crossNode);
-		Tree<Node> cross1parent = cross1.getParent();
-		Tree<Node> cross2parent = cross2.getParent();
-		
-		cross1.getParent().exchangeChild(cross1, cross2);
-		cross2.getParent().exchangeChild(cross2, cross1);
-		cross1.setParent(cross2parent);
-		cross2.setParent(cross1parent);
-		
-		((AntTrailChromosome) parent1).trimProgram();
-		((AntTrailChromosome) parent2).trimProgram();
-		
-		parent1.setAptitude(parent1.evaluate());
-		parent2.setAptitude(parent2.evaluate());
+		if(nodes1 != 1 && nodes2 != 1) {
+			
+			if(nodes1 < nodes2) nodesNum = nodes1;
+			else nodesNum = nodes2;
+			int crossNode = random.nextInt(nodesNum - 1) + 1; // all but the root
+			
+			Tree<Node> cross1 = parent1Gene.getNode(crossNode);
+			Tree<Node> cross2 = parent2Gene.getNode(crossNode);
+			Tree<Node> cross1parent = cross1.getParent();
+			Tree<Node> cross2parent = cross2.getParent();
+			
+			cross1.getParent().exchangeChild(cross1, cross2);
+			cross2.getParent().exchangeChild(cross2, cross1);
+			cross1.setParent(cross2parent);
+			cross2.setParent(cross1parent);
+			
+			((AntTrailChromosome) parent1).trimProgram();
+			((AntTrailChromosome) parent2).trimProgram();
+			
+			parent1.setAptitude(parent1.evaluate());
+			parent2.setAptitude(parent2.evaluate());
+			
+		}
 	}
 
 	@Override
