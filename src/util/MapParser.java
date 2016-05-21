@@ -41,7 +41,15 @@ public class MapParser {
 		
 		br.close();
 		
-		return new Map(cells, maxFood);
+		CellType[][] coolcells = new CellType[cells.size()][cells.get(0).size()];
+		
+		for (int i = 0; i < cells.size(); i++) {
+			for (int j = 0; j < cells.get(0).size(); j++) {
+				coolcells[i][j] = cells.get(i).get(j);
+			}
+		}
+		
+		return new Map(coolcells, maxFood);
 	}
 	
 }
