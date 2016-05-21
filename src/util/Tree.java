@@ -254,6 +254,10 @@ public class Tree<E> implements Cloneable {
 		return node;
 	}
 	
+	/**
+	 * Return a random inner node. Returns null if the tree is a leaf.
+	 * @return node or null
+	 */
 	public Tree<E> getRandomInnerNode() {
 		Tree<E> node = this;
 		boolean end = false;

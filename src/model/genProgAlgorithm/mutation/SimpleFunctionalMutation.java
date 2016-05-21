@@ -26,21 +26,38 @@ public class SimpleFunctionalMutation implements MutationInterface {
 		RandGenerator random = RandGenerator.getInstance();
 		boolean finish = false;
 		Tree<Node> inner;
+		Tree<Node> program = ((AntTrailChromosome) chrom).getProgram();
+		
+		if(!program.isLeaf() && program.getNodes() != 4) {
 
 		// progn3 is the only 3-children function so it can't mutate into another with same number of children
+		int i = 0;
 		do {
-			inner = ((AntTrailChromosome) chrom).getProgram().getRandomInnerNode();
-		} while (inner.getValue().equals(Function.progn3));
-		
-		Function innerFunction = (Function) inner.getValue();
-		Function newFunction;
-		do {
-			newFunction = Function.values()[random.nextInt(Function.values().length)];
-			if (!innerFunction.equals(newFunction) && Function.numberOfChildren(innerFunction) == Function.numberOfChildren(newFunction)) {
-				inner.setValue(newFunction);
-				finish = true;
+			inner = program.getRandomInnerNode();
+			i++;
+			if(i >= 50) {
+				// overpopulated prog3 tree, turn into prog2
+				inner.setValue(Function.progn2);
+				Tree<Node> a = inner.getNChild(0);
+				Tree<Node> b = inner.getNChild(1);
+				inner.dropChilds();
+				inner.addChild(a);
+				inner.addChild(b);
 			}
-		} while(!finish);
+		} while (inner.getValue().equals(Function.progn3));
+		i = 0;
+		
+			Function innerFunction = (Function) inner.getValue();
+			Function newFunction;
+			do {
+				newFunction = Function.values()[random.nextInt(Function.values().length)];
+				if (!innerFunction.equals(newFunction) && Function.numberOfChildren(innerFunction) == Function.numberOfChildren(newFunction)) {
+					inner.setValue(newFunction);
+					finish = true;
+				}
+			} while(!finish);
+		
+		}
 		
 	}
 
