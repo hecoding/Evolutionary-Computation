@@ -10,7 +10,9 @@ import model.genProgAlgorithm.fitnessFunction.FitnessFunctionInterface;
 import model.program.Function;
 import model.program.Node;
 import model.program.Terminal;
+import util.RandGenerator;
 import util.Tree;
+import util.nodeGenerator.NodeGeneratorImp;
 
 public class AntTrailChromosome extends AbstractChromosome {
 	private Tree<Node> program;
@@ -118,6 +120,12 @@ public class AntTrailChromosome extends AbstractChromosome {
 		// maxHeight static
 		
 		return chr;
+	}
+	
+	public void trimProgram() {
+		Tree<Node> terminal = new Tree<Node>();
+		terminal.setValue(Terminal.values()[RandGenerator.getInstance().nextInt(Terminal.values().length)]);
+		this.program.replaceBelowDepth(maxHeight, NodeGeneratorImp.getInstance());
 	}
 
 	@Override

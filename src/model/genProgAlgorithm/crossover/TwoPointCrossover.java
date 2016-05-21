@@ -53,6 +53,9 @@ public class TwoPointCrossover implements CrossoverInterface {
 		cross1.setParent(cross2parent);
 		cross2.setParent(cross1parent);
 		
+		((AntTrailChromosome) parent1).trimProgram();
+		((AntTrailChromosome) parent2).trimProgram();
+		
 		parent1.setAptitude(parent1.evaluate());
 		parent2.setAptitude(parent2.evaluate());
 	}

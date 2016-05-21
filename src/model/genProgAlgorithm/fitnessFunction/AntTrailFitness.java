@@ -7,10 +7,15 @@ public class AntTrailFitness implements FitnessFunctionInterface {
 	@Override
 	public double f(ArrayList<Double> params) {
 		int foodEaten = params.get(0).intValue();
-		int steps = params.get(1).intValue();
-		int maxSteps = params.get(2).intValue();
+		//int steps = params.get(1).intValue();
+		//int maxSteps = params.get(2).intValue();
+		//int height = params.get(3).intValue();
+		//int maxHeight = params.get(4).intValue();
 		
-		return foodEaten + (1 - (steps / maxSteps)) * 20;
+		return foodEaten
+				//+ ( (1 - (steps / maxSteps)) * 10 ) // if it uses less steps gets better fitness
+				//- Math.max((height - maxHeight), 0) // subtract the surplus of levels if there's any
+				;
 	}
 
 	@Override

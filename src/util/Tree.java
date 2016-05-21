@@ -3,6 +3,8 @@ package util;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import util.nodeGenerator.NodeGenerator;
+
 public class Tree<E> implements Cloneable {
 	private E value;
 	private Tree<E> parent;
@@ -293,26 +295,33 @@ public class Tree<E> implements Cloneable {
 		}
 	}
 	
-	/*public void cutBelow(int n) {
+	public void replaceBelowDepth(int n, NodeGenerator<E> generator) {
 		Stack<Tree<E>> s = new Stack<>();
+		Stack<Integer> depth = new Stack<>();
 		s.push(this);
+		depth.push(0);
 		
-		while(!s.isEmpty()) {
+		while(!s.isEmpty() && !depth.isEmpty()) {
 			Tree<E> a = s.pop();
+			int currentDepth = depth.pop();
 			
 			for (int i = 0; i < a.children.size(); i++) {
 				Tree<E> child = a.children.get(i);
 				if(child != null) {
-					if(child.height > n) {
-						a.children.remove(i);
-						child.parent = null;
+					if(currentDepth > n - 3) {
+						Tree<E> terminal = generator.next();
+						a.setNChild(i, terminal);
+						child.setParent(null);
+						terminal.setParent(a);
 					}
-					else
+					else {
 						s.push(child);
+						depth.push(currentDepth + 1);
+					}
 				}
 			}
 		}
-	}*/
+	}
 	
 	/* recursive clone
 	public Tree<E> clone() {
