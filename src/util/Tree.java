@@ -254,6 +254,27 @@ public class Tree<E> implements Cloneable {
 		return node;
 	}
 	
+	public Tree<E> getRandomInnerNode() {
+		Tree<E> node = this;
+		boolean end = false;
+		RandGenerator random = RandGenerator.getInstance();
+		
+		while(!end) {
+			if(node.isLeaf()) {
+				node = node.parent;
+				end = true;
+			}
+			else {
+				if(random.nextDouble() < 0.5) {
+					node = node.children.get(random.nextInt(node.children.size()));
+				} else
+					end = true;
+			}
+		}
+		
+		return node;
+	}
+	
 	private void checkHeights(Tree<E> newNode) {
 		if(newNode.height + 1 > this.height) {
 			this.height = newNode.height + 1;
