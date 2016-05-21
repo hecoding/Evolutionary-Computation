@@ -7,7 +7,7 @@ public class Tree<E> implements Cloneable {
 	private E value;
 	private Tree<E> parent;
 	private ArrayList<Tree<E>> children;
-	private int depth;
+	private int height;
 	private static final int defaultChildren = 2;
 	
 	/**
@@ -17,7 +17,7 @@ public class Tree<E> implements Cloneable {
 	public Tree(){
 		this.parent = null;
 		this.children = new ArrayList<Tree<E>>(defaultChildren);
-		this.depth = 0;
+		this.height = 0;
 	}
 	
 	/**
@@ -27,7 +27,7 @@ public class Tree<E> implements Cloneable {
 	public Tree(Tree<E> copy) {
 		this.value = copy.value;
 		this.parent = null;
-		this.depth = copy.depth;
+		this.height = copy.height;
 		this.children = new ArrayList<Tree<E>>(copy.children.size());
 		
 		Stack<Tree<E>> s = new Stack<>();
@@ -44,7 +44,7 @@ public class Tree<E> implements Cloneable {
 			Tree<E> original = s.pop();
 			
 			thisOne.value = original.value;
-			thisOne.depth = original.depth;
+			thisOne.height = original.height;
 			thisOne.children = new ArrayList<Tree<E>>(original.children.size());
 			
 			for (Tree<E> originalChild : original.children) {
@@ -61,20 +61,36 @@ public class Tree<E> implements Cloneable {
 	public void setValue(E value){this.value = value;}
 	
 	public Tree<E> getParent(){return parent;}
-	public void setParent(Tree<E> p){parent = p; if(p == null) depth = 0; else depth = parent.getDepth() + 1;}
+	/**
+	 * Add a parent to the current node. Does not check heights (do add/setChild instead).
+	 * @param p
+	 */
+	public void setParent(Tree<E> p){parent = p;}
 	
 	public Tree<E> getLeftChild(){return this.children.get(0);}
-	public void setLeftChild(Tree<E> left){this.children.set(0, left);}
+	public void setLeftChild(Tree<E> left) {
+		this.children.set(0, left);
+		this.checkHeights(left);
+	}
 	
 	public Tree<E> getRightChild(){return this.children.get(this.children.size() - 1);}
-	public void setRightChild(Tree<E> right){this.children.set(this.children.size() - 1, right);}
+	public void setRightChild(Tree<E> right) {
+		this.children.set(this.children.size() - 1, right);
+		this.checkHeights(right);
+	}
 	
-	public void addChild(Tree<E> child){this.children.add(child);}
+	public void addChild(Tree<E> child){
+		this.children.add(child);
+		this.checkHeights(child);
+	}
 	
 	public Tree<E> getNChild(int n){return this.children.get(n);}
-	public void setNChild(int n, Tree<E> child){this.children.set(n, child);}
+	public void setNChild(int n, Tree<E> child) {
+		this.children.set(n, child);
+		this.checkHeights(child);
+	}
 	
-	public int getDepth(){return this.depth;}
+	public int getHeight(){return this.height;}
 	
 	public int getNodes() {
 		Stack<Tree<E>> s = new Stack<>();
@@ -195,17 +211,18 @@ public class Tree<E> implements Cloneable {
 	}
 	
 	/**
-	 * Adopt a child but does not change its parent old reference.
+	 * Exchange a child for another but does not change its parent old reference.
 	 * @param current
-	 * @param adopted
+	 * @param exchanged
 	 */
-	public void exchangeChild(Tree<E> current, Tree<E> adopted) {
+	public void exchangeChild(Tree<E> current, Tree<E> exchanged) {
 		boolean finished = false;
 		
 		for (int i = 0; !finished && i < this.children.size(); i++) {
 			Tree<E> a = this.children.get(i);
 			if(a == current) {
-				this.children.set(i, adopted);
+				this.children.set(i, exchanged);
+				this.checkHeights(exchanged);
 				
 				finished = true;
 			}
@@ -254,6 +271,28 @@ public class Tree<E> implements Cloneable {
 		return leaf;
 	}
 	
+	private void checkHeights(Tree<E> newNode) {
+		if(newNode.height + 1 > this.height) {
+			this.height = newNode.height + 1;
+			adjustUpperHeights(this);
+		}
+	}
+
+	private void adjustUpperHeights(Tree<E> node) {
+		Tree<E> current = node;
+		Tree<E> parent = node.parent;
+		
+		while (parent != null) {
+			if (current.height + 1 > parent.height) {
+				parent.height = current.height + 1;
+				current = parent;
+				parent = current.parent;
+			}
+			else
+				parent = null;
+		}
+	}
+	
 	/*public void cutBelow(int n) {
 		Stack<Tree<E>> s = new Stack<>();
 		s.push(this);
@@ -264,7 +303,7 @@ public class Tree<E> implements Cloneable {
 			for (int i = 0; i < a.children.size(); i++) {
 				Tree<E> child = a.children.get(i);
 				if(child != null) {
-					if(child.depth > n) {
+					if(child.height > n) {
 						a.children.remove(i);
 						child.parent = null;
 					}

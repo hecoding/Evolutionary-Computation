@@ -21,7 +21,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	protected int populationNum;
 	protected int currentGeneration;
 	protected int maxGenerationNum;
-	protected int maxProgramDepth;
+	protected int maxProgramHeight;
 	protected double crossProb;
 	protected double mutationProb;
 	protected boolean useElitism;
@@ -52,7 +52,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	
 	public AbstractGeneticAlgorithm(FitnessFunctionInterface func, InitializationInterface initializationStrategy,
 			SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy, MutationInterface mutationStrategy,
-			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum, int maxProgramDepth,
+			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum, int maxProgramHeight,
 			double crossProb, double mutationProb) {
 		this.fitnessFunc = func;
 		this.initializationStrategy = initializationStrategy;
@@ -66,7 +66,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 		this.elite = null;
 		this.currentGeneration = 0;
 		this.maxGenerationNum = maxGenerationNum;
-		this.maxProgramDepth = maxProgramDepth;
+		this.maxProgramHeight = maxProgramHeight;
 		this.bestChromosome = null;
 		this.bestAptitude = 0;
 		this.averageAptitude = 0;
@@ -86,7 +86,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	}
 	
 	public void initialize() {
-		this.population = this.initializationStrategy.initialize(this.populationNum, this.fitnessFunc, this.maxProgramDepth, this.maxGenerationNum);
+		this.population = this.initializationStrategy.initialize(this.populationNum, this.fitnessFunc, this.maxProgramHeight, this.maxGenerationNum);
 	}
 	
 	public void selection() {
@@ -331,12 +331,12 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 		this.maxGenerationNum = maxGenerations;
 	}
 	
-	public int getProgramDepth() {
-		return this.maxProgramDepth;
+	public int getProgramHeight() {
+		return this.maxProgramHeight;
 	}
 	
-	public void setProgramDepth(int depth) {
-		this.maxProgramDepth = depth;
+	public void setProgramHeight(int height) {
+		this.maxProgramHeight = height;
 	}
 
 	public double getCrossProb() {

@@ -46,7 +46,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	
  	JTextField populationText;
  	JTextField generationText;
- 	JTextField depthText;
+ 	JTextField heightText;
  	JSlider crossoverSlider;
  	JSlider mutationSlider;
  	JSlider elitismSlider;
@@ -66,7 +66,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	
  	String populationTextDefault;
 	String generationTextDefault;
-	String depthTextDefault;
+	String heightTextDefault;
 	String tournamentGroupsTextDefault;
 	int crossoverSliderDefault;
 	int mutationSliderDefault;
@@ -108,7 +108,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				try {
 					ctrl.setPopulation(Integer.parseInt(populationText.getText()));
 					ctrl.setGenerations(Integer.parseInt(generationText.getText()));
-					ctrl.setDepth(Integer.parseInt(depthText.getText()));
+					ctrl.setHeight(Integer.parseInt(heightText.getText()));
 					ctrl.setCrossoverPercentage(crossoverSlider.getValue());
 					ctrl.setMutationPercentage(mutationSlider.getValue());
 					ctrl.setElitismPercentage(elitismSlider.getValue());
@@ -215,36 +215,36 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		
 		//---------------------------------------------
 		
-		JPanel depth = new JPanel();
-		JLabel depthLabel = new JLabel("Profundidad máx.");
-		depth.add(depthLabel);
-		depthText = new JTextField(4);
-		depthText.setInputVerifier(new InputVerifier() {
+		JPanel height = new JPanel();
+		JLabel heightLabel = new JLabel("Altura máxima");
+		height.add(heightLabel);
+		heightText = new JTextField(4);
+		heightText.setInputVerifier(new InputVerifier() {
 			public boolean verify(JComponent input) {
 				try {
 					int a = Integer.parseInt(((JTextField) input).getText());
 					if (a >= 1) {
-						depthText.setBorder(defaultborder);
+						heightText.setBorder(defaultborder);
 						status.setErrors(false);
 						return true;
 					}
 					else {
-						depthText.setBorder(BorderFactory.createLineBorder(Color.red));
+						heightText.setBorder(BorderFactory.createLineBorder(Color.red));
 						status.setErrors(true);
 						return false;
 					}
 				} catch (NumberFormatException e) {
-					depthText.setBorder(BorderFactory.createLineBorder(Color.red));
+					heightText.setBorder(BorderFactory.createLineBorder(Color.red));
 					status.setErrors(true);
 					return false;
 				}
 			}
 		});
-		depth.add(depthText);
-		depth.setMaximumSize(depth.getPreferredSize());
-		depth.setMinimumSize(depth.getPreferredSize());
-		depth.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		settings.add(depth);
+		height.add(heightText);
+		height.setMaximumSize(height.getPreferredSize());
+		height.setMinimumSize(height.getPreferredSize());
+		height.setAlignmentX(Component.RIGHT_ALIGNMENT);
+		settings.add(height);
 		
 		//---------------------------------------------
 		JSeparator sep1 = new JSeparator();
@@ -758,7 +758,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private void fillFields() {
 		this.populationText.setText(String.valueOf(this.ctrl.getPopulation()));
 		this.generationText.setText(String.valueOf(this.ctrl.getGenerations()));
-		this.depthText.setText(String.valueOf(this.ctrl.getDepth()));
+		this.heightText.setText(String.valueOf(this.ctrl.getHeight()));
 		this.tournamentGroupsText.setText(Integer.toString( this.ctrl.getTournamentSelectionGroups() ));
 		this.crossoverSlider.setValue(this.ctrl.getCrossoverPercentage());
 		this.mutationSlider.setValue(this.ctrl.getMutationPercentage());
@@ -795,7 +795,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private void saveDefaults() {
 		populationTextDefault = populationText.getText();
 		generationTextDefault = generationText.getText();
-		depthTextDefault = depthText.getText();
+		heightTextDefault = heightText.getText();
 		tournamentGroupsTextDefault = tournamentGroupsText.getText();
 		crossoverSliderDefault = crossoverSlider.getValue();
 		mutationSliderDefault = mutationSlider.getValue();
@@ -810,7 +810,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private void restoreDefaults() {
 		populationText.setText(populationTextDefault);
 		generationText.setText(generationTextDefault);
-		depthText.setText(depthTextDefault);
+		heightText.setText(heightTextDefault);
 		tournamentGroupsText.setText(tournamentGroupsTextDefault);
 		crossoverSlider.setValue(crossoverSliderDefault);
 		mutationSlider.setValue(mutationSliderDefault);

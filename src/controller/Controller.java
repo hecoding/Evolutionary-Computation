@@ -10,11 +10,13 @@ import model.genProgAlgorithm.AbstractGeneticAlgorithm;
 import model.genProgAlgorithm.AntTrailGeneticAlgorithm;
 import model.genProgAlgorithm.crossover.CrossoverFactory;
 import model.genProgAlgorithm.crossover.CrossoverInterface;
+import model.genProgAlgorithm.crossover.OnePointCrossover;
 import model.genProgAlgorithm.fitnessFunction.AntTrailFitness;
 import model.genProgAlgorithm.initialization.InitializationFactory;
 import model.genProgAlgorithm.initialization.InitializationInterface;
 import model.genProgAlgorithm.mutation.MutationFactory;
 import model.genProgAlgorithm.mutation.MutationInterface;
+import model.genProgAlgorithm.mutation.SimpleTerminalMutation;
 import model.genProgAlgorithm.selection.RouletteSelection;
 import model.genProgAlgorithm.selection.SelectionFactory;
 import model.genProgAlgorithm.selection.SelectionInterface;
@@ -43,13 +45,13 @@ public class Controller {
 									null,
 									new AntTrailFitness(),
 									new RouletteSelection(),
-									null,
-									null,
-									100,
+									new OnePointCrossover(),
+									new SimpleTerminalMutation(),
+									400,
 									false,
 									0,
 									400,
-									4,
+									6,
 									0.6,
 									0.05);
 		this.rangeParameters = false;
@@ -125,12 +127,12 @@ public class Controller {
 		this.ga.setMaxGenerations(generations);
 	}
 	
-	public int getDepth() {
-		return this.ga.getProgramDepth();
+	public int getHeight() {
+		return this.ga.getProgramHeight();
 	}
 	
-	public void setDepth(int depth) {
-		this.ga.setProgramDepth(depth);
+	public void setHeight(int height) {
+		this.ga.setProgramHeight(height);
 	}
 	
 	public int getTournamentSelectionGroups() {

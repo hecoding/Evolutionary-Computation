@@ -13,10 +13,10 @@ public class AntTrailGeneticAlgorithm extends AbstractGeneticAlgorithm<AntTrailC
 
 	public AntTrailGeneticAlgorithm(Map map, InitializationInterface initializationStrategy, FitnessFunctionInterface func,
 			SelectionInterface selectionStrategy, CrossoverInterface crossoverStrategy, MutationInterface mutationStrategy,
-			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum, int maxProgramDepth,
+			int populationNum, boolean useElitism, double elitePercentage, int maxGenerationNum, int maxProgramHeight,
 			double crossProb, double mutationProb) {
 		super(func, initializationStrategy, selectionStrategy, crossoverStrategy, mutationStrategy, populationNum,
-				useElitism, elitePercentage, maxGenerationNum, maxProgramDepth, crossProb, mutationProb);
+				useElitism, elitePercentage, maxGenerationNum, maxProgramHeight, crossProb, mutationProb);
 		
 		originalMap = map;
 	}

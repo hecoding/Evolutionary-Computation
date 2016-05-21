@@ -15,12 +15,12 @@ public class GrowInitialization implements InitializationInterface {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractChromosome> ArrayList<T> initialize(int populationSize, FitnessFunctionInterface function, int programDepth, int maxSteps) {
+	public <T extends AbstractChromosome> ArrayList<T> initialize(int populationSize, FitnessFunctionInterface function, int programHeight, int maxSteps) {
 		ArrayList<AntTrailChromosome> population = new ArrayList<AntTrailChromosome>(populationSize);
 		for (int i = 0; i < populationSize; i++)  {
-			AntTrailChromosome chromosome = new AntTrailChromosome(function, maxSteps, programDepth);
+			AntTrailChromosome chromosome = new AntTrailChromosome(function, maxSteps, programHeight);
 			Tree<Node> program = new Tree<>();
-			initialize(program, programDepth);
+			initialize(program, programHeight);
 			
 			chromosome.setProgram(program);
 			chromosome.setAptitude(chromosome.evaluate());
@@ -30,8 +30,8 @@ public class GrowInitialization implements InitializationInterface {
 		return (ArrayList<T>) population;
 	}
 	
-	private void initialize(Tree<Node> program, int programDepth) {
-		if(programDepth == 1)
+	private void initialize(Tree<Node> program, int programLevels) {
+		if(programLevels == 1)
 			program.setValue(Terminal.values()[RandGenerator.getInstance().nextInt(Terminal.values().length)]);
 		
 		else {
@@ -44,7 +44,7 @@ public class GrowInitialization implements InitializationInterface {
 				for (int i = 0; i < Function.numberOfChildren(program.getValue()); i++) {
 					Tree<Node> child = new Tree<>();
 					child.setParent(program);
-					initialize(child, programDepth - 1);
+					initialize(child, programLevels - 1);
 					program.addChild(child);
 				}
 			}

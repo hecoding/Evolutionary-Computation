@@ -15,16 +15,16 @@ import util.Tree;
 public class AntTrailChromosome extends AbstractChromosome {
 	private Tree<Node> program;
 	private static int maxSteps;
-	public static int maxDepth;
+	public static int maxHeight;
 	
 	public AntTrailChromosome() {
 		this.program = new Tree<>();
 	}
 	
-	public AntTrailChromosome(FitnessFunctionInterface function, int maxNumOfSteps, int maxProgramDepth) {
+	public AntTrailChromosome(FitnessFunctionInterface function, int maxNumOfSteps, int maxProgramHeight) {
 		fitnessFunc = function;
 		maxSteps = maxNumOfSteps;
-		maxDepth = maxProgramDepth;
+		maxHeight = maxProgramHeight;
 		this.program = new Tree<>();
 	}
 	
@@ -38,6 +38,8 @@ public class AntTrailChromosome extends AbstractChromosome {
 		steps.add((double) ant.getNumberOfBitsEaten());
 		steps.add((double) ant.getNumberOfSteps());
 		steps.add((double) maxSteps);
+		steps.add((double) this.program.getHeight());
+		steps.add((double) maxHeight);
 		
 		return fitnessFunc.f(steps);
 	}
@@ -112,6 +114,8 @@ public class AntTrailChromosome extends AbstractChromosome {
 		chr.aggregateScore = this.aggregateScore;
 		chr.aptitude = this.aptitude;
 		chr.score = this.score;
+		// maxSteps static
+		// maxHeight static
 		
 		return chr;
 	}
