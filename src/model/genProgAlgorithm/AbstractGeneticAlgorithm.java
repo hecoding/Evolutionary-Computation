@@ -139,6 +139,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 				this.aptitudeShifting();
 			this.evaluatePopulation();
 			
+			this.makeIncrement();
 			this.gatherStatistics();
 		}
 		
@@ -413,6 +414,12 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	
 	public void removeObserver(GeneticAlgorithmObserver o) {
 		this.observers.remove(o);
+	}
+	
+	public void makeIncrement() {
+		for (GeneticAlgorithmObserver obs : this.observers) {
+			obs.onIncrement((int) Math.floor( 100 * this.currentGeneration / this.maxGenerationNum ));
+		}
 	}
 	
 	public ArrayList<GeneticAlgorithmObserver> getObservers() {

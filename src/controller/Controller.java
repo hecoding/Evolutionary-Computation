@@ -29,8 +29,10 @@ public class Controller {
 	private double minRange, maxRange, step;
 	private String param;
 	private ArrayList<Double> results;
+	private boolean finish;
 	
 	public Controller() {
+		this.finish = true;
 		Map map;
 		try {
 			map = MapParser.parse("src/map.txt", 89);
@@ -63,6 +65,7 @@ public class Controller {
 		if (!this.rangeParameters)
 			this.ga.run();
 		else {
+			this.finish = false;
 			this.results.clear();
 			ArrayList<Double> range = createRange(this.minRange, this.maxRange, this.step);
 			for (Double num : range) {
@@ -71,6 +74,7 @@ public class Controller {
 				this.ga.run();
 				this.results.add( this.getFunctionResult() );
 			}
+			this.finish = true;
 		}
 	}
 	
@@ -273,6 +277,14 @@ public class Controller {
 		AntTrailChromosome.runProgram(((AntTrailChromosome) this.ga.getBestChromosome()).getProgram(), m, a);
 		
 		return m;
+	}
+	
+	public boolean isMinimization() {
+		return this.ga.getFitnessFunction().isMinimization();
+	}
+	
+	public boolean isFinished() {
+		return this.finish;
 	}
 	
 	public boolean isContentBasedTermination() {

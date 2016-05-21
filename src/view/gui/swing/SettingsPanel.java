@@ -34,6 +34,7 @@ import javax.swing.event.ChangeListener;
 import controller.Controller;
 import model.chromosome.exception.IllegalChromosomeException;
 import model.observer.GeneticAlgorithmObserver;
+import view.gui.swing.MainWindow.Worker1;
 
 public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	private static final long serialVersionUID = 1L;
@@ -43,6 +44,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
  	JButton runButton;
  	JButton resetButton;
  	private StatusBarPanel status;
+ 	Worker1 worker;
  	
  	JTextField populationText;
  	JTextField generationText;
@@ -81,10 +83,11 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 	JRadioButton rangePopulationRadioButton, rangeGenerationRadioButton, rangeCrossRadioButton, rangeMutationRadioButton, rangeElitismRadioButton;
 	Border defaultborder;
 
-	public SettingsPanel(Controller ctrl, StatusBarPanel status) {
+	public SettingsPanel(Controller ctrl, StatusBarPanel status, Worker1 worker) {
 		this.ctrl = ctrl;
 		this.ctrl.addModelObserver(this);
 		this.status = status;
+		this.worker = worker;
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -122,12 +125,8 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 					if(rangeParametersCheck.isSelected())
 						setRanges();
 					
-					Thread t1 = new Thread(new Runnable() {
-					     public void run() {
-					    	 ctrl.run();
-					     }
-					});  
-					t1.start();
+					worker = new Worker1();
+					worker.execute();
 				} catch(IllegalChromosomeException ex) {
 					JOptionPane.showMessageDialog(null,
 							ex.getMessage(),
@@ -866,6 +865,11 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				}
 			}
 		});
+	}
+	
+	@Override
+	public void onIncrement(int n) {
+		
 	}
 	
 	class SliderListener implements ChangeListener {

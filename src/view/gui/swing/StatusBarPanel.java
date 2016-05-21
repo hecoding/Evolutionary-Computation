@@ -70,17 +70,26 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 	public void onEndRun() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				String s = new String("");
-				if(ctrl.isRangeParameters()) {
-					double[] x = ctrl.getRangeList();
-					ArrayList<Double> y = ctrl.getRangeResults();
-					Double best = Collections.min(y);
-					int idx = y.indexOf(best);
-					
-					s += "El mejor resultado es " + best.intValue() + ", con el parámetro " + String.format("%.2f", x[idx]);
+				if(ctrl.isFinished()) {
+					String s = new String("");
+					if(ctrl.isRangeParameters()) {
+						double[] x = ctrl.getRangeList();
+						ArrayList<Double> y = ctrl.getRangeResults();
+						Double best;
+						if(ctrl.isMinimization()) best = Collections.min(y);
+						else best = Collections.max(y);
+						int idx = y.indexOf(best);
+						
+						s += "El mejor resultado es " + best.intValue() + ", con el parámetro " + String.format("%.2f", x[idx]);
+					}
+					setStatus(s);
 				}
-				setStatus(s);
 			}
 		});
+	}
+	
+	@Override
+	public void onIncrement(int n) {
+		
 	}
 }

@@ -7,6 +7,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
@@ -18,6 +19,7 @@ import controller.Controller;
 import model.Map;
 import model.genProgAlgorithm.AntTrailGeneticAlgorithm;
 import model.observer.GeneticAlgorithmObserver;
+import view.gui.swing.MainWindow.Worker1;
 
 public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 	private static final long serialVersionUID = 1L;
@@ -28,6 +30,7 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
  	private JPanel programPanel;
  	private StatusBarPanel status;
  	JPanel centerPanel;
+ 	JProgressBar progressBar;
  	
  	AntTrailPane map;
  	Plot2DPanel plot;
@@ -38,6 +41,7 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		this.ctrl = ctrl;
 		this.ctrl.addModelObserver(this);
 		this.status = status;
+		this.progressBar = Worker1.progressBar;
 		
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -75,13 +79,18 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		tabs.setMnemonicAt(2, KeyEvent.VK_3);
 		
 		this.add(tabs, BorderLayout.CENTER);
-		this.add(this.status, BorderLayout.PAGE_END);
+		JPanel lowBar = new JPanel(new BorderLayout());
+		lowBar.add(this.status, BorderLayout.PAGE_START);
+		this.progressBar.setVisible(false);
+		lowBar.add(this.progressBar, BorderLayout.CENTER);
+		this.add(lowBar, BorderLayout.PAGE_END);
 	}
 
 	@Override
 	public void onStartRun() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
+				progressBar.setVisible(true);
 				plot.setVisible(false);
 			}
 		});
@@ -91,11 +100,19 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 	public void onEndRun() {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
-				updateMapPanel();
-				updateGraphPanel();
-				updateProgramPanel();
+				if(ctrl.isFinished()) {
+					progressBar.setVisible(false);
+					updateMapPanel();
+					updateGraphPanel();
+					updateProgramPanel();
+				}
 			}
 		});
+	}
+	
+	@Override
+	public void onIncrement(int n) {
+		
 	}
 	
 	private void updateMapPanel() {
