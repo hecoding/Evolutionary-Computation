@@ -56,7 +56,7 @@ public class AntTrailChromosome extends AbstractChromosome {
 		if(ant.steps < maxSteps && ant.bitsEaten < map.getFoodHere()) {
 		
 			// functions
-			if(program.getValue() == Function.sic) {
+			if(program.getValue() == Function.ifFoodAhead) {
 				if(map.get(ant.getForwardPosition()) == CellType.food)
 					runProgram(program.getLeftChild(), map, ant);
 				else
@@ -72,11 +72,11 @@ public class AntTrailChromosome extends AbstractChromosome {
 				runProgram(program.getRightChild(), map, ant);
 			}
 			// terminals
-			else if(program.getValue() == Terminal.left)
+			else if(program.getValue() == Terminal.turnLeft)
 				ant.turnLeft();
-			else if(program.getValue() == Terminal.right)
+			else if(program.getValue() == Terminal.turnRight)
 				ant.turnRight();
-			else if(program.getValue() == Terminal.forward) {
+			else if(program.getValue() == Terminal.goForward) {
 				if(map.get(ant.getPosition()) == CellType.nothing)
 					map.set(CellType.trail, ant.getPosition());
 				ant.moveForward();

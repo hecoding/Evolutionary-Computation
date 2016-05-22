@@ -1,7 +1,7 @@
 package model.program;
 
 public enum Function implements Node {
-	sic, progn2, progn3;
+	ifFoodAhead, progn2, progn3;
 	
 	public static int numberOfChildren(Node n) {
 		if(n == Function.progn3)
