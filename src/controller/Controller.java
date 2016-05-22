@@ -52,7 +52,7 @@ public class Controller {
 									400,
 									false,
 									0,
-									400,
+									100,
 									6,
 									0.6,
 									0.05);

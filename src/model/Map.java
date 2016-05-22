@@ -28,7 +28,7 @@ public class Map implements Cloneable {
 	}
 	
 	public CellType get(Position pos) {
-		return get(pos.x, pos.y);
+		return get(pos.y, pos.x);
 	}
 	
 	public void set(CellType cell, int row, int column) {
@@ -36,7 +36,7 @@ public class Map implements Cloneable {
 	}
 	
 	public void set(CellType cell, Position pos) {
-		set(cell, pos.x, pos.y);
+		set(cell, pos.y, pos.x);
 	}
 	
 	public Map clone() {

@@ -86,7 +86,7 @@ public abstract class AbstractGeneticAlgorithm<T extends AbstractChromosome> imp
 	}
 	
 	public void initialize() {
-		this.population = this.initializationStrategy.initialize(this.populationNum, this.fitnessFunc, this.maxProgramHeight, this.maxGenerationNum);
+		this.population = this.initializationStrategy.initialize(this.populationNum, this.fitnessFunc, this.maxProgramHeight);
 	}
 	
 	public void selection() {

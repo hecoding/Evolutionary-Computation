@@ -23,9 +23,9 @@ public class AntTrailChromosome extends AbstractChromosome {
 		this.program = new Tree<>();
 	}
 	
-	public AntTrailChromosome(FitnessFunctionInterface function, int maxNumOfSteps, int maxProgramHeight) {
+	public AntTrailChromosome(FitnessFunctionInterface function, int maxProgramHeight) {
 		fitnessFunc = function;
-		maxSteps = maxNumOfSteps;
+		maxSteps = 400;
 		maxHeight = maxProgramHeight;
 		this.program = new Tree<>();
 	}

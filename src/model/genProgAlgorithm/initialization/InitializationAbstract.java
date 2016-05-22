@@ -12,10 +12,10 @@ public abstract class InitializationAbstract implements InitializationInterface 
 	
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractChromosome> ArrayList<T> initialize(int populationSize, FitnessFunctionInterface function, int programHeight, int maxSteps) {
+	public <T extends AbstractChromosome> ArrayList<T> initialize(int populationSize, FitnessFunctionInterface function, int programHeight) {
 		ArrayList<AntTrailChromosome> population = new ArrayList<AntTrailChromosome>(populationSize);
 		for (int i = 0; i < populationSize; i++)  {
-			AntTrailChromosome chromosome = new AntTrailChromosome(function, maxSteps, programHeight);
+			AntTrailChromosome chromosome = new AntTrailChromosome(function, programHeight);
 			Tree<Node> program = new Tree<>();
 			initialize(program, programHeight);
 			
