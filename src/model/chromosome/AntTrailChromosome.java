@@ -47,29 +47,35 @@ public class AntTrailChromosome extends AbstractChromosome {
 	}
 	
 	public static void runProgram(Tree<Node> program, Map map, Ant ant) {
-		// nomnom
-		if(map.get(ant.getPosition()) == CellType.food) {
-			ant.eat();
-			map.set(CellType.eatenfood, ant.getPosition());
+		while (ant.steps < maxSteps && ant.bitsEaten < map.getFoodHere()) {
+			runProgramRecursive(program, map, ant);
 		}
+	}
+	
+	private static void runProgramRecursive(Tree<Node> program, Map map, Ant ant) {
 
 		if(ant.steps < maxSteps && ant.bitsEaten < map.getFoodHere()) {
+			// nomnom
+			if(map.get(ant.getPosition()) == CellType.food) {
+				ant.eat();
+				map.set(CellType.eatenfood, ant.getPosition());
+			}
 		
 			// functions
 			if(program.getValue() == Function.ifFoodAhead) {
 				if(map.get(ant.getForwardPosition()) == CellType.food)
-					runProgram(program.getLeftChild(), map, ant);
+					runProgramRecursive(program.getLeftChild(), map, ant);
 				else
-					runProgram(program.getRightChild(), map, ant);
+					runProgramRecursive(program.getRightChild(), map, ant);
 			}
 			else if(program.getValue() == Function.progn3) {
 				for (int i = 0; i < Function.numberOfChildren(Function.progn3); i++) {
-					runProgram(program.getNChild(i), map, ant);
+					runProgramRecursive(program.getNChild(i), map, ant);
 				}
 			}
 			else if(program.getValue() == Function.progn2) {
-				runProgram(program.getLeftChild(), map, ant);
-				runProgram(program.getRightChild(), map, ant);
+				runProgramRecursive(program.getLeftChild(), map, ant);
+				runProgramRecursive(program.getRightChild(), map, ant);
 			}
 			// terminals
 			else if(program.getValue() == Terminal.turnLeft)
