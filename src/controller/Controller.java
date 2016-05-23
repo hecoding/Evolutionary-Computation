@@ -52,8 +52,8 @@ public class Controller {
 									400,
 									false,
 									0,
-									100,
-									6,
+									500,
+									4,
 									0.6,
 									0.05);
 		this.rangeParameters = false;

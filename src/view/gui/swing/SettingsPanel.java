@@ -407,7 +407,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		//---------------------------------------------
 		
 		JPanel contentBasedTermination = new JPanel();
-		JLabel cbterm = new JLabel("Terminación por calidad");
+		JLabel cbterm = new JLabel("Contractividad");
 		contentBasedTermination.add(cbterm);
 		contentBasedTerminationCheck = new JCheckBox();
 		contentBasedTerminationCheck.addItemListener(new ItemListener() {
