@@ -2,7 +2,7 @@ package model.genProgAlgorithm.initialization;
 
 public class InitializationFactory {
 	private static InitializationFactory instance;
-	private static String[] strategies = {"Completa", "Creciente"};
+	private static String[] strategies = {"Completa", "Creciente", "Ra. & Half"};
 	
 	private InitializationFactory() {}
 	
@@ -18,6 +18,8 @@ public class InitializationFactory {
 			return new FullInitialization();
 		else if (id == "Creciente")
 			return new GrowInitialization();
+		else if (id == "Ra. & Half")
+			return new RampedAndHalfInitialization();
 		else
 			throw new IllegalArgumentException("Unknown initialization method");
 	}
