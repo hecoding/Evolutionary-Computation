@@ -44,21 +44,21 @@ public class RampedAndHalfInitialization implements InitializationInterface {
 		
 		int remainder = populationSize % programHeight;
 		if(remainder != 0) { // if the division isn't exact
-			for (int i = 0; i < remainder / 2 ; i++) { // half the group with grow
+			for (int j = 0; j < remainder / 2 ; j++) { // half the group with grow
 				AntTrailChromosome chromosome = new AntTrailChromosome(function, programHeight);
 				Tree<Node> program = new Tree<>();
 				
-				growInit.initialize(program, i);
+				growInit.initialize(program, programHeight);
 				
 				chromosome.setProgram(program);
 				chromosome.setAptitude(chromosome.evaluate());
 				population.add(chromosome);
 			}
-			for (int i = remainder / 2; i < chromsPerGroup; i++) { // half wit full
+			for (int j = remainder / 2; j < chromsPerGroup; j++) { // half wit full
 				AntTrailChromosome chromosome = new AntTrailChromosome(function, programHeight);
 				Tree<Node> program = new Tree<>();
 				
-				fullInit.initialize(program, i);
+				fullInit.initialize(program, programHeight);
 				
 				chromosome.setProgram(program);
 				chromosome.setAptitude(chromosome.evaluate());
