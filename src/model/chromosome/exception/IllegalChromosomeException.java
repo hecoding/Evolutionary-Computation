@@ -8,7 +8,7 @@ public class IllegalChromosomeException extends IllegalArgumentException {
 	}
 	
 	public IllegalChromosomeException(Class<?> currentChromosome, Class<?> expectedChromosome) {
-		super(extractName(currentChromosome) + " no puede llevar a cabo la acción como si fuera un " + extractName(expectedChromosome));
+		super(extractName(currentChromosome) + " can't perform the action as a " + extractName(expectedChromosome));
 	}
 
 	private static String extractName(Class<?> s) {

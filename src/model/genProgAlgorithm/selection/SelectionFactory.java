@@ -15,9 +15,9 @@ public class SelectionFactory {
 	}
 	
 	public SelectionInterface create(String id) {
-		if (id == "Ruleta")
+		if (id == "roulette")
 			return new RouletteSelection();
-		else if (id == "Torneo")
+		else if (id == "tournament")
 			return new TournamentSelection((int) parameter);
 		else if (id == "Truncamiento")
 			return new TruncationSelection();

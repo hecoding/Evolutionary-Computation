@@ -43,7 +43,7 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 	public void setErrors(Boolean b) {
 		if(b) {
 			this.outputTextArea.setForeground(Color.red);
-			this.outputTextArea.setText("Hay errores");
+			this.outputTextArea.setText("There are errors");
 			this.setVisible(true);
 		}
 		else {

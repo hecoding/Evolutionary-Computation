@@ -125,14 +125,14 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		
 		if(!ctrl.isRangeParameters()) {
 			double[] avgApt = ctrl.getAverageAptitudeList();
-			plot.addLinePlot("Mejor absoluto", ctrl.getBestChromosomeList());
-			plot.addLinePlot("Mejor de la generación", ctrl.getBestAptitudeList());
-			plot.addLinePlot("Media de la generación", avgApt);
+			plot.addLinePlot("Absolute best", ctrl.getBestChromosomeList());
+			plot.addLinePlot("Best of generation", ctrl.getBestAptitudeList());
+			plot.addLinePlot("Generation average", ctrl.getAverageAptitudeList());
 			plot.setFixedBounds(0, 0, avgApt.length);
 		}
 		else {
 			double[] range = ctrl.getRangeList();
-			plot.addLinePlot("Distancia", Color.red, range, ctrl.getResultsList());
+			plot.addLinePlot("Distance", Color.red, range, ctrl.getResultsList());
 			plot.setFixedBounds(0, range[0], range[range.length - 1]);
 		}
 		
@@ -141,8 +141,8 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 	
 	private void updateProgramPanel() {
 		String s = new String("");
-		s += " Resultado: " + new Double(ctrl.getFunctionResult()).intValue() + System.lineSeparator();
-		s += "Mejor:" + System.lineSeparator();
+		s += "Result: " + new Double(ctrl.getFunctionResult()).intValue() + " bits" + System.lineSeparator();
+		s += "Best:" + System.lineSeparator();
 		s += ctrl.getResult();
 		
 		programText.setText(s);
