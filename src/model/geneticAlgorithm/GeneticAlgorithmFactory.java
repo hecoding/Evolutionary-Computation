@@ -11,7 +11,7 @@ public class GeneticAlgorithmFactory {
 	}
 	
 	public AbstractGeneticAlgorithm<?> create(String id) {
-		if (id == "booleano")
+		if (id == "boolean")
 			return new BooleanGeneticAlgorithm();
 		else if (id == "real")
 			return new DoubleGeneticAlgorithm();

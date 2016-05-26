@@ -4,43 +4,43 @@ import view.gui.swing.SettingsPanel.Check;
 import view.gui.swing.SettingsPanel.Percentage;
 
 public class TransferGeneticAlgorithm {
-	private String funcion;
-	private String seleccion;
-	private String cruce;
+	private String function;
+	private String selection;
+	private String crossover;
 	private Double precision;
-	private int poblacion;
-	private int generaciones;
-	private double porcCruces;
-	private double porcMutacion;
-	private Check semillaPersonalizada;
-	private int semilla;
-	private Check elitismo;
-	private Percentage porcElite;
+	private int populationSize;
+	private int generations;
+	private double crossoverProb;
+	private double mutationProb;
+	private Check customSeed;
+	private int seed;
+	private Check elitism;
+	private Percentage eliteRate;
 	private int paramFunc4 = 1;
-	private Check cromosomaReal;
+	private Check realChromosome;
 	
-	public String getFuncion() {
-		return funcion;
+	public String getFunction() {
+		return function;
 	}
 
-	public void setFuncion(String funcion) {
-		this.funcion = funcion;
+	public void setFunction(String funcion) {
+		this.function = funcion;
 	}
 
-	public String getSeleccion() {
-		return seleccion;
+	public String getSelection() {
+		return selection;
 	}
 
-	public void setSeleccion(String seleccion) {
-		this.seleccion = seleccion;
+	public void setSelection(String seleccion) {
+		this.selection = seleccion;
 	}
 
-	public String getCruce() {
-		return cruce;
+	public String getCrossover() {
+		return crossover;
 	}
 
-	public void setCruce(String cruce) {
-		this.cruce = cruce;
+	public void setCrossover(String cruce) {
+		this.crossover = cruce;
 	}
 
 	public Double getPrecision() {
@@ -51,68 +51,68 @@ public class TransferGeneticAlgorithm {
 		this.precision = precision;
 	}
 
-	public int getPoblacion() {
-		return poblacion;
+	public int getPopulationSize() {
+		return populationSize;
 	}
 
-	public void setPoblacion(int poblacion) {
-		this.poblacion = poblacion;
+	public void setPopulationSize(int poblacion) {
+		this.populationSize = poblacion;
 	}
 
-	public int getGeneraciones() {
-		return generaciones;
+	public int getGenerations() {
+		return generations;
 	}
 
-	public void setGeneraciones(int generaciones) {
-		this.generaciones = generaciones;
+	public void setGenerations(int generations) {
+		this.generations = generations;
 	}
 
-	public double getPorcCruces() {
-		return porcCruces;
+	public double getCrossoverProb() {
+		return crossoverProb;
 	}
 
-	public void setPorcCruces(double porcCruces) {
-		this.porcCruces = porcCruces;
+	public void setCrossoverProb(double prob) {
+		this.crossoverProb = prob;
 	}
 
-	public double getPorcMutacion() {
-		return porcMutacion;
+	public double getMutationProb() {
+		return mutationProb;
 	}
 
-	public void setPorcMutacion(double porcMutacion) {
-		this.porcMutacion = porcMutacion;
+	public void setMutationProb(double prob) {
+		this.mutationProb = prob;
 	}
 
-	public Check getSemillaPersonalizada() {
-		return semillaPersonalizada;
+	public Check getCustomSeed() {
+		return customSeed;
 	}
 
-	public void setSemillaPersonalizada(Check semillaPersonalizada) {
-		this.semillaPersonalizada = semillaPersonalizada;
+	public void setCustomSeed(Check seed) {
+		this.customSeed = seed;
 	}
 
-	public int getSemilla() {
-		return semilla;
+	public int getSeed() {
+		return seed;
 	}
 
-	public void setSemilla(int semilla) {
-		this.semilla = semilla;
+	public void setSeed(int seed) {
+		this.seed = seed;
 	}
 
-	public Check getElitismo() {
-		return elitismo;
+	public Check getElitism() {
+		return elitism;
 	}
 
-	public void setElitismo(Check elitismo) {
-		this.elitismo = elitismo;
+	public void setElitism(Check elitism) {
+		this.elitism = elitism;
 	}
 
-	public Percentage getPorcElite() {
-		return porcElite;
+	public Percentage getEliteRate() {
+		return eliteRate;
 	}
 
-	public void setPorcElite(Percentage porcElite) {
-		this.porcElite = porcElite;
+	public void setEliteRate(Percentage rate) {
+		this.eliteRate = rate;
 	}
 
 	public int getParamFunc4() {
@@ -123,28 +123,28 @@ public class TransferGeneticAlgorithm {
 		this.paramFunc4 = paramFunc4;
 	}
 
-	public Check getCromosomaReal() {
-		return cromosomaReal;
+	public Check getRealChromosome() {
+		return realChromosome;
 	}
 
-	public void setCromosomaReal(Check cromosomaReal) {
-		this.cromosomaReal = cromosomaReal;
+	public void setRealChromosome(Check cromosomaReal) {
+		this.realChromosome = cromosomaReal;
 	}
 
 	public String toString() {
-		return "función: " + this.funcion + System.lineSeparator() +
-				"selección: " + this.seleccion + System.lineSeparator() +
-				"cruce: " + this.cruce + System.lineSeparator() +
+		return "function: " + this.function + System.lineSeparator() +
+				"selection: " + this.selection + System.lineSeparator() +
+				"crossover: " + this.crossover + System.lineSeparator() +
 				"param func 4: " + this.paramFunc4 + System.lineSeparator() +
-				"cromosoma real: " + this.cromosomaReal + System.lineSeparator() +
-				"precisión: " + this.precision + System.lineSeparator() +
-				"población: " + this.poblacion + System.lineSeparator() +
-				"generaciones: " + this.generaciones + System.lineSeparator() +
-				"% cruces: " + this.porcCruces + System.lineSeparator() +
-				"% mutación: " + this.porcMutacion + System.lineSeparator() +
-				"semilla personalizada: " + this.semillaPersonalizada + System.lineSeparator() +
-				"semilla: " + this.semilla + System.lineSeparator() +
-				"elitismo: " + this.elitismo + System.lineSeparator() +
-				"% elitismo: " + this.porcElite.getPerc();
+				"real chrom: " + this.realChromosome + System.lineSeparator() +
+				"precision: " + this.precision + System.lineSeparator() +
+				"population size: " + this.populationSize + System.lineSeparator() +
+				"generations: " + this.generations + System.lineSeparator() +
+				"crossover prob: " + this.crossoverProb + System.lineSeparator() +
+				"mutation prob: " + this.mutationProb + System.lineSeparator() +
+				"custom seed: " + this.customSeed + System.lineSeparator() +
+				"seed: " + this.seed + System.lineSeparator() +
+				"elitism: " + this.elitism + System.lineSeparator() +
+				"elitism rate: " + this.eliteRate.getPerc();
 	}
 }

@@ -38,7 +38,7 @@ public class TournamentSelection implements SelectionInterface {
 
 	@Override
 	public String getName() {
-		return "torneo";
+		return "tournament";
 	}
 
 }

@@ -65,7 +65,7 @@ public class UniformCrossover implements CrossoverInterface {
 
 	@Override
 	public String getName() {
-		return "discreto uniforme";
+		return "uniform";
 	}
 
 }

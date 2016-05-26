@@ -35,12 +35,12 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 		this.add(this.errors);
 		this.add(this.status);
 		this.add(this.result);
-		this.result.setToolTipText("Mejor xi y f(xi)");
+		this.result.setToolTipText("Best xi and f(xi)");
 	}
 	
 	public void setErrors(Boolean b) {
 		if(b)
-			this.errors.setText("Hay errores");
+			this.errors.setText("There are errors");
 		else
 			this.errors.setText("");
 	}
@@ -63,11 +63,11 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 				}
 				s = s.substring(0, s.length() - 2);
 				if(ctrl.getResult().size() > 1)
-					s = "Mejor: " + "[" + s + "]";
+					s = "Best: " + "[" + s + "]";
 				else
-					s = "Mejor: " + s;
+					s = "Best: " + s;
 				
-				s = s + " Resultado: " + String.format("%.4f", ctrl.getFunctionResult());
+				s = s + " Result: " + String.format("%.4f", ctrl.getFunctionResult());
 				result.setText(s);
 			}
 		});

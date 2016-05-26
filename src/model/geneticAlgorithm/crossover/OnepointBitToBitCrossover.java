@@ -82,7 +82,7 @@ public class OnepointBitToBitCrossover implements CrossoverInterface {
 
 	@Override
 	public String getName() {
-		return "un punto bit a bit";
+		return "one-point bit-to-bit";
 	}
 
 }

@@ -71,7 +71,7 @@ public class OnepointCrossover implements CrossoverInterface {
 
 	@Override
 	public String getName() {
-		return "un punto";
+		return "one-point";
 	}
 
 }

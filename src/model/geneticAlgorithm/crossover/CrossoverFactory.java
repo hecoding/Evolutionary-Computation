@@ -11,13 +11,13 @@ private static CrossoverFactory instance;
 	}
 	
 	public CrossoverInterface create(String id) {
-		if (id == "un punto bit a bit")
+		if (id == "one-point bit-to-bit")
 			return new OnepointBitToBitCrossover();
-		else if (id == "un punto")
+		else if (id == "one-point")
 			return new OnepointCrossover();
-		else if (id == "discreto uniforme")
+		else if (id == "uniform")
 			return new UniformCrossover();
-		else if (id == "aritmético")
+		else if (id == "arithmetic")
 			return new ArithmeticCrossover();
 		else if (id == "SBX")
 			return new SimulatedBinaryCrossover();

@@ -11,13 +11,13 @@ public class FunctionFactory {
 	}
 	
 	public Function create(String id) {
-		if (id == "función 1")
+		if (id == "function 1")
 			return new Function1();
-		else if (id == "función 2")
+		else if (id == "function 2")
 			return new Function2();
-		else if (id == "función 3")
+		else if (id == "function 3")
 			return new Function3();
-		else if (id == "función 5")
+		else if (id == "function 5")
 			return new Function5();
 		else
 			throw new IllegalArgumentException("Unknown function");

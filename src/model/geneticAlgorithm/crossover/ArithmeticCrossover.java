@@ -67,7 +67,7 @@ public class ArithmeticCrossover implements CrossoverInterface {
 
 	@Override
 	public String getName() {
-		return "aritmético";
+		return "arithmetic";
 	}
 
 }

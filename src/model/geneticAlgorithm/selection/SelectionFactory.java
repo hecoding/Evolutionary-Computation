@@ -11,9 +11,9 @@ public class SelectionFactory {
 	}
 	
 	public SelectionInterface create(String id) {
-		if (id == "ruleta")
+		if (id == "roulette")
 			return new RouletteSelection();
-		else if (id == "torneo")
+		else if (id == "tournament")
 			return new TournamentSelection();
 		else
 			throw new IllegalArgumentException("Unknown selection method");
