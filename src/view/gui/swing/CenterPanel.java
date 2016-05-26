@@ -59,14 +59,14 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 				
 				if(!ctrl.isRangeParameters()) {
 					double[] avgApt = ctrl.getAverageAptitudeList();
-					plot.addLinePlot("Mejor absoluto", ctrl.getBestChromosomeList());
-					plot.addLinePlot("Mejor de la generación", ctrl.getBestAptitudeList());
-					plot.addLinePlot("Media de la generación", avgApt);
+					plot.addLinePlot("Absolute best", ctrl.getBestChromosomeList());
+				plot.addLinePlot("Best of generation", ctrl.getBestAptitudeList());
+				plot.addLinePlot("Generation average", ctrl.getAverageAptitudeList());
 					plot.setFixedBounds(0, 0, avgApt.length);
 				}
 				else {
 					double[] range = ctrl.getRangeList();
-					plot.addLinePlot("Distancia", Color.red, range, ctrl.getResultsList());
+					plot.addLinePlot("Distance", Color.red, range, ctrl.getResultsList());
 					plot.setFixedBounds(0, range[0], range[range.length - 1]);
 				}
 				

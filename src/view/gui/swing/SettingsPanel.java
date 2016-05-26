@@ -94,13 +94,13 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 
 	private void initGUI() {
 		this.setLayout(new BorderLayout());
-		this.setBorder(new TitledBorder("Ajustes"));
+		this.setBorder(new TitledBorder("Settings"));
 		
 		initSettings();
 		this.add(settings, BorderLayout.CENTER);
 		
 		buttonPanel = new JPanel(new BorderLayout());
-		runButton = new JButton("Lanzar");
+		runButton = new JButton("Run");
 		runButton.setMnemonic(KeyEvent.VK_L);
 		runButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -140,9 +140,9 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			}
 		});
 		buttonPanel.add(runButton, BorderLayout.CENTER);
-		resetButton = new JButton("Resetear");
+		resetButton = new JButton("Reset");
 		resetButton.setMnemonic(KeyEvent.VK_R);
-		resetButton.setToolTipText("Volver a los valores iniciales");
+		resetButton.setToolTipText("Set initial values");
 		resetButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				restoreDefaults();

@@ -43,7 +43,7 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 	public void setErrors(Boolean b) {
 		if(b) {
 			this.outputTextArea.setForeground(Color.red);
-			this.outputTextArea.setText("Hay errores");
+			this.outputTextArea.setText("There are errors");
 		}
 		else {
 			this.outputTextArea.setForeground(defaultColor);
@@ -71,11 +71,11 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 					}
 					s = s.substring(0, s.length() - 2);
 					if(ctrl.getResult().size() > 1)
-						s = "Mejor: " + "[" + s + "]";
+						s = "Best: " + "[" + s + "]";
 					else
-						s = "Mejor: " + s;
+						s = "Best: " + s;
 					
-					s = s + " Resultado: " + new Double(ctrl.getFunctionResult()).intValue();
+					s = s + " Result: " + new Double(ctrl.getFunctionResult()).intValue();
 				}
 				else {
 					double[] x = ctrl.getRangeList();
