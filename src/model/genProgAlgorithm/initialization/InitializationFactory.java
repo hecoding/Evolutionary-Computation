@@ -2,7 +2,7 @@ package model.genProgAlgorithm.initialization;
 
 public class InitializationFactory {
 	private static InitializationFactory instance;
-	private static String[] strategies = {"Completa", "Creciente", "Ra. & Half"};
+	private static String[] strategies = {"Full", "Grow", "Ra. & Half"};
 	
 	private InitializationFactory() {}
 	
@@ -14,9 +14,9 @@ public class InitializationFactory {
 	}
 	
 	public InitializationInterface create(String id) {
-		if (id == "Completa")
+		if (id == "Full")
 			return new FullInitialization();
-		else if (id == "Creciente")
+		else if (id == "Grow")
 			return new GrowInitialization();
 		else if (id == "Ra. & Half")
 			return new RampedAndHalfInitialization();

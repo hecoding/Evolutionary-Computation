@@ -69,7 +69,7 @@ public class TwoPointCrossover implements CrossoverInterface {
 
 	@Override
 	public String getName() {
-		return "Dos puntos";
+		return "Two-point";
 	}
 
 }

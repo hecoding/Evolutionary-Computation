@@ -38,7 +38,7 @@ public class LinearRankSelection implements SelectionInterface {
 
 	@Override
 	public String getName() {
-		return "Ranking";
+		return "Linear Rank";
 	}
 
 }

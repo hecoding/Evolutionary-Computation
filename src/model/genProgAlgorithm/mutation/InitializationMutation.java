@@ -35,6 +35,6 @@ public class InitializationMutation implements MutationInterface {
 
 	@Override
 	public String getName() {
-		return "de árbol";
+		return "Initialisation";
 	}
 }

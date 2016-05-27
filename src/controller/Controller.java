@@ -183,7 +183,7 @@ public class Controller {
 		if(!param.isEmpty()) {
 			double num = Double.parseDouble(param);
 			if(num <= 0)
-				throw new IllegalArgumentException("Mal parámetro");
+				throw new IllegalArgumentException("Bad parameter");
 			else
 				SelectionFactory.getInstance().setParameter(num);
 		}

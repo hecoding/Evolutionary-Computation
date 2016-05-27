@@ -80,7 +80,7 @@ public class StatusBarPanel extends JPanel implements GeneticAlgorithmObserver {
 						else best = Collections.max(y);
 						int idx = y.indexOf(best);
 						
-						s += "El mejor resultado es " + best.intValue() + ", con el parámetro " + String.format("%.2f", x[idx]);
+						s += "The best result is " + best.intValue() + " with the parameter " + String.format("%.2f", x[idx]);
 					}
 					setStatus(s);
 				}

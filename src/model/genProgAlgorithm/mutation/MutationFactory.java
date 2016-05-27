@@ -2,7 +2,7 @@ package model.genProgAlgorithm.mutation;
 
 public class MutationFactory {
 	private static MutationFactory instance;
-	private static String[] strategies = {"Terminal smp.", "Funcional smp.", "de árbol"};
+	private static String[] strategies = {"Smp. terminal", "Smp. functional", "Initialisation"};
 	
 	private MutationFactory() {}
 	
@@ -14,11 +14,11 @@ public class MutationFactory {
 	}
 	
 	public MutationInterface create(String id) {
-		if (id == "Terminal smp.")
+		if (id == "Smp. terminal")
 			return new SimpleTerminalMutation();
-		else if (id == "Funcional smp.")
+		else if (id == "Smp. functional")
 			return new SimpleFunctionalMutation();
-		else if (id == "de árbol")
+		else if (id == "Initialisation")
 			return new InitializationMutation();
 		else
 			throw new IllegalArgumentException("Unknown mutation method");

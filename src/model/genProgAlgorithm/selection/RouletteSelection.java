@@ -31,7 +31,7 @@ public class RouletteSelection implements SelectionInterface {
 
 	@Override
 	public String getName() {
-		return "roulette";
+		return "Roulette";
 	}
 
 }

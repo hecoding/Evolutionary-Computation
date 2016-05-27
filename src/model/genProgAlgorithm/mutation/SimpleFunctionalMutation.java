@@ -63,6 +63,6 @@ public class SimpleFunctionalMutation implements MutationInterface {
 
 	@Override
 	public String getName() {
-		return "Funcional smp.";
+		return "Smp. functional";
 	}
 }

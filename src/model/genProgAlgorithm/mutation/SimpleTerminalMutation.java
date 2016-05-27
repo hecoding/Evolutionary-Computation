@@ -41,6 +41,6 @@ public class SimpleTerminalMutation implements MutationInterface {
 
 	@Override
 	public String getName() {
-		return "Terminal smp.";
+		return "Smp. terminal";
 	}
 }

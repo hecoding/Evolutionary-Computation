@@ -31,7 +31,7 @@ public class GrowInitialization extends InitializationAbstract {
 
 	@Override
 	public String getName() {
-		return "Creciente";
+		return "Grow";
 	}
 
 }

@@ -59,12 +59,12 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		
 		map = new AntTrailPane();
 		mapPanel.add(map, BorderLayout.CENTER);
-		tabs.add("Mapa", mapPanel);
+		tabs.add("Map", mapPanel);
 		
 		plot = new Plot2DPanel();
 		plot.addLegend("SOUTH");
 		graphPanel.add(plot, BorderLayout.CENTER);
-		tabs.add("Aptitud", graphPanel);
+		tabs.add("Fitness", graphPanel);
 		
 		programText = new JTextArea();
 		programText.setEditable(false);
@@ -72,7 +72,7 @@ public class CenterPanel extends JPanel implements GeneticAlgorithmObserver {
 		programText.setWrapStyleWord(true);
 		programPanel.setLayout(new BorderLayout());
 		programPanel.add(new JScrollPane(programText), BorderLayout.CENTER);
-		tabs.add("Programa", programPanel);
+		tabs.add("Program", programPanel);
 		
 		tabs.setMnemonicAt(0, KeyEvent.VK_1);
 		tabs.setMnemonicAt(1, KeyEvent.VK_2);

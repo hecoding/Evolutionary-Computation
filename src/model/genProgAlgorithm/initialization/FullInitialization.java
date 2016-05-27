@@ -26,7 +26,7 @@ public class FullInitialization extends InitializationAbstract {
 
 	@Override
 	public String getName() {
-		return "Completa";
+		return "Full";
 	}
 
 }
