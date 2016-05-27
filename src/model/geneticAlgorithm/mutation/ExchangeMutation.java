@@ -38,7 +38,7 @@ public class ExchangeMutation implements MutationInterface {
 
 	@Override
 	public String getName() {
-		return "Intercambio";
+		return "Exchange";
 	}
 
 }

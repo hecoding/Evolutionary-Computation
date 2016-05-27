@@ -98,6 +98,6 @@ public class OwnCrossover implements CrossoverInterface {
 
 	@Override
 	public String getName() {
-		return "Propio";
+		return "Own";
 	}
 }

@@ -162,7 +162,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		//---------------------------------------------
 		
 		JPanel population = new JPanel();
-		JLabel populationLabel = new JLabel("Población");
+		JLabel populationLabel = new JLabel("Population Size");
 		population.add(populationLabel);
 		populationText = new JTextField(4);
 		defaultborder = populationText.getBorder();
@@ -176,7 +176,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		//---------------------------------------------
 		
 		JPanel generations = new JPanel();
-		JLabel generationsLabel = new JLabel("Generaciones");
+		JLabel generationsLabel = new JLabel("Generations");
 		generations.add(generationsLabel);
 		generationText = new JTextField(4);
 		generationText.setInputVerifier(new InputVerifier() {
@@ -215,12 +215,12 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		selection = new JPanel();
 		selection.setLayout(new BoxLayout(selection, BoxLayout.Y_AXIS));
 		JPanel selectionSel = new JPanel();
-		JLabel selectionLabel = new JLabel("Selección");
+		JLabel selectionLabel = new JLabel("Selection");
 		selectionSel.add(selectionLabel);
 		selectionBox = new JComboBox<String>();
 		selectionBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				if(e.getItem() == "Torneo") {
+				if(e.getItem() == "Tournament") {
 					if(e.getStateChange() == ItemEvent.SELECTED) {
 						tournamentGroups.setVisible(true);
 						selection.setMaximumSize(selection.getPreferredSize());
@@ -235,7 +235,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		selectionSel.add(selectionBox);
 		selection.add(selectionSel);
 			tournamentGroups = new JPanel();
-			tournamentGroups.add(new JLabel("Tamaño grupos"));
+			tournamentGroups.add(new JLabel("Group size"));
 			tournamentGroupsText = new JTextField(4);
 			tournamentGroups.add(tournamentGroupsText);
 			tournamentGroups.setVisible(false);
@@ -257,7 +257,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		
 		crossoverMethodPanel = new JPanel();
 		crossoverMethodPanel.setLayout(new BoxLayout(crossoverMethodPanel, BoxLayout.Y_AXIS));
-		JLabel crossoverLabel = new JLabel("Cruce");
+		JLabel crossoverLabel = new JLabel("Crossover");
 		JPanel crossSel = new JPanel();
 		crossSel.add(crossoverLabel);
 		crossoverBox = new JComboBox<String>();
@@ -294,7 +294,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		mutationPanel.setLayout(new BoxLayout(mutationPanel, BoxLayout.Y_AXIS));
 		
 		mutationMethodPanel = new JPanel();
-		JLabel mutationLabel = new JLabel("Mutación");
+		JLabel mutationLabel = new JLabel("Mutation");
 		mutationMethodPanel.add(mutationLabel);
 		mutationBox = new JComboBox<String>();
 		mutationMethodPanel.add(mutationBox);
@@ -327,7 +327,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		JPanel elitism = new JPanel(new BorderLayout());
 		
 		JPanel elitismMain = new JPanel();
-		JLabel elitismLabel = new JLabel("Elitismo");
+		JLabel elitismLabel = new JLabel("Elitism");
 		elitismMain.add(elitismLabel);
 		elitismSlider = new JSlider(0,100);
 		elitismCheck = new JCheckBox();
@@ -365,7 +365,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		//---------------------------------------------
 		
 		JPanel variableMutation = new JPanel();
-		JLabel varMutLabel = new JLabel("Mutación variable");
+		JLabel varMutLabel = new JLabel("Variable mutation");
 		variableMutation.add(varMutLabel);
 		variableMutationCheck = new JCheckBox();
 		variableMutationCheck.addItemListener(new ItemListener() {
@@ -382,24 +382,24 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		variableMutation.setMaximumSize(variableMutation.getPreferredSize());
 		variableMutation.setMinimumSize(variableMutation.getPreferredSize());
 		variableMutation.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		variableMutation.setToolTipText("El ratio de mutación va disminuyendo conforme avanzan las generaciones");
+		variableMutation.setToolTipText("Mutation rate decreases as generations go on");
 		settings.add(variableMutation);
 		
 		//---------------------------------------------
 		
 		JPanel contentBasedTermination = new JPanel();
-		JLabel cbterm = new JLabel("Terminación por calidad");
+		JLabel cbterm = new JLabel("Quality termin. criteria");
 		contentBasedTermination.add(cbterm);
 		contentBasedTerminationCheck = new JCheckBox();
 		contentBasedTerminationCheck.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if(e.getStateChange() == ItemEvent.SELECTED) {
-					generationsLabel.setText("Generaciones relat.");
+					generationsLabel.setText("Relative gen");
 					generations.setMaximumSize(generations.getPreferredSize());
 					generations.setMinimumSize(generations.getPreferredSize());
 				}
 				else if(e.getStateChange() == ItemEvent.DESELECTED) {
-					generationsLabel.setText("Generaciones");
+					generationsLabel.setText("Generations");
 					generations.setMaximumSize(generations.getPreferredSize());
 					generations.setMinimumSize(generations.getPreferredSize());
 				}
@@ -409,8 +409,8 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		contentBasedTermination.setMaximumSize(contentBasedTermination.getPreferredSize());
 		contentBasedTermination.setMinimumSize(contentBasedTermination.getPreferredSize());
 		contentBasedTermination.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		contentBasedTermination.setToolTipText("Criterio de terminación basada o enfocada en el contenido." + 
-				"Sólo incrementa la generación cuando hay un incremento global de la aptitud.");
+		contentBasedTermination.setToolTipText("Termination criteria based on the content. " + 
+				"It only increases a generation when a global fitness increment is produced.");
 		settings.add(contentBasedTermination);
 		
 		//---------------------------------------------
@@ -443,7 +443,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 		bg.add(rangeMutationRadioButton);
 		bg.add(rangeElitismRadioButton);
 		
-		optionalCheck.add(new JLabel("Variación de parámetros"));
+		optionalCheck.add(new JLabel("Parameter variations"));
 		rangeParametersCheck = new JCheckBox();
 		rangeParametersCheck.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -483,7 +483,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			JPanel popOpt = new JPanel();
 			popOpt.setLayout(new BoxLayout(popOpt, BoxLayout.Y_AXIS));
 				JPanel go1 = new JPanel();
-					JLabel go11 = new JLabel("Población");
+					JLabel go11 = new JLabel("Population size");
 					go1.add(go11);
 					rangePopulationRadioButton.addItemListener(new ItemListener() {
 						public void itemStateChanged(ItemEvent e) {
@@ -512,13 +512,13 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				
 				pomin = new JTextField(4);
 				pomin.setInputVerifier(new IntegerNonZeroVerifier());
-				pomin.setToolTipText("rango mínimo");
+				pomin.setToolTipText("min range");
 				pomax = new JTextField(4);
 				pomax.setInputVerifier(new IntegerNonZeroVerifier());
-				pomin.setToolTipText("rango máximo");
+				pomin.setToolTipText("max range");
 				postep = new JTextField(4);
 				postep.setInputVerifier(new IntegerNonZeroVerifier());
-				pomin.setToolTipText("paso");
+				pomin.setToolTipText("step");
 				popTextOpt.add(pomin);
 				popTextOpt.add(pomax);
 				popTextOpt.add(postep);
@@ -533,7 +533,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			generTextOpt.setVisible(false);
 			generOpt.setLayout(new BoxLayout(generOpt, BoxLayout.Y_AXIS));
 				JPanel go2 = new JPanel();
-					JLabel go21 = new JLabel("Generaciones");
+					JLabel go21 = new JLabel("Generations");
 					go2.add(go21);
 					rangeGenerationRadioButton.addItemListener(new ItemListener() {
 						public void itemStateChanged(ItemEvent e) {
@@ -564,13 +564,13 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				
 				gomin = new JTextField(4);
 				gomin.setInputVerifier(new IntegerNonZeroVerifier());
-				gomin.setToolTipText("rango mínimo");
+				gomin.setToolTipText("min range");
 				gomax = new JTextField(4);
 				gomax.setInputVerifier(new IntegerNonZeroVerifier());
-				gomax.setToolTipText("rango máximo");
+				gomax.setToolTipText("max range");
 				gostep = new JTextField(4);
 				gostep.setInputVerifier(new IntegerNonZeroVerifier());
-				gostep.setToolTipText("paso");
+				gostep.setToolTipText("step");
 				generTextOpt.add(gomin);
 				generTextOpt.add(gomax);
 				generTextOpt.add(gostep);
@@ -585,7 +585,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			crossTextOpt.setVisible(false);
 			crossOpt.setLayout(new BoxLayout(crossOpt, BoxLayout.Y_AXIS));
 				JPanel co2 = new JPanel();
-					JLabel co21 = new JLabel("Cruce");
+					JLabel co21 = new JLabel("Crossover");
 					co2.add(co21);
 					rangeCrossRadioButton.addItemListener(new ItemListener() {
 						public void itemStateChanged(ItemEvent e) {
@@ -614,13 +614,13 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				
 				comin = new JTextField(4);
 				comin.setInputVerifier(new DoubleLessThanZeroVerifier());
-				comin.setToolTipText("rango mínimo");
+				comin.setToolTipText("min range");
 				comax = new JTextField(4);
 				comax.setInputVerifier(new DoubleLessThanZeroVerifier());
-				comax.setToolTipText("rango máximo");
+				comax.setToolTipText("max range");
 				costep = new JTextField(4);
 				costep.setInputVerifier(new DoubleLessThanZeroVerifier());
-				costep.setToolTipText("paso");
+				costep.setToolTipText("step");
 				crossTextOpt.add(comin);
 				crossTextOpt.add(comax);
 				crossTextOpt.add(costep);
@@ -635,7 +635,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			mutTextOpt.setVisible(false);
 			mutOpt.setLayout(new BoxLayout(mutOpt, BoxLayout.Y_AXIS));
 				JPanel mo2 = new JPanel();
-					JLabel mo21 = new JLabel("Mutación");
+					JLabel mo21 = new JLabel("Mutation");
 					mo2.add(mo21);
 					rangeMutationRadioButton.addItemListener(new ItemListener() {
 						public void itemStateChanged(ItemEvent e) {
@@ -666,13 +666,13 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				
 				momin = new JTextField(4);
 				momin.setInputVerifier(new DoubleLessThanZeroVerifier());
-				momin.setToolTipText("rango mínimo");
+				momin.setToolTipText("min range");
 				momax = new JTextField(4);
 				momax.setInputVerifier(new DoubleLessThanZeroVerifier());
-				momax.setToolTipText("rango máximo");
+				momax.setToolTipText("max range");
 				mostep = new JTextField(4);
 				mostep.setInputVerifier(new DoubleLessThanZeroVerifier());
-				mostep.setToolTipText("paso");
+				mostep.setToolTipText("step");
 				mutTextOpt.add(momin);
 				mutTextOpt.add(momax);
 				mutTextOpt.add(mostep);
@@ -687,7 +687,7 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 			elitTextOpt.setVisible(false);
 			elitOpt.setLayout(new BoxLayout(elitOpt, BoxLayout.Y_AXIS));
 				JPanel eo2 = new JPanel();
-					JLabel eo21 = new JLabel("Elitismo");
+					JLabel eo21 = new JLabel("Elitism");
 					eo2.add(eo21);
 					rangeElitismRadioButton.addItemListener(new ItemListener() {
 						public void itemStateChanged(ItemEvent e) {
@@ -720,13 +720,13 @@ public class SettingsPanel extends JPanel implements GeneticAlgorithmObserver {
 				
 				eomin = new JTextField(4);
 				eomin.setInputVerifier(new DoubleLessThanZeroVerifier());
-				eomin.setToolTipText("rango mínimo");
+				eomin.setToolTipText("min range");
 				eomax = new JTextField(4);
 				eomax.setInputVerifier(new DoubleLessThanZeroVerifier());
-				eomax.setToolTipText("rango máximo");
+				eomax.setToolTipText("max range");
 				eostep = new JTextField(4);
 				eostep.setInputVerifier(new DoubleLessThanZeroVerifier());
-				eostep.setToolTipText("paso");
+				eostep.setToolTipText("step");
 				elitTextOpt.add(eomin);
 				elitTextOpt.add(eomax);
 				elitTextOpt.add(eostep);

@@ -29,7 +29,7 @@ public class TruncationSelection implements SelectionInterface {
 
 	@Override
 	public String getName() {
-		return "Truncamiento";
+		return "Truncation";
 	}
 
 }

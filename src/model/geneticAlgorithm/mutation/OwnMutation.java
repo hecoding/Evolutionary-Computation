@@ -50,6 +50,6 @@ public class OwnMutation implements MutationInterface {
 
 	@Override
 	public String getName() {
-		return "Propio";
+		return "Own";
 	}
 }

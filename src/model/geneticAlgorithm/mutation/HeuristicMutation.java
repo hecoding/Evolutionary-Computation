@@ -63,7 +63,7 @@ public class HeuristicMutation implements MutationInterface {
 
 	@Override
 	public String getName() {
-		return "Heurística";
+		return "Heuristic";
 	}
 
 }

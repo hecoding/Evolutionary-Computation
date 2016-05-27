@@ -48,7 +48,7 @@ public class InversionMutation implements MutationInterface {
 
 	@Override
 	public String getName() {
-		return "Inversión";
+		return "Inversion";
 	}
 
 }

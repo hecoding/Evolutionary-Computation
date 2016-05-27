@@ -50,7 +50,7 @@ public class InsertionMutation implements MutationInterface {
 
 	@Override
 	public String getName() {
-		return "Inserción";
+		return "Insertion";
 	}
 
 }
